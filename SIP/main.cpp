@@ -34,7 +34,7 @@ int main(int argc, const char * argv[])
             input=readFile(file);
             output=execute(input);
             
-            return 0; //we will exit as soon as we find a
+            return 0; //we will exit as soon as we find a readable file
         }
         /*else
         {
