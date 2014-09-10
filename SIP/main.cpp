@@ -6,20 +6,23 @@
 //  Copyright (c) 2014 jfakult15. All rights reserved.
 //
 
+#include "execute.h"
+
 #include <iostream>
 #include <fstream>
 #include <vector>
 
 using namespace std;
 
-vector<string> lines;
+vector<string> input;
+vector<string> output;
 vector<string> readFile(ifstream &file);
 
 int main(int argc, const char * argv[])
 {
     if (argc==1)
     {
-        cout << "Usage: stuff" << "\n";
+        cout << "No file provided" << "\n";
         return 1;
     }
     
@@ -28,7 +31,9 @@ int main(int argc, const char * argv[])
         ifstream file(argv[1]);
         if (file.is_open())
         {
-            lines=readFile(file);
+            input=readFile(file);
+            output=execute(input);
+            
             return 0; //we will exit as soon as we find a
         }
         /*else
@@ -55,7 +60,6 @@ vector<string> readFile(ifstream &file)
         
         if (temp.length()>0)
         {
-            cout << temp << "\n";
             tempLines.push_back(temp);
         }
     }
