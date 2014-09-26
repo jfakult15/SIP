@@ -10,6 +10,8 @@
 		3F777C3D19C0D16700E4F0DE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F777C3C19C0D16700E4F0DE /* main.cpp */; };
 		3F777C3F19C0D16700E4F0DE /* SIP.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3F777C3E19C0D16700E4F0DE /* SIP.1 */; };
 		3F777C4719C0E66400E4F0DE /* execute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F777C4519C0E66400E4F0DE /* execute.cpp */; };
+		3F777C4A19CA0A7C00E4F0DE /* object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F777C4819CA0A7C00E4F0DE /* object.cpp */; };
+		3F777C4D19CA33E600E4F0DE /* err.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F777C4B19CA33E600E4F0DE /* err.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +33,10 @@
 		3F777C3E19C0D16700E4F0DE /* SIP.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SIP.1; sourceTree = "<group>"; };
 		3F777C4519C0E66400E4F0DE /* execute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = execute.cpp; sourceTree = "<group>"; };
 		3F777C4619C0E66400E4F0DE /* execute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = execute.h; sourceTree = "<group>"; };
+		3F777C4819CA0A7C00E4F0DE /* object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = object.cpp; sourceTree = "<group>"; };
+		3F777C4919CA0A7C00E4F0DE /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object.h; sourceTree = "<group>"; };
+		3F777C4B19CA33E600E4F0DE /* err.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = err.cpp; sourceTree = "<group>"; };
+		3F777C4C19CA33E600E4F0DE /* err.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = err.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +72,10 @@
 				3F777C3C19C0D16700E4F0DE /* main.cpp */,
 				3F777C4519C0E66400E4F0DE /* execute.cpp */,
 				3F777C4619C0E66400E4F0DE /* execute.h */,
+				3F777C4B19CA33E600E4F0DE /* err.cpp */,
+				3F777C4C19CA33E600E4F0DE /* err.h */,
+				3F777C4819CA0A7C00E4F0DE /* object.cpp */,
+				3F777C4919CA0A7C00E4F0DE /* object.h */,
 				3F777C3E19C0D16700E4F0DE /* SIP.1 */,
 			);
 			path = SIP;
@@ -123,6 +133,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F777C3D19C0D16700E4F0DE /* main.cpp in Sources */,
+				3F777C4D19CA33E600E4F0DE /* err.cpp in Sources */,
+				3F777C4A19CA0A7C00E4F0DE /* object.cpp in Sources */,
 				3F777C4719C0E66400E4F0DE /* execute.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

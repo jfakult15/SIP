@@ -1,25 +1,38 @@
 //
 //  main.cpp
-//  SIP
+//  SIP -- Students Introduction to Programming
 //
 //  Created by Jacob Fakult on 9/10/14.
 //  Copyright (c) 2014 jfakult15. All rights reserved.
 //
 
 #include "execute.h"
+#include "object.h"
+#include "err.h"
 
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
 vector<string> input;
 vector<string> output;
+vector<Object> s;
 vector<string> readFile(ifstream &file);
+
 
 int main(int argc, const char * argv[])
 {
+    input={"var x=\"10.4\";"};
+    output=execute(input);
+    for (int i=0; i<output.size(); i++)
+    {
+        cout << output[i] << "\n";
+    }
+    return 0;
+    
     if (argc==1)
     {
         cout << "No file provided" << "\n";
@@ -32,6 +45,7 @@ int main(int argc, const char * argv[])
         if (file.is_open())
         {
             input=readFile(file);
+            input={"var x=10;"};
             output=execute(input);
             
             return 0; //we will exit as soon as we find a readable file
