@@ -17,4 +17,10 @@ using namespace std;
 
 void err(string e);
 
+struct errVar
+{
+    int errorPos;
+    string message;
+};
+
 #endif /* defined(__SIP__err__) */

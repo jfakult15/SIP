@@ -25,7 +25,7 @@ vector<string> readFile(ifstream &file);
 
 int main(int argc, const char * argv[])
 {
-    input={"var x=\"10.4\";"};
+    input={"if ( x==\"2. 2\" );"};
     output=execute(input);
     for (int i=0; i<output.size(); i++)
     {

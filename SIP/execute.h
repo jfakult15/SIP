@@ -11,9 +11,20 @@
 
 #include <iostream>
 #include <vector>
+#include "err.h"
 
 using namespace std;
 
 vector<string> execute(vector<string> code);
+errVar syntaxIfWhile(vector<string> tokens);
+errVar checkSyntax(vector<string> line);
+errVar syntaxVar(vector<string> tokens);
+errVar syntaxIfWhile(vector<string> tokens);
+
+vector<string> tokenize(string line);
+
+void removeSpaces(string &line);
+bool isLetter(int ch);
+bool isNumber(int ch);
 
 #endif /* defined(__SIP__execute__) */
