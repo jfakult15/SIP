@@ -10,9 +10,17 @@
 #define __SIP__helpers__
 
 #include <iostream>
+#include <cmath>
+#include <vector>
 
 using namespace std;
 
 string parseString(string str); //parse backquotes and whatnot. Returns "" if error
+int boolEval(string expr); //-1 for error, 0 for false, 1 for true
+string eval(string val);
+string findAfter(string val, int pos);
+string findBefore(string val, int pos);
+bool isNum(string num);
+vector<string> split(string str, string delim);
 
 #endif /* defined(__SIP__helpers__) */

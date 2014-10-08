@@ -29,7 +29,7 @@ bool isLetter(int ch);
 bool isNumber(int ch);
 bool isProperVarName(string varName);
 
-bool isObjectNamed(vector<Object> &objects, string name);
+int getObjectNamed(vector<Object> &objects, string name);
 string determineType(string value);
 
 #endif /* defined(__SIP__execute__) */

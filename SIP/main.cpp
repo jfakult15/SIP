@@ -9,6 +9,7 @@
 #include "execute.h"
 #include "object.h"
 #include "err.h"
+#include "helpers.h"
 
 #include <iostream>
 #include <fstream>
@@ -25,7 +26,14 @@ vector<string> readFile(ifstream &file);
 
 int main(int argc, const char * argv[])
 {
-    input={"var x = 10;"};
+    /*vector<string> s=split("hello my n==ame is==jaco==b", "==");
+    for (int i=0; i<s.size(); i++)
+    {
+        cout << s[i] << "\n";
+    }
+    return 0;*/
+    
+    input={"if (x==10)"};
     output=execute(input);
     
     for (int i=0; i<output.size(); i++)
@@ -49,12 +57,8 @@ int main(int argc, const char * argv[])
             input={"var x=10;"};
             output=execute(input);
             
-            return 0; //we will exit as soon as we find a readable file
+            return 0; //we will exit as soon as we find and run a readable file
         }
-        /*else
-        {
-            cout << "Couldn't find it!\n";
-        }*/
         file.close();
     }
     

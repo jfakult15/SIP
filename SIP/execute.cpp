@@ -41,6 +41,8 @@ vector<string> execute(vector<string> code)
         }
     }
     
+    //cout << "Length: " << objects[0].type << "\n";
+    
     return output;
 }
 
@@ -159,7 +161,7 @@ errVar checkSyntax(vector<string> tokens) //returns first character that caused 
 {
     errVar err;
     
-    if (keywords.find(tokens[0])==keywords.end() && !isObjectNamed(objects, tokens[0])) //the first word isnt a keyword or a variable
+    if (keywords.find(tokens[0])==keywords.end() && getObjectNamed(objects, tokens[0])<0) //the first word isnt a keyword or a variable
     {
         err.errorPos=0;
         err.message="Unknown variable or keyword";
@@ -251,7 +253,33 @@ errVar syntaxVar(vector<string> tokens)
         return err;
     }
     
+    //cout << "Obj: " << obj.type << "\n";
     objects.push_back(obj);
+    //cout << "Obj2: " << objects[0].type << "\n";
+    
+    return err;
+}
+
+errVar syntaxFor(vector<string> tokens)
+{
+    errVar err;
+    if (!isProperVarName(tokens[1]))
+    {
+        err.errorPos=1;
+        err.message="Improper variable name";
+        return err;
+    }
+    
+    if (tokens[2]!="in")
+    {
+        err.errorPos=2;
+        err.message="Bad 'for' syntax";
+        return err;
+    }
+    
+    Object forVar;
+    forVar.value=tokens[3];
+    forVar.type
     
     return err;
 }
@@ -259,12 +287,16 @@ errVar syntaxVar(vector<string> tokens)
 errVar syntaxIfWhile(vector<string> tokens)
 {
     errVar err;
+    if (tokens[1]!="(")
+    {
+        err.errorPos=1;
+        err.message="Expected boolean expression";
+        return err;
+    }
+    
+    
+    
     return err;
-}
-
-bool boolEval(vector<string> line)
-{
-    return true;
 }
 
 bool isProperVarName(string varName)
@@ -282,14 +314,14 @@ bool isProperVarName(string varName)
     return true;
 }
 
-bool isObjectNamed(vector<Object> &objects, string name)
+int getObjectNamed(vector<Object> &objects, string name)
 {
     for (int i=0; i<objects.size(); i++)
     {
-        if (objects[i].name==name) return true;
+        if (objects[i].name==name) return i;
     }
     
-    return false;
+    return -1;
 }
 
 string determineType(string value) //very simplistic, I hope this will satisfy all conditions. More error checking later will determine the validity of the values
