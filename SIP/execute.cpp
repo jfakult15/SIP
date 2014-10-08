@@ -19,7 +19,7 @@ using namespace std;
 set<string> keywords={ "var", "if", "while", "else", "for" };
 
 vector<Object> objects;
-set<string> objectNames;
+//set<string> objectNames;
 
 vector<string> execute(vector<string> code)
 {
@@ -151,8 +151,11 @@ bool isLetter(int ch)
 errVar checkSyntax(vector<string> tokens) //returns first character that caused the issue
 {
     errVar err;
-    if (keywords.find(tokens[0])==keywords.end() && objectNames.find(tokens[0])==objectNames.end()) //the first word isnt a keyword or a variable
+    
+    if (keywords.find(tokens[0])==keywords.end() && !isObjectNamed(objects, tokens[0])) //the first word isnt a keyword or a variable
     {
+        err.errorPos=0;
+        err.message="Unknown variable or keyword";
         return err;
     }
     
@@ -178,17 +181,37 @@ errVar syntaxVar(vector<string> tokens)
 {
     errVar err;
     err.errorPos=-1;
+    Object obj;
+    /*
+    if (tokens.size()<5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
+    {
+        err.errorPos=tokens.size()-1;
+        err.message="Var declaration improperly formated";
+        return err;
+    }*/
+    
+    string varName=tokens[1];
+    if (!isProperVarName(varName))
+    {
+        err.errorPos=1;
+        err.message="Invalid variable name";
+    }
+    
+    //obj.type="hi";
+    
+    if (tokens[2]!="=")
+    {
+        err.errorPos=2;
+        err.message="Invalid assignment operator";
+        return err;
+    }
+    
+    string varValue=tokens[3];
     
     if (tokens[tokens.size()]!=";")
     {
         err.errorPos=tokens.size()-1;
-        err.message="Did you forget a semicolon? (;)";
-        return err;
-    }
-    if (tokens[tokens.size()]!=";")
-    {
-        err.errorPos=tokens.size()-1;
-        err.message="Did you forget a semicolon? (;)";
+        err.message="Did you forget a semicolon (;)?";
         return err;
     }
     
@@ -206,4 +229,38 @@ bool boolEval(vector<string> line)
     return true;
 }
 
+bool isProperVarName(string varName)
+{
+    if (!isLetter(int(varName[0]))) return false;
+    for (int i=1; i<varName.length(); i++)
+    {
+        if (!isLetter(int(varName[i])) && !isNumber(int(varName[i])))
+        {
+            if (varName[i]!='-' && varName[i]!='_')
+                return false;
+        }
+    }
+    
+    return true;
+}
+
+bool isObjectNamed(vector<Object> &objects, string name)
+{
+    for (int i=0; i<objects.size(); i++)
+    {
+        if (objects[i].name==name) return true;
+    }
+    
+    return false;
+}
+
+string determineType(string value) //very simplistic, I hope this will satisfy all conditions. More error checking later will determine the validity of the values
+{
+    if (value.find("\"")>=0 || value.find("'")>=0) return "string";
+    if (value.find(".")>=0) return "double";
+    if (value=="true" || value=="false") return "bool";
+    
+    
+    return "null";
+}
 

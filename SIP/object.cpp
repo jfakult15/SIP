@@ -12,7 +12,15 @@
 Object::Object()
 {
     type="int";
+    name="x";
     value="1.4";
+}
+
+Object::Object(string newType, string newName, string newValue)
+{
+    type=newType;
+    name=newName;
+    value=newValue;
 }
 
 string Object::getType()

@@ -17,7 +17,7 @@ class Object
 {
 public:
     Object();
-    Object(string type, string value);
+    Object(string type, string name, string value);
     string getType();
     int getIntValue();
     double getDoubleValue();
@@ -25,8 +25,8 @@ public:
     char getCharValue();
     bool getBoolValue();
     
-private:
     string type;
+    string name;
     string value;
 };
 
