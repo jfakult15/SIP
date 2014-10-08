@@ -23,7 +23,7 @@ vector<Object> objects;
 
 vector<string> execute(vector<string> code)
 {
-    return tokenize(code[0]);
+    //return tokenize(code[0]);
     vector<string> output;
     
     for (int i=0; i<code.size(); i++)
@@ -33,8 +33,9 @@ vector<string> execute(vector<string> code)
         errVar syntaxError=checkSyntax(tokens);
         if (syntaxError.errorPos>=0) //add error messages
         {
-            output={"Syntax error: line " + to_string(i+1)+"\n"};
-            output.push_back('"' + tokens[syntaxError.errorPos] + '"' );
+            //cout << "--" << syntaxError.errorPos << "--\n";
+            output.push_back("Syntax error: line " + to_string(i+1)+"\n");
+            output.push_back("\"" + tokens[syntaxError.errorPos] + "\"" );
             output.push_back("Got error: " + syntaxError.message);
             return output;
         }
@@ -46,7 +47,6 @@ vector<string> execute(vector<string> code)
 vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
 {
     removeSpaces(line);
-    //cout << "Line is: '" << line << "'\n";
     
     vector<string> output;
     output.push_back("");
@@ -80,14 +80,12 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
             if (ch==lch && char(ch)=='=')
                 output[output.size()-1]+=line[i];
             else if (((lch>90 || lch<65) && (lch<48 || lch>57)) && (lch!=46 && lch!=34 && lch!=39)) //output.size()>0 && output[output.size()-1].length()==0)
+            {
                 output.push_back(string(1,line[i]));
+            }
             else
                 output[output.size()-1]+=line[i];
         }
-        //else if (i<line.length() && line[i]=='=' && lastChar=='=')
-        //{
-        //    output[output.size()-1]+=line[i];
-        //}
         else if (ch!=32)
         {
             //cout << "last char1: '" << output[output.size()-1] << " " << line[i] << "'\n";
@@ -103,6 +101,15 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
     }
     
     output.erase(output.begin());
+    
+    for (int i=0; i<output.size(); i++) //this is horrible, but I couldn't figure out the "magic spaces" bug
+    {
+        if (output[i].length()==0 || output[i]==" ")
+        {
+            output.erase(output.begin()+i);
+            i--;
+        }
+    }
     
     //for (int i=0; i<output.size(); i++) cout << "'" << output[i] << "'\n";
     
@@ -183,13 +190,6 @@ errVar syntaxVar(vector<string> tokens)
     err.errorPos=-1;
     
     Object obj;
-    /*
-    if (tokens.size()<5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
-    {
-        err.errorPos=tokens.size()-1;
-        err.message="Var declaration improperly formated";
-        return err;
-    }*/
     
     string varName=tokens[1];
     if (!isProperVarName(varName))
@@ -199,6 +199,8 @@ errVar syntaxVar(vector<string> tokens)
     }
     
     obj.name=varName;
+    
+    //cout << tokens[1] << "--\n";
     
     if (tokens[2]!="=")
     {
@@ -227,10 +229,25 @@ errVar syntaxVar(vector<string> tokens)
         return err;
     }
     
-    if (tokens[tokens.size()]!=";")
+    if (tokens.size()>5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
     {
         err.errorPos=tokens.size()-1;
+        err.message="Var declaration improperly formated";
+        return err;
+    }
+    
+    if (tokens[tokens.size()-1]!=";")
+    {
+        err.errorPos=tokens.size()-1;
+        //cout << "Error pos: " << err.errorPos << "\n";
         err.message="Did you forget a semicolon (;)?";
+        return err;
+    }
+    
+    if (tokens.size()!=5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
+    {
+        err.errorPos=tokens.size()-1;
+        err.message="Var declaration improperly formated";
         return err;
     }
     
@@ -280,7 +297,6 @@ string determineType(string value) //very simplistic, I hope this will satisfy a
     if (value.find("\"")!=string::npos || value.find("'")!=string::npos) return "string";
     if (value.find(".")!=string::npos) return "double";
     if (value=="true" || value=="false") return "bool";
-    
-    return "null";
+    return "int";
 }
 

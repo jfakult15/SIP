@@ -19,7 +19,7 @@ void err(string e);
 
 struct errVar
 {
-    int errorPos;
+    int errorPos=-1;
     string message;
 };
 

@@ -25,8 +25,9 @@ vector<string> readFile(ifstream &file);
 
 int main(int argc, const char * argv[])
 {
-    input={"if ( x==\"2. 2\" );"};
+    input={"var x = 10;"};
     output=execute(input);
+    
     for (int i=0; i<output.size(); i++)
     {
         cout << output[i] << "\n";
@@ -38,7 +39,7 @@ int main(int argc, const char * argv[])
         cout << "No file provided" << "\n";
         return 1;
     }
-    
+    //I am trying to be flexible with command line errors. Ill check every arg until one is a good file
     for (int i=1; i<argc; i++)
     {
         ifstream file(argv[1]);
