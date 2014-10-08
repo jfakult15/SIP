@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+#include "helpers.h"
+
 using namespace std;
 
 class Object
@@ -24,6 +26,11 @@ public:
     string getStringValue();
     char getCharValue();
     bool getBoolValue();
+    bool isCorrectDataFormat();
+    bool isIntFormat();
+    bool isDoubleFormat();
+    bool isStringFormat();
+    bool isBoolFormat();
     
     string type;
     string name;

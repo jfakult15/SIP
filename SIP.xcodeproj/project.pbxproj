@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F0DD68E19E57E59005F511F /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F0DD68C19E57E59005F511F /* helpers.cpp */; };
 		3F777C3D19C0D16700E4F0DE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F777C3C19C0D16700E4F0DE /* main.cpp */; };
 		3F777C3F19C0D16700E4F0DE /* SIP.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3F777C3E19C0D16700E4F0DE /* SIP.1 */; };
 		3F777C4719C0E66400E4F0DE /* execute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F777C4519C0E66400E4F0DE /* execute.cpp */; };
@@ -28,6 +29,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3F0DD68C19E57E59005F511F /* helpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helpers.cpp; sourceTree = "<group>"; };
+		3F0DD68D19E57E59005F511F /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
 		3F777C3919C0D16700E4F0DE /* SIP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SIP; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F777C3C19C0D16700E4F0DE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		3F777C3E19C0D16700E4F0DE /* SIP.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SIP.1; sourceTree = "<group>"; };
@@ -76,6 +79,8 @@
 				3F777C4C19CA33E600E4F0DE /* err.h */,
 				3F777C4819CA0A7C00E4F0DE /* object.cpp */,
 				3F777C4919CA0A7C00E4F0DE /* object.h */,
+				3F0DD68C19E57E59005F511F /* helpers.cpp */,
+				3F0DD68D19E57E59005F511F /* helpers.h */,
 				3F777C3E19C0D16700E4F0DE /* SIP.1 */,
 			);
 			path = SIP;
@@ -135,6 +140,7 @@
 				3F777C3D19C0D16700E4F0DE /* main.cpp in Sources */,
 				3F777C4D19CA33E600E4F0DE /* err.cpp in Sources */,
 				3F777C4A19CA0A7C00E4F0DE /* object.cpp in Sources */,
+				3F0DD68E19E57E59005F511F /* helpers.cpp in Sources */,
 				3F777C4719C0E66400E4F0DE /* execute.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -245,6 +251,7 @@
 				3F777C4419C0D16700E4F0DE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

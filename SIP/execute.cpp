@@ -181,6 +181,7 @@ errVar syntaxVar(vector<string> tokens)
 {
     errVar err;
     err.errorPos=-1;
+    
     Object obj;
     /*
     if (tokens.size()<5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
@@ -197,7 +198,7 @@ errVar syntaxVar(vector<string> tokens)
         err.message="Invalid variable name";
     }
     
-    //obj.type="hi";
+    obj.name=varName;
     
     if (tokens[2]!="=")
     {
@@ -208,12 +209,32 @@ errVar syntaxVar(vector<string> tokens)
     
     string varValue=tokens[3];
     
+    string type=determineType(varValue);
+    if (type=="null")
+    {
+        err.errorPos=3;
+        err.message="Couldn't determine data type";
+        return err;
+    }
+    
+    obj.type=type;
+    obj.value=varValue;
+    
+    if (!obj.isCorrectDataFormat())
+    {
+        err.errorPos=3;
+        err.message="Data type wasn't parsable";
+        return err;
+    }
+    
     if (tokens[tokens.size()]!=";")
     {
         err.errorPos=tokens.size()-1;
         err.message="Did you forget a semicolon (;)?";
         return err;
     }
+    
+    objects.push_back(obj);
     
     return err;
 }
@@ -256,10 +277,9 @@ bool isObjectNamed(vector<Object> &objects, string name)
 
 string determineType(string value) //very simplistic, I hope this will satisfy all conditions. More error checking later will determine the validity of the values
 {
-    if (value.find("\"")>=0 || value.find("'")>=0) return "string";
-    if (value.find(".")>=0) return "double";
+    if (value.find("\"")!=string::npos || value.find("'")!=string::npos) return "string";
+    if (value.find(".")!=string::npos) return "double";
     if (value=="true" || value=="false") return "bool";
-    
     
     return "null";
 }
