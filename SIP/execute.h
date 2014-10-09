@@ -17,9 +17,13 @@
 using namespace std;
 
 vector<string> execute(vector<string> code);
+int executeLine(string line, int curLine);
+
+
 errVar syntaxIfWhile(vector<string> tokens);
 errVar checkSyntax(vector<string> line);
 errVar syntaxVar(vector<string> tokens);
+errVar syntaxFor(vector<string> tokens);
 errVar syntaxIfWhile(vector<string> tokens);
 
 vector<string> tokenize(string line);

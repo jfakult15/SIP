@@ -33,12 +33,12 @@ int main(int argc, const char * argv[])
     }
     return 0;*/
     
-    input={"if (x==10)"};
+    input={"for var i=1 to 10 by 10"};
     output=execute(input);
     
     for (int i=0; i<output.size(); i++)
     {
-        cout << output[i] << "\n";
+        cout << output[i] << "--\n";
     }
     return 0;
     
@@ -64,7 +64,7 @@ int main(int argc, const char * argv[])
     
     //if we found a good file, the program will have terminated by this point
     //hence we couldn't find the file in any of the parameters
-    cout << "Couldn't find it!\n";
+    cout << "Couldn't find a file!\n";
     
     return 0;
 }

@@ -16,7 +16,7 @@
 
 using namespace std;
 
-set<string> keywords={ "var", "if", "while", "else", "for" };
+set<string> keywords={ "var", "if", "while", "else", "for", "print" };
 
 vector<Object> objects;
 //set<string> objectNames;
@@ -26,6 +26,7 @@ vector<string> execute(vector<string> code)
     //return tokenize(code[0]);
     vector<string> output;
     
+    //syntax checking. We check the syntax first so we don't have to worry about it on execution
     for (int i=0; i<code.size(); i++)
     {
         string line=code[i];
@@ -41,9 +42,21 @@ vector<string> execute(vector<string> code)
         }
     }
     
+    //actual execution
+    int curLine=0; //which line we are curently executing
+    while (curLine<code.size())
+    {
+        curLine=executeLine(code[curLine], 1);
+    }
+    
     //cout << "Length: " << objects[0].type << "\n";
     
     return output;
+}
+
+int executeLine(string line, int curLine)
+{
+    return -1;
 }
 
 vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
@@ -173,6 +186,9 @@ errVar checkSyntax(vector<string> tokens) //returns first character that caused 
         err=syntaxVar(tokens);
     }
     
+    if (tokens[0]=="for")
+        err=syntaxFor(tokens);
+    
     if (tokens[0]=="else" &&  tokens[1]=="if") //else if functions the same way as if I think
     {
         tokens.erase(tokens.begin());
@@ -190,6 +206,13 @@ errVar syntaxVar(vector<string> tokens)
 {
     errVar err;
     err.errorPos=-1;
+    
+    if (tokens[0]!="var") //I know this seems unnecessary, but vars can be declared in for loops etc.
+    {
+        err.errorPos=0;
+        err.message="Unknown variable";
+        return err;
+    }
     
     Object obj;
     
@@ -254,7 +277,7 @@ errVar syntaxVar(vector<string> tokens)
     }
     
     //cout << "Obj: " << obj.type << "\n";
-    objects.push_back(obj);
+    //objects.push_back(obj); //should this be declared in the syntax checker? NO
     //cout << "Obj2: " << objects[0].type << "\n";
     
     return err;
@@ -263,23 +286,69 @@ errVar syntaxVar(vector<string> tokens)
 errVar syntaxFor(vector<string> tokens)
 {
     errVar err;
-    if (!isProperVarName(tokens[1]))
+    
+    //there should be a variable declared in the for statement
+    vector<string> varTokens(tokens.begin()+1, tokens.begin()+5);
+    varTokens.push_back(";");
+    
+    err=syntaxVar(varTokens);
+    if (err.errorPos>=0) //we had an error in the for variable declaration
     {
-        err.errorPos=1;
-        err.message="Improper variable name";
+        err.errorPos+=1;
+        err.message="Error in iterator declaration: "+err.message;
         return err;
     }
     
-    if (tokens[2]!="in")
+    if (tokens[5]!="to")
     {
-        err.errorPos=2;
-        err.message="Bad 'for' syntax";
+        err.errorPos=5;
+        err.message="Bad 'for' syntax. Did you mean 'to'?";
         return err;
     }
     
     Object forVar;
-    forVar.value=tokens[3];
-    forVar.type
+    forVar.value=tokens[6];
+    forVar.type=determineType(forVar.value);
+    
+    if (forVar.type=="null")
+    {
+        err.errorPos=6;
+        err.message="Couldn't determine data type";
+        return err;
+    }
+    
+    if (!forVar.isCorrectDataFormat())
+    {
+        err.errorPos=6;
+        err.message="Bad " + forVar.type + " value";
+        return err;
+    }
+    
+    if (tokens.size()>7) //we are adding in a custom increment value (format: 'by x')
+    {
+        if (tokens[7]!="by")
+        {
+            err.errorPos=7;
+            err.message="Invalid 'for' increment parameter: '" +tokens[7] + "'. Did you mean 'by'";
+            return err;
+        }
+        
+        if (tokens.size()==8)
+        {
+            err.errorPos=0;
+            err.message="For: missing step parameter";
+            return err;
+        }
+        
+        forVar.value=tokens[8];
+        forVar.type=forVar.getType();
+        if (forVar.type!="int" && forVar.type!="double")
+        {
+            err.errorPos=8;
+            err.message="For 'by' requires integer or floating point parameter. Found: '"+forVar.type +"'";
+            return err;
+        }
+    }
     
     return err;
 }
