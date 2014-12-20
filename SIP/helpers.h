@@ -22,5 +22,10 @@ string findAfter(string val, int pos);
 string findBefore(string val, int pos);
 bool isNum(string num);
 vector<string> split(string str, string delim);
+vector<string> seperateAll(string str, vector<string> delims);
+void removeVectorParts(vector<string> &strings, vector<string> delims);
+void trim(string &str);
+bool isLetter(int ch);
+bool isNumber(int ch);
 
 #endif /* defined(__SIP__helpers__) */

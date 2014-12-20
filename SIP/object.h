@@ -15,6 +15,9 @@
 
 using namespace std;
 
+bool isProperVarName(string varName);
+string determineType(string value);
+
 class Object
 {
 public:

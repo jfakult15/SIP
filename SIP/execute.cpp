@@ -8,6 +8,8 @@
 
 #include "execute.h"
 #include "object.h"
+#include "helpers.h"
+#include "keywords.h"
 //#include "err.h"
 
 #include <iostream>
@@ -16,6 +18,9 @@
 
 using namespace std;
 
+void executeCode(vector<string> code);
+vector<string> tokenize(string line);
+
 set<string> keywords={ "var", "if", "while", "else", "for", "print" };
 
 vector<Object> objects;
@@ -23,7 +28,8 @@ vector<Object> objects;
 
 vector<string> execute(vector<string> code)
 {
-    //return tokenize(code[0]);
+    cout << "executing...\n";
+    
     vector<string> output;
     
     //syntax checking. We check the syntax first so we don't have to worry about it on execution
@@ -31,6 +37,7 @@ vector<string> execute(vector<string> code)
     {
         string line=code[i];
         vector<string> tokens=tokenize(line);
+        
         errVar syntaxError=checkSyntax(tokens);
         if (syntaxError.errorPos>=0) //add error messages
         {
@@ -42,14 +49,9 @@ vector<string> execute(vector<string> code)
         }
     }
     
-    //actual execution
-    int curLine=0; //which line we are curently executing
-    while (curLine<code.size())
-    {
-        curLine=executeLine(code[curLine], 1);
-    }
+    cout << "Syntax OK!\n";
     
-    //cout << "Length: " << objects[0].type << "\n";
+    //executeCode(code);
     
     return output;
 }
@@ -61,118 +63,30 @@ int executeLine(string line, int curLine)
 
 vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
 {
-    removeSpaces(line);
-    
     vector<string> output;
-    output.push_back("");
+    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")" };
+    vector<string> removables = {" "};
     
-    for (int i=0; i<line.length(); i++)
-    {
-        int ch = toupper(int(line[i]));
-        
-        if (ch==92) //backquote or escape character
-        {
-            output[output.size()-1]+=line[i];
-            continue;
-        }
-        
-        int minus=1;
-        while (minus<output.size() && output[output.size()-minus].length()==0)
-        {
-            minus++;
-        }
-        int lch=toupper(int(output[output.size()-minus][output[output.size()-1].length()-1])); //lastChar
-        //cout << lch << "--\n";
-        
-        //cout << lastChar << " " << output[output.size()-1] << "--\n";
-        //cout << char(lch) << " " << char(ch) << "--\n";
-        
-        if (isLetter(ch) || (ch>=48 && ch<=57) || ch==46 || ch==39 || ch==34 || char(ch)=='=') //46=. 34=" 39='
-        {
-            if (char(ch)=='=' && char(lch)!='=')
-                output.push_back("");
-            
-            if (ch==lch && char(ch)=='=')
-                output[output.size()-1]+=line[i];
-            else if (((lch>90 || lch<65) && (lch<48 || lch>57)) && (lch!=46 && lch!=34 && lch!=39)) //output.size()>0 && output[output.size()-1].length()==0)
-            {
-                output.push_back(string(1,line[i]));
-            }
-            else
-                output[output.size()-1]+=line[i];
-        }
-        else if (ch!=32)
-        {
-            //cout << "last char1: '" << output[output.size()-1] << " " << line[i] << "'\n";
-            if (output[output.size()-1].length()>0)
-                output.push_back(string(1,line[i]));
-            
-            //output.push_back("");
-        }
-        else if (output.size()>0 && output[output.size()-1].length()>0)
-            output.push_back("");
-        
-        //cout << "last char: '" << output[output.size()-1] << "'\n";
-    }
+    //split and seperate chunks (i.e tokenize them)
+    output = seperateAll(line, splits);
+    removeVectorParts(output, removables);
     
-    output.erase(output.begin());
-    
-    for (int i=0; i<output.size(); i++) //this is horrible, but I couldn't figure out the "magic spaces" bug
-    {
-        if (output[i].length()==0 || output[i]==" ")
-        {
-            output.erase(output.begin()+i);
-            i--;
-        }
-    }
-    
-    //for (int i=0; i<output.size(); i++) cout << "'" << output[i] << "'\n";
+    //recombine necessary parts
     
     return output;
-}
-
-void removeSpaces(string &line) //remove spaces between non-letter characters
-{
-    for (int i=0; i<line.length()-2; i++)
-    {
-        int thisCh=toupper(line[i]);
-        int nextCh=toupper(line[i+1]);
-        int twoCh=toupper(line[i+2]);
-        
-        if (!isLetter(thisCh) && !isNumber(thisCh) && nextCh==32)
-        {
-            line=line.substr(0,i+1)+line.substr(i+2);
-            i--;
-        }
-        
-        if (isLetter(thisCh) || isNumber(thisCh))
-        {
-            if (nextCh==32)
-            {
-                if (!isLetter(twoCh) && !isNumber(twoCh))
-                {
-                    line=line.substr(0,i+1)+line.substr(i+2);
-                    i--;
-                }
-            }
-        }
-    }
-}
-            
-bool isNumber(int ch)
-{
-    return toupper(ch)<=57 && toupper(ch)>=48;
-}
-
-bool isLetter(int ch)
-{
-    return toupper(ch)<=90 && toupper(ch)>=65;
 }
 
 //the int this (and all other syntax functions) return the character position of the error or a value less than zero on no errors
 errVar checkSyntax(vector<string> tokens) //returns first character that caused the issue
 {
     errVar err;
+    
+    cout << "Checking syntax\n";
+    if (tokens.size()==0)
+    {
+        cout << "No tokens found... quitting :(\n";
+        exit(1);
+    }
     
     if (keywords.find(tokens[0])==keywords.end() && getObjectNamed(objects, tokens[0])<0) //the first word isnt a keyword or a variable
     {
@@ -202,157 +116,6 @@ errVar checkSyntax(vector<string> tokens) //returns first character that caused 
     return err;
 }
 
-errVar syntaxVar(vector<string> tokens)
-{
-    errVar err;
-    err.errorPos=-1;
-    
-    if (tokens[0]!="var") //I know this seems unnecessary, but vars can be declared in for loops etc.
-    {
-        err.errorPos=0;
-        err.message="Unknown variable";
-        return err;
-    }
-    
-    Object obj;
-    
-    string varName=tokens[1];
-    if (!isProperVarName(varName))
-    {
-        err.errorPos=1;
-        err.message="Invalid variable name";
-    }
-    
-    obj.name=varName;
-    
-    //cout << tokens[1] << "--\n";
-    
-    if (tokens[2]!="=")
-    {
-        err.errorPos=2;
-        err.message="Invalid assignment operator";
-        return err;
-    }
-    
-    string varValue=tokens[3];
-    
-    string type=determineType(varValue);
-    if (type=="null")
-    {
-        err.errorPos=3;
-        err.message="Couldn't determine data type";
-        return err;
-    }
-    
-    obj.type=type;
-    obj.value=varValue;
-    
-    if (!obj.isCorrectDataFormat())
-    {
-        err.errorPos=3;
-        err.message="Data type wasn't parsable";
-        return err;
-    }
-    
-    if (tokens.size()>5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
-    {
-        err.errorPos=tokens.size()-1;
-        err.message="Var declaration improperly formated";
-        return err;
-    }
-    
-    if (tokens[tokens.size()-1]!=";")
-    {
-        err.errorPos=tokens.size()-1;
-        //cout << "Error pos: " << err.errorPos << "\n";
-        err.message="Did you forget a semicolon (;)?";
-        return err;
-    }
-    
-    if (tokens.size()!=5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
-    {
-        err.errorPos=tokens.size()-1;
-        err.message="Var declaration improperly formated";
-        return err;
-    }
-    
-    //cout << "Obj: " << obj.type << "\n";
-    //objects.push_back(obj); //should this be declared in the syntax checker? NO
-    //cout << "Obj2: " << objects[0].type << "\n";
-    
-    return err;
-}
-
-errVar syntaxFor(vector<string> tokens)
-{
-    errVar err;
-    
-    //there should be a variable declared in the for statement
-    vector<string> varTokens(tokens.begin()+1, tokens.begin()+5);
-    varTokens.push_back(";");
-    
-    err=syntaxVar(varTokens);
-    if (err.errorPos>=0) //we had an error in the for variable declaration
-    {
-        err.errorPos+=1;
-        err.message="Error in iterator declaration: "+err.message;
-        return err;
-    }
-    
-    if (tokens[5]!="to")
-    {
-        err.errorPos=5;
-        err.message="Bad 'for' syntax. Did you mean 'to'?";
-        return err;
-    }
-    
-    Object forVar;
-    forVar.value=tokens[6];
-    forVar.type=determineType(forVar.value);
-    
-    if (forVar.type=="null")
-    {
-        err.errorPos=6;
-        err.message="Couldn't determine data type";
-        return err;
-    }
-    
-    if (!forVar.isCorrectDataFormat())
-    {
-        err.errorPos=6;
-        err.message="Bad " + forVar.type + " value";
-        return err;
-    }
-    
-    if (tokens.size()>7) //we are adding in a custom increment value (format: 'by x')
-    {
-        if (tokens[7]!="by")
-        {
-            err.errorPos=7;
-            err.message="Invalid 'for' increment parameter: '" +tokens[7] + "'. Did you mean 'by'";
-            return err;
-        }
-        
-        if (tokens.size()==8)
-        {
-            err.errorPos=0;
-            err.message="For: missing step parameter";
-            return err;
-        }
-        
-        forVar.value=tokens[8];
-        forVar.type=forVar.getType();
-        if (forVar.type!="int" && forVar.type!="double")
-        {
-            err.errorPos=8;
-            err.message="For 'by' requires integer or floating point parameter. Found: '"+forVar.type +"'";
-            return err;
-        }
-    }
-    
-    return err;
-}
-
 errVar syntaxIfWhile(vector<string> tokens)
 {
     errVar err;
@@ -368,21 +131,6 @@ errVar syntaxIfWhile(vector<string> tokens)
     return err;
 }
 
-bool isProperVarName(string varName)
-{
-    if (!isLetter(int(varName[0]))) return false;
-    for (int i=1; i<varName.length(); i++)
-    {
-        if (!isLetter(int(varName[i])) && !isNumber(int(varName[i])))
-        {
-            if (varName[i]!='-' && varName[i]!='_')
-                return false;
-        }
-    }
-    
-    return true;
-}
-
 int getObjectNamed(vector<Object> &objects, string name)
 {
     for (int i=0; i<objects.size(); i++)
@@ -393,11 +141,17 @@ int getObjectNamed(vector<Object> &objects, string name)
     return -1;
 }
 
-string determineType(string value) //very simplistic, I hope this will satisfy all conditions. More error checking later will determine the validity of the values
+void executeCode(vector<string> code)
 {
-    if (value.find("\"")!=string::npos || value.find("'")!=string::npos) return "string";
-    if (value.find(".")!=string::npos) return "double";
-    if (value=="true" || value=="false") return "bool";
-    return "int";
+    cout << "Executing code\n";
+    
+    //actual execution
+    int curLine=0; //which line we are curently executing
+    while (curLine<code.size())
+    {
+        curLine=executeLine(code[curLine], 1);
+    }
+    
+    //cout << "Length: " << objects[0].type << "\n";
 }
 

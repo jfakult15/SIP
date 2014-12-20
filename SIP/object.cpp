@@ -105,5 +105,25 @@ bool Object::isBoolFormat()
     return value=="true" || value=="false";
 }
 
+bool isProperVarName(string varName)
+{
+    if (!isLetter(int(varName[0]))) return false;
+    for (int i=1; i<varName.length(); i++)
+    {
+        if (!isLetter(int(varName[i])) && !isNumber(int(varName[i])))
+        {
+            if (varName[i]!='-' && varName[i]!='_')
+                return false;
+        }
+    }
+    
+    return true;
+}
 
-
+string determineType(string value) //very simplistic, I hope this will satisfy all conditions. More error checking later will determine the validity of the values
+{
+    if (value.find("\"")!=string::npos || value.find("'")!=string::npos) return "string";
+    if (value.find(".")!=string::npos) return "double";
+    if (value=="true" || value=="false") return "bool";
+    return "int";
+}

@@ -141,7 +141,7 @@ vector<string> split(string str, string delim)
     for (int i=0; i<str.length(); i++)
     {
         int pos=str.find(delim, i);
-        if (pos!=string::npos)
+        if (pos != -1)
         {
             parts.push_back(str.substr(0,pos));
             i--;
@@ -149,7 +149,7 @@ vector<string> split(string str, string delim)
         }
         else
         {
-            parts.push_back(str.substr(pos+delim.length()-1));
+            parts.push_back(str);
             str="";
         }
     }
@@ -157,3 +157,74 @@ vector<string> split(string str, string delim)
     return parts;
 }
 
+vector<string> seperateAll(string str, vector<string> delims)
+{
+    vector<string> output;
+    
+    int pos = 0;
+    while (pos<str.length())
+    {
+        //cout << str.substr(pos, delims[j].length()) << " " << delims[j] << "--\n";
+        for (int j=0; j<delims.size(); j++)
+        {
+            if (str.length()>=pos+delims[j].length() && str.substr(pos, delims[j].length())==delims[j])
+            {
+                if (pos>=delims[j].length()) //we have a part on the front (before the delimiter)
+                {
+                    output.push_back(str.substr(0, pos));
+                    trim(output[output.size()-1]);
+                }
+                output.push_back(delims[j]);
+                str=str.substr(pos+delims[j].length());
+                pos=0;
+                j=-1; //so it goes back to 0 on the loop around. Weird trick, never done this before!
+            }
+        }
+        pos++;
+        //cout << pos << "\n";
+    }
+    
+    if (str.length()>0)
+    {
+        trim(str);
+        output.push_back(str);
+    }
+    
+    return output;
+}
+
+void removeVectorParts(vector<string> &strings, vector<string> delims)
+{
+    for (int i=delims.size()-1; i>=0; i--)
+    {
+        auto findPos=find(strings.begin(), strings.end(), delims[i]);
+        while (findPos!=strings.end())
+        {
+            int pos = distance(strings.begin(), findPos);
+            strings.erase(strings.begin()+pos);
+            findPos=find(strings.begin(), strings.end(), delims[i]);
+        }
+    }
+}
+
+void trim(string &str)
+{
+    if (str.length()==0)
+    {
+        return;
+    }
+    str.erase(0, str.find_first_not_of(' ')); //spaces
+    str.erase(str.find_last_not_of(' ')+1);
+    str.erase(0, str.find_first_not_of(9)); //tabs
+    str.erase(str.find_last_not_of(9)+1);
+}
+
+bool isNumber(int ch)
+{
+    return toupper(ch)<=57 && toupper(ch)>=48;
+}
+
+bool isLetter(int ch)
+{
+    return toupper(ch)<=90 && toupper(ch)>=65;
+}

@@ -26,19 +26,12 @@ vector<string> readFile(ifstream &file);
 
 int main(int argc, const char * argv[])
 {
-    /*vector<string> s=split("hello my n==ame is==jaco==b", "==");
-    for (int i=0; i<s.size(); i++)
-    {
-        cout << s[i] << "\n";
-    }
-    return 0;*/
-    
-    input={"for var i=1 to 10 by 10"};
+    input={"var x=10; "};
     output=execute(input);
     
     for (int i=0; i<output.size(); i++)
     {
-        cout << output[i] << "--\n";
+        cout << output[i] << "\n";
     }
     return 0;
     
