@@ -27,5 +27,7 @@ void removeVectorParts(vector<string> &strings, vector<string> delims);
 void trim(string &str);
 bool isLetter(int ch);
 bool isNumber(int ch);
+void recombine(vector<string> &output, string str);
+void recombineBetween(vector<string> &output, string str);
 
 #endif /* defined(__SIP__helpers__) */

@@ -26,7 +26,7 @@ vector<string> readFile(ifstream &file);
 
 int main(int argc, const char * argv[])
 {
-    input={"var x=10; "};
+    input={"print 'hello my name is jacob!'"};
     output=execute(input);
     
     for (int i=0; i<output.size(); i++)

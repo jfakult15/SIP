@@ -7,6 +7,9 @@
 //
 
 #include "helpers.h"
+#include <cmath>
+
+int countOfChars(string str, string match);
 
 using namespace std;
 
@@ -16,12 +19,63 @@ string parseString(string str)
 }
 
 int boolEval(string expr) //we will assume that parameters will be passed in with the outmost parentheses
-{
+{/*
     expr=expr.substr(1, expr.length()-1);
     vector<string> parts=split(expr, "==");
     
+    //if (isBool(val))
+        //return val;//atof(val.c_str());
     
-    return -1;
+    //if (val[0]=='(')
+    for (int i=0; i<val.length(); i++)
+    {
+        if (val[i]=='(')
+        {
+            //cout << getFirstParentheses(val.substr(i)) << "\n";
+            string subParenth = getFirstParentheses(val.substr(i));
+            string append = "";
+            if (val.length()>i+subParenth.length())
+            {
+                append = val.substr(i+subParenth.length()+2);
+            }
+            //cout << val << "\n";
+            val = val.substr(0, i) + eval(subParenth) + append;
+        }
+    }
+    
+    */return -1;
+}
+
+bool isValidBool(string expr)
+{
+    if (countOfChars(expr, "(") != countOfChars(expr, ")"))
+    {
+        return false;
+    }
+    
+    return true;
+}
+
+string getFirstParentheses(string val) //under the assumption that val[0] == "("
+{
+    val = val.substr(1);
+    int openCount = 1;
+    int closeCount = 0;
+    int pos=0;
+    while (pos<val.length() && openCount>closeCount)
+    {
+        if (val[pos]=='(')
+        {
+            openCount++;
+        }
+        else if (val[pos]==')')
+        {
+            closeCount++;
+        }
+        pos++;
+    }
+    
+    return val.substr(0, pos-1);
 }
 
 string eval(string val)
@@ -29,53 +83,70 @@ string eval(string val)
     if (isNum(val))
         return val;//atof(val.c_str());
     
-    //double sum=0.0;
-    while (!isNum(val))
+    //if (val[0]=='(')
+    for (int i=0; i<val.length(); i++)
     {
-        while (val.find("*") != string::npos)
+        if (val[i]=='(')
         {
-            int pos=val.find("*");
-            string before=findBefore(val, pos-1);
-            string after=findAfter(val, pos+1);
-            string mult=to_string(int(round(atof(before.c_str()) * atof(after.c_str()))));
-            val=val.substr(0,pos-int(before.length()))+mult+val.substr(pos+int(after.length())+1);
-            ///*
-            cout << "from 0 for " << pos-int(before.length()) << "\n";
-            cout << "from " << pos+int(after.length())+1 << " for " << val.length() << "\n";
-            cout << "before: " << before << "\n";
-            cout << "after: " << after << "\n";
-            cout << "val: " << val << "\n";
-            //*/
+            //cout << getFirstParentheses(val.substr(i)) << "\n";
+            string subParenth = getFirstParentheses(val.substr(i));
+            string append = "";
+            if (val.length()>i+subParenth.length())
+            {
+                append = val.substr(i+subParenth.length()+2);
+            }
+            //cout << val << "\n";
+            val = val.substr(0, i) + eval(subParenth) + append;
         }
-        cout << val << "\n";
-        while (val.find("/") != string::npos)
-        {
-            int pos=val.find("/");
-            string before=findBefore(val, pos-1);
-            string after=findAfter(val, pos+1);
-            string div=to_string(atof(before.c_str()) / atof(after.c_str()));
-            val=val.substr(0,pos-int(before.length()))+div+val.substr(pos+int(after.length())+1);
-        }
-        cout << val << "\n";
-        while (val.find("+") != string::npos)
-        {
-            int pos=val.find("+");
-            string before=findBefore(val, pos-1);
-            string after=findAfter(val, pos+1);
-            string add=to_string(int(round(atof(before.c_str()) + atof(after.c_str()))));
-            val=val.substr(0,pos-int(before.length()))+add+val.substr(pos+int(after.length())+1);
-        }
-        cout << val << "\n";
-        while (val.find("-") != string::npos)
-        {
-            int pos=val.find("-");
-            string before=findBefore(val, pos-1);
-            string after=findAfter(val, pos+1);
-            string sub=to_string(atof(before.c_str()) - atof(after.c_str()));
-            val=val.substr(0,pos-int(before.length()))+sub+val.substr(pos+int(after.length())+1);
-        }
-        //cout << val << "\n";
     }
+    
+    //cout << val << "\n";
+    while (val.find("^") != string::npos)
+    {
+        int pos=val.find("^");
+        string before=findBefore(val, pos-1);
+        string after=findAfter(val, pos+1);
+        double temp = pow(atof(before.c_str()), atof(after.c_str()));
+        string pow=to_string(temp);
+        val=val.substr(0,pos-int(before.length()))+pow+val.substr(pos+int(after.length())+1);
+    }
+    //cout << val << "\n";
+    while (val.find("*") != string::npos)
+    {
+        int pos=val.find("*");
+        string before=findBefore(val, pos-1);
+        string after=findAfter(val, pos+1);
+        string mult=to_string(int(round(atof(before.c_str()) * atof(after.c_str()))));
+        val=val.substr(0,pos-int(before.length()))+mult+val.substr(pos+int(after.length())+1);
+    }
+    //cout << val << "\n";
+    while (val.find("/") != string::npos)
+    {
+        int pos=val.find("/");
+        string before=findBefore(val, pos-1);
+        string after=findAfter(val, pos+1);
+        string div=to_string(atof(before.c_str()) / atof(after.c_str()));
+        val=val.substr(0,pos-int(before.length()))+div+val.substr(pos+int(after.length())+1);
+    }
+    //cout << val << "\n";
+    while (val.find("+") != string::npos)
+    {
+        int pos=val.find("+");
+        string before=findBefore(val, pos-1);
+        string after=findAfter(val, pos+1);
+        string add=to_string(int(round(atof(before.c_str()) + atof(after.c_str()))));
+        val=val.substr(0,pos-int(before.length()))+add+val.substr(pos+int(after.length())+1);
+    }
+    //cout << val << "\n";
+    while (val.find("-") != string::npos)
+    {
+        int pos=val.find("-");
+        string before=findBefore(val, pos-1);
+        string after=findAfter(val, pos+1);
+        string sub=to_string(atof(before.c_str()) - atof(after.c_str()));
+        val=val.substr(0,pos-int(before.length()))+sub+val.substr(pos+int(after.length())+1);
+    }
+    
     return val;//atof(val.c_str());  //note, for int return type: return int(round(atof(val.c_str())));
 }
 
@@ -228,3 +299,39 @@ bool isLetter(int ch)
 {
     return toupper(ch)<=90 && toupper(ch)>=65;
 }
+
+int countOfChars(string str, string match)
+{
+    int count = 0;
+    for (int i=0;str.length()-match.length(); i++)
+    {
+        if (str.substr(i, match.length())==match)
+        {
+            count++;
+        }
+    }
+    
+    return count;
+}
+
+void recombine(vector<string> &output, string str)
+{
+    if (output.size()<=1) //nothing to combine
+    {
+        return;
+    }
+    
+    string lastStr = output[0];
+    string thisStr = output[1];
+    
+    for (int i=1; i<output.size(); i++)
+    {
+        
+    }
+}
+
+void recombineBetween(vector<string> &output, string str)
+{
+    
+}
+

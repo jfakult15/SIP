@@ -11,5 +11,7 @@
 
 #include "keyword_for.h"
 #include "keyword_var.h"
+#include "keyword_while_if.h"
+#include "helpers.h"
 
 #endif

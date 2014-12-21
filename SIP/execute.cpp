@@ -8,7 +8,7 @@
 
 #include "execute.h"
 #include "object.h"
-#include "helpers.h"
+//#include "helpers.h"
 #include "keywords.h"
 //#include "err.h"
 
@@ -37,7 +37,10 @@ vector<string> execute(vector<string> code)
     {
         string line=code[i];
         vector<string> tokens=tokenize(line);
-        
+        for (int i=0; i<tokens.size(); i++)
+        {
+            cout << tokens[i] << "\n";
+        }
         errVar syntaxError=checkSyntax(tokens);
         if (syntaxError.errorPos>=0) //add error messages
         {
@@ -72,6 +75,9 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
     removeVectorParts(output, removables);
     
     //recombine necessary parts
+    recombine(output, "=");
+    recombineBetween(output, "'");
+    recombineBetween(output, "\"");
     
     return output;
 }
@@ -112,21 +118,6 @@ errVar checkSyntax(vector<string> tokens) //returns first character that caused 
     {
         err=syntaxIfWhile(tokens);
     }
-    
-    return err;
-}
-
-errVar syntaxIfWhile(vector<string> tokens)
-{
-    errVar err;
-    if (tokens[1]!="(")
-    {
-        err.errorPos=1;
-        err.message="Expected boolean expression";
-        return err;
-    }
-    
-    
     
     return err;
 }
