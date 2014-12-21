@@ -120,6 +120,11 @@ errVar checkSyntax(vector<string> tokens) //returns first character that caused 
         err=syntaxIfWhile(tokens);
     }
     
+    if (tokens[0] == "print")
+    {
+        err = syntaxPrint(tokens);
+    }
+    
     return err;
 }
 

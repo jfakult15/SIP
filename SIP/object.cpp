@@ -26,7 +26,7 @@ Object::Object(string newType, string newName, string newValue)
 
 string Object::getType()
 {
-    return type;
+    return determineType(value);
 }
 
 int Object::getIntValue()
