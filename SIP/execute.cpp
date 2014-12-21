@@ -37,10 +37,10 @@ vector<string> execute(vector<string> code)
     {
         string line=code[i];
         vector<string> tokens=tokenize(line);
-        for (int i=0; i<tokens.size(); i++)
-        {
-            cout << tokens[i] << "\n";
-        }
+        //for (int i=0; i<tokens.size(); i++)
+        //{
+        //    cout << tokens[i] << "\n";
+        //}
         errVar syntaxError=checkSyntax(tokens);
         if (syntaxError.errorPos>=0) //add error messages
         {
@@ -72,12 +72,13 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
     
     //split and seperate chunks (i.e tokenize them)
     output = seperateAll(line, splits);
-    removeVectorParts(output, removables);
     
     //recombine necessary parts
     recombine(output, "=");
     recombineBetween(output, "'");
     recombineBetween(output, "\"");
+    
+    removeVectorParts(output, removables);
     
     return output;
 }

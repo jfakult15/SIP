@@ -322,16 +322,46 @@ void recombine(vector<string> &output, string str)
     }
     
     string lastStr = output[0];
-    string thisStr = output[1];
+    string thisStr;// = output[1];
     
     for (int i=1; i<output.size(); i++)
     {
+        thisStr = output[i];
+        if (lastStr == thisStr && thisStr == str)
+        {
+            output[i-1] += str;
+            output.erase(output.begin()+i);
+        }
         
+        lastStr = thisStr;
     }
 }
 
-void recombineBetween(vector<string> &output, string str)
+void recombineBetween(vector<string> &output, string str) //for example combine all parts between two quotes
 {
-    
+    bool delimOpen = false;
+    for (int i=0; i<output.size()-1; i++)
+    {
+        if (output[i] == str)
+        {
+            //cout << output[i] << "---\n";
+            delimOpen = true;
+        }
+        else if (delimOpen && output[i+1] == str)
+        {
+            delimOpen = false;
+            output[i]+=output[i+1];
+            //cout << output[i] << " " << output[i+1] << "--\n";
+            output.erase(output.begin()+(i+1));
+            i--;
+        }
+        if (delimOpen)
+        {
+            output[i]+=output[i+1];
+            //cout << output[i] << " " << output[i+1] << "--\n";
+            output.erase(output.begin()+(i+1));
+            i--;
+        }
+    }
 }
 
