@@ -60,6 +60,7 @@
 		3FAE21581A4889A1000FEB2E /* interpreter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = interpreter.cpp; sourceTree = "<group>"; };
 		3FAE21591A4889A1000FEB2E /* interpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interpreter.h; sourceTree = "<group>"; };
 		3FAE215C1A488AC5000FEB2E /* save_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = save_state.h; sourceTree = "<group>"; };
+		3FAE215E1A48AD5E000FEB2E /* output.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +107,7 @@
 				3FAE215C1A488AC5000FEB2E /* save_state.h */,
 				3FAE21441A463C22000FEB2E /* keywords */,
 				3F777C3E19C0D16700E4F0DE /* SIP.1 */,
+				3FAE215E1A48AD5E000FEB2E /* output.h */,
 			);
 			path = SIP;
 			sourceTree = "<group>";

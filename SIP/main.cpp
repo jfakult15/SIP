@@ -19,15 +19,9 @@
 using namespace std;
 
 vector<string> input;
-vector<string> output;
+ExecutionOutput output;
 //vector<Object> s;
 vector<string> readFile(ifstream &file);
-
-struct executionOutput
-{
-    vector<string> output;
-    vector<string> info;
-};
 
 int main(int argc, const char * argv[])
 {
@@ -57,9 +51,9 @@ int main(int argc, const char * argv[])
             input=readFile(file);
             output=execute(input);
             
-            for (int i=0; i<output.size(); i++)
+            for (int i=0; i<output.output.size(); i++)
             {
-                cout << output[i] << "\n";
+                cout << output.output[i] << "\n";
             }
             
             return 0; //we will exit as soon as we find and run a readable file

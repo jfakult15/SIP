@@ -19,8 +19,9 @@
 #include "interpreter.h"
 #include "execute.h"
 #include "keywords.h"
+#include "output.h"
 
-vector<string> execute(vector<string> code);
+ExecutionOutput execute(vector<string> code);
 int executeLine(string line, int curLine);
 errVar checkSyntax(vector<string> line);
 vector<string> tokenize(string line);

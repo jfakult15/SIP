@@ -18,33 +18,29 @@ set<string> keywords={ "var", "if", "while", "else", "for", "print" };
 
 SaveState ss;
 
-vector<string> execute(vector<string> code)
+void execute(vector<string> code, ExecutionOutput &output)
 {
-    cout << "executing...\n";
-    
-    vector<string> output;
+    output.info.push_back("Executing...\n");
     
     //syntax checking. We check the syntax first so we don't have to worry about it on execution
     for (int i=0; i<code.size(); i++)
     {
         string line=code[i];
         vector<string> tokens=tokenize(line);
-        errVar syntaxError=checkSyntax(tokens);
+        errVar syntaxError=checkSyntax(tokens, output);
         
         if (syntaxError.errorPos>=0) //add error messages
         {
-            output.push_back("Syntax error: line " + to_string(i+1)+"\n");
-            output.push_back("\"" + tokens[syntaxError.errorPos] + "\"" );
-            output.push_back("Got error: " + syntaxError.message);
-            return output;
+            output.output.push_back("Syntax error: line " + to_string(i+1)+"\n");
+            output.output.push_back("\"" + tokens[syntaxError.errorPos] + "\"" );
+            output.output.push_back("Got error: " + syntaxError.message);
+            return;
         }
     }
     
-    cout << "Syntax OK!\n";
+    output.info.push_back("Syntax Okay!");
     
     executeCode(code, output);
-    
-    return output;
 }
 
 vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
@@ -67,14 +63,15 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
 }
 
 //the int this (and all other syntax functions) return the character position of the error or a value less than zero on no errors
-errVar checkSyntax(vector<string> tokens) //returns first character that caused the issue
+errVar checkSyntax(vector<string> tokens, ExecutionOutput &output) //returns first character that caused the issue
 {
+    output.info.push_back("Checking syntax...");
+    
     errVar err;
     
-    cout << "Checking syntax\n";
     if (tokens.size()==0)
     {
-        cout << "No tokens found... quitting :(\n";
+        output.info.push_back("No tokens found... quitting :(");
         exit(1);
     }
     
@@ -122,15 +119,15 @@ int getObjectNamed(vector<Object> &objects, string name)
     return -1;
 }
 
-void executeCode(vector<string> code, vector<string> &output)
+void executeCode(vector<string> code, ExecutionOutput &output)
 {
-    cout << "Executing code\n";
+    output.info.push_back("Executing code...");
     
     //actual execution
     int curLine=0; //which line we are curently executing
     while (curLine<code.size())
     {
-        interpreter(ss, tokenize(code[curLine]));
+        interpreter(ss, tokenize(code[curLine]), output);
     }
 }
 
