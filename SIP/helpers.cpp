@@ -103,7 +103,7 @@ string eval(string val)
     //cout << val << "\n";
     while (val.find("^") != string::npos)
     {
-        int pos=val.find("^");
+        int pos=int(val.find("^"));
         string before=findBefore(val, pos-1);
         string after=findAfter(val, pos+1);
         double temp = pow(atof(before.c_str()), atof(after.c_str()));
@@ -113,7 +113,7 @@ string eval(string val)
     //cout << val << "\n";
     while (val.find("*") != string::npos)
     {
-        int pos=val.find("*");
+        int pos=int(val.find("*"));
         string before=findBefore(val, pos-1);
         string after=findAfter(val, pos+1);
         string mult=to_string(int(round(atof(before.c_str()) * atof(after.c_str()))));
@@ -122,7 +122,7 @@ string eval(string val)
     //cout << val << "\n";
     while (val.find("/") != string::npos)
     {
-        int pos=val.find("/");
+        int pos=int(val.find("/"));
         string before=findBefore(val, pos-1);
         string after=findAfter(val, pos+1);
         string div=to_string(atof(before.c_str()) / atof(after.c_str()));
@@ -131,7 +131,7 @@ string eval(string val)
     //cout << val << "\n";
     while (val.find("+") != string::npos)
     {
-        int pos=val.find("+");
+        int pos=int(val.find("+"));
         string before=findBefore(val, pos-1);
         string after=findAfter(val, pos+1);
         string add=to_string(int(round(atof(before.c_str()) + atof(after.c_str()))));
@@ -140,7 +140,7 @@ string eval(string val)
     //cout << val << "\n";
     while (val.find("-") != string::npos)
     {
-        int pos=val.find("-");
+        int pos=int(val.find("-"));
         string before=findBefore(val, pos-1);
         string after=findAfter(val, pos+1);
         string sub=to_string(atof(before.c_str()) - atof(after.c_str()));
@@ -211,7 +211,7 @@ vector<string> split(string str, string delim)
     
     for (int i=0; i<str.length(); i++)
     {
-        int pos=str.find(delim, i);
+        int pos=int(str.find(delim, i));
         if (pos != -1)
         {
             parts.push_back(str.substr(0,pos));
@@ -266,12 +266,12 @@ vector<string> seperateAll(string str, vector<string> delims)
 
 void removeVectorParts(vector<string> &strings, vector<string> delims)
 {
-    for (int i=delims.size()-1; i>=0; i--)
+    for (int i=int(delims.size())-1; i>=0; i--)
     {
         auto findPos=find(strings.begin(), strings.end(), delims[i]);
         while (findPos!=strings.end())
         {
-            int pos = distance(strings.begin(), findPos);
+            int pos = int(distance(strings.begin(), findPos));
             strings.erase(strings.begin()+pos);
             findPos=find(strings.begin(), strings.end(), delims[i]);
         }

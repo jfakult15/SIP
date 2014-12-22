@@ -11,21 +11,20 @@
 
 #include <iostream>
 #include <vector>
+#include <set>
+
 #include "err.h"
 #include "object.h"
-
-using namespace std;
+#include "save_state.h"
+#include "interpreter.h"
+#include "execute.h"
+#include "keywords.h"
 
 vector<string> execute(vector<string> code);
 int executeLine(string line, int curLine);
-
-//errVar syntaxIfWhile(vector<string> tokens);
 errVar checkSyntax(vector<string> line);
-//errVar syntaxVar(vector<string> tokens);
-//errVar syntaxFor(vector<string> tokens);
-
 vector<string> tokenize(string line);
-
 int getObjectNamed(vector<Object> &objects, string name);
+void executeCode(vector<string> code, vector<string> &output);
 
 #endif /* defined(__SIP__execute__) */

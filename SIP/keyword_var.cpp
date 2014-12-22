@@ -62,14 +62,14 @@ errVar syntaxVar(vector<string> tokens)
     
     if (tokens.size()>5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
     {
-        err.errorPos=tokens.size()-1;
+        err.errorPos=int(tokens.size()-1);
         err.message="Var declaration improperly formated";
         return err;
     }
     
     if (tokens[tokens.size()-1]!=";")
     {
-        err.errorPos=tokens.size()-1;
+        err.errorPos=int(tokens.size()-1);
         //cout << "Error pos: " << err.errorPos << "\n";
         err.message="Did you forget a semicolon (;)?";
         return err;
@@ -77,7 +77,7 @@ errVar syntaxVar(vector<string> tokens)
     
     if (tokens.size()!=5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
     {
-        err.errorPos=tokens.size()-1;
+        err.errorPos=int(tokens.size()-1);
         err.message="Var declaration improperly formated";
         return err;
     }

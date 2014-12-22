@@ -14,6 +14,8 @@
 #include "keyword_while_if.h"
 #include "keyword_print.h"
 
+#include "one_word_statement.h"
+
 #include "helpers.h"
 
 #endif

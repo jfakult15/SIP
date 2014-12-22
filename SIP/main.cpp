@@ -20,13 +20,18 @@ using namespace std;
 
 vector<string> input;
 vector<string> output;
-vector<Object> s;
+//vector<Object> s;
 vector<string> readFile(ifstream &file);
 
+struct executionOutput
+{
+    vector<string> output;
+    vector<string> info;
+};
 
 int main(int argc, const char * argv[])
 {
-    input={"print 'hello my name is jacob!' + 'hi'"};
+    /*input={"print 'hello my name is jacob!' + 'hi';"};
     output=execute(input);
     
     for (int i=0; i<output.size(); i++)
@@ -39,7 +44,10 @@ int main(int argc, const char * argv[])
     {
         cout << "No file provided" << "\n";
         return 1;
-    }
+    }*/
+    
+    argc = 2;
+    argv[1] = "/Users/jfakult/Desktop/SIP_test.txt";
     //I am trying to be flexible with command line errors. Ill check every arg until one is a good file
     for (int i=1; i<argc; i++)
     {
@@ -47,8 +55,12 @@ int main(int argc, const char * argv[])
         if (file.is_open())
         {
             input=readFile(file);
-            input={"var x=10;"};
             output=execute(input);
+            
+            for (int i=0; i<output.size(); i++)
+            {
+                cout << output[i] << "\n";
+            }
             
             return 0; //we will exit as soon as we find and run a readable file
         }

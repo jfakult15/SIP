@@ -52,7 +52,7 @@ errVar syntaxPrint(vector<string> tokens)
     
     if (tokens[tokens.size()-1] != ";")
     {
-        err.errorPos = tokens.size()-1;
+        err.errorPos = int(tokens.size())-1;
         err.message = "Missing a semicolon";
     }
     

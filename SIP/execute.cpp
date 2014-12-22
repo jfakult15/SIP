@@ -6,25 +6,17 @@
 //  Copyright (c) 2014 jfakult15. All rights reserved.
 //
 
-#include "execute.h"
-#include "object.h"
-//#include "helpers.h"
-#include "keywords.h"
-//#include "err.h"
+/*
+ This is the main file. It ensures the execution of all tokenizing, syntax checking, and interpretation/execution aspects of the code
+*/
 
-#include <iostream>
-#include <vector>
-#include <set>
+#include "execute.h"
 
 using namespace std;
 
-void executeCode(vector<string> code);
-vector<string> tokenize(string line);
-
 set<string> keywords={ "var", "if", "while", "else", "for", "print" };
 
-vector<Object> objects;
-//set<string> objectNames;
+SaveState ss;
 
 vector<string> execute(vector<string> code)
 {
@@ -37,14 +29,10 @@ vector<string> execute(vector<string> code)
     {
         string line=code[i];
         vector<string> tokens=tokenize(line);
-        //for (int i=0; i<tokens.size(); i++)
-        //{
-        //    cout << tokens[i] << "\n";
-        //}
         errVar syntaxError=checkSyntax(tokens);
+        
         if (syntaxError.errorPos>=0) //add error messages
         {
-            //cout << "--" << syntaxError.errorPos << "--\n";
             output.push_back("Syntax error: line " + to_string(i+1)+"\n");
             output.push_back("\"" + tokens[syntaxError.errorPos] + "\"" );
             output.push_back("Got error: " + syntaxError.message);
@@ -54,14 +42,9 @@ vector<string> execute(vector<string> code)
     
     cout << "Syntax OK!\n";
     
-    //executeCode(code);
+    executeCode(code, output);
     
     return output;
-}
-
-int executeLine(string line, int curLine)
-{
-    return -1;
 }
 
 vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
@@ -95,12 +78,13 @@ errVar checkSyntax(vector<string> tokens) //returns first character that caused 
         exit(1);
     }
     
-    if (keywords.find(tokens[0])==keywords.end() && getObjectNamed(objects, tokens[0])<0) //the first word isnt a keyword or a variable
+    /*
+    if (keywords.find(tokens[0])==keywords.end())// && getObjectNamed(objects, tokens[0])<0) //the first word isnt a keyword or a variable
     {
         err.errorPos=0;
-        err.message="Unknown variable or keyword";
+        err.message="Unknown keyword";
         return err;
-    }
+    }*/
     
     if (tokens[0]=="var")
     {
@@ -138,7 +122,7 @@ int getObjectNamed(vector<Object> &objects, string name)
     return -1;
 }
 
-void executeCode(vector<string> code)
+void executeCode(vector<string> code, vector<string> &output)
 {
     cout << "Executing code\n";
     
@@ -146,9 +130,7 @@ void executeCode(vector<string> code)
     int curLine=0; //which line we are curently executing
     while (curLine<code.size())
     {
-        curLine=executeLine(code[curLine], 1);
+        interpreter(ss, tokenize(code[curLine]));
     }
-    
-    //cout << "Length: " << objects[0].type << "\n";
 }
 

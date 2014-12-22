@@ -17,6 +17,8 @@
 		3FAE214E1A463F0A000FEB2E /* keyword_var.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FAE214C1A463F0A000FEB2E /* keyword_var.cpp */; };
 		3FAE21511A46729E000FEB2E /* keyword_while_if.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FAE214F1A46729E000FEB2E /* keyword_while_if.cpp */; };
 		3FAE21541A4682D3000FEB2E /* keyword_print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FAE21521A4682D3000FEB2E /* keyword_print.cpp */; };
+		3FAE21571A4887FC000FEB2E /* one_word_statement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FAE21551A4887FC000FEB2E /* one_word_statement.cpp */; };
+		3FAE215A1A4889A1000FEB2E /* interpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FAE21581A4889A1000FEB2E /* interpreter.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,6 +55,11 @@
 		3FAE21501A46729E000FEB2E /* keyword_while_if.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyword_while_if.h; sourceTree = "<group>"; };
 		3FAE21521A4682D3000FEB2E /* keyword_print.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keyword_print.cpp; sourceTree = "<group>"; };
 		3FAE21531A4682D3000FEB2E /* keyword_print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyword_print.h; sourceTree = "<group>"; };
+		3FAE21551A4887FC000FEB2E /* one_word_statement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = one_word_statement.cpp; sourceTree = "<group>"; };
+		3FAE21561A4887FC000FEB2E /* one_word_statement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = one_word_statement.h; sourceTree = "<group>"; };
+		3FAE21581A4889A1000FEB2E /* interpreter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = interpreter.cpp; sourceTree = "<group>"; };
+		3FAE21591A4889A1000FEB2E /* interpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interpreter.h; sourceTree = "<group>"; };
+		3FAE215C1A488AC5000FEB2E /* save_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = save_state.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,12 +95,15 @@
 				3F777C3C19C0D16700E4F0DE /* main.cpp */,
 				3F777C4519C0E66400E4F0DE /* execute.cpp */,
 				3F777C4619C0E66400E4F0DE /* execute.h */,
+				3FAE21581A4889A1000FEB2E /* interpreter.cpp */,
+				3FAE21591A4889A1000FEB2E /* interpreter.h */,
 				3F777C4B19CA33E600E4F0DE /* err.cpp */,
 				3F777C4C19CA33E600E4F0DE /* err.h */,
 				3F777C4819CA0A7C00E4F0DE /* object.cpp */,
 				3F777C4919CA0A7C00E4F0DE /* object.h */,
 				3F0DD68C19E57E59005F511F /* helpers.cpp */,
 				3F0DD68D19E57E59005F511F /* helpers.h */,
+				3FAE215C1A488AC5000FEB2E /* save_state.h */,
 				3FAE21441A463C22000FEB2E /* keywords */,
 				3F777C3E19C0D16700E4F0DE /* SIP.1 */,
 			);
@@ -112,6 +122,8 @@
 				3FAE21501A46729E000FEB2E /* keyword_while_if.h */,
 				3FAE21521A4682D3000FEB2E /* keyword_print.cpp */,
 				3FAE21531A4682D3000FEB2E /* keyword_print.h */,
+				3FAE21551A4887FC000FEB2E /* one_word_statement.cpp */,
+				3FAE21561A4887FC000FEB2E /* one_word_statement.h */,
 			);
 			name = keywords;
 			sourceTree = "<group>";
@@ -172,9 +184,11 @@
 				3FAE214E1A463F0A000FEB2E /* keyword_var.cpp in Sources */,
 				3F777C4D19CA33E600E4F0DE /* err.cpp in Sources */,
 				3F777C4A19CA0A7C00E4F0DE /* object.cpp in Sources */,
+				3FAE215A1A4889A1000FEB2E /* interpreter.cpp in Sources */,
 				3F0DD68E19E57E59005F511F /* helpers.cpp in Sources */,
 				3F777C4719C0E66400E4F0DE /* execute.cpp in Sources */,
 				3FAE214B1A463D84000FEB2E /* keyword_for.cpp in Sources */,
+				3FAE21571A4887FC000FEB2E /* one_word_statement.cpp in Sources */,
 				3FAE21541A4682D3000FEB2E /* keyword_print.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
