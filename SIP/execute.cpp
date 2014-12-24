@@ -14,7 +14,7 @@
 
 using namespace std;
 
-set<string> keywords={ "var", "if", "while", "else", "for", "print" };
+map<string, KeywordObject> keywords=initKeywordObjects();
 
 SaveState ss;
 
@@ -91,7 +91,7 @@ errVar checkSyntax(vector<string> tokens, ExecutionOutput &output) //returns fir
     if (tokens[0]=="for")
         err=syntaxFor(tokens);
     
-    if (tokens[0]=="else" &&  tokens[1]=="if") //else if functions the same way as if I think
+    if (tokens[0]=="else" &&  tokens[1]=="if") //else if functions the same way as if... I think
     {
         tokens.erase(tokens.begin());
     }

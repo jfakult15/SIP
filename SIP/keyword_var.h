@@ -15,7 +15,6 @@
 #include "err.h"
 #include "object.h"
 
-
 errVar syntaxVar(vector<string> tokens);
 
 #endif /* defined(__SIP__keyword_var__) */

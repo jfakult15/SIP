@@ -12,8 +12,9 @@
 #include <stdio.h>
 #include <vector>
 #include "save_state.h"
+#include "output.h"
 //#include "keywords.h"
 
-void interpreter(SaveState &ss, vector<string> line);
+void interpreter(SaveState &ss, vector<string> line, ExecutionOutput &output);
 
 #endif /* defined(__SIP__interpreter__) */

@@ -10,8 +10,10 @@
 #define __SIP__keyword_print__
 
 #include <stdio.h>
-#include "err.h"
 #include <vector>
+
+#include "err.h"
+#include "object.h"
 
 errVar syntaxPrint(vector<string> tokens);
 

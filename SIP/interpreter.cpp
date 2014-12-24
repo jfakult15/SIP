@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void interpreter(SaveState &ss, vector<string> line)
+void interpreter(SaveState &ss, vector<string> line, ExecutionOutput &output)
 {
     
 }

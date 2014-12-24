@@ -49,7 +49,7 @@ int main(int argc, const char * argv[])
         if (file.is_open())
         {
             input=readFile(file);
-            output=execute(input);
+            execute(input, output);
             
             for (int i=0; i<output.output.size(); i++)
             {

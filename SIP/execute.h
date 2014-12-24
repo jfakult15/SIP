@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include <map>
 
 #include "err.h"
 #include "object.h"
@@ -20,12 +21,13 @@
 #include "execute.h"
 #include "keywords.h"
 #include "output.h"
+#include "keyword_object.h"
 
-ExecutionOutput execute(vector<string> code);
+void execute(vector<string> code, ExecutionOutput &output);
 int executeLine(string line, int curLine);
-errVar checkSyntax(vector<string> line);
+errVar checkSyntax(vector<string> line, ExecutionOutput &output);
 vector<string> tokenize(string line);
 int getObjectNamed(vector<Object> &objects, string name);
-void executeCode(vector<string> code, vector<string> &output);
+void executeCode(vector<string> code, ExecutionOutput &output);
 
 #endif /* defined(__SIP__execute__) */

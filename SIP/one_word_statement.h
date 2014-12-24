@@ -13,4 +13,6 @@
 #include <vector>
 #include "err.h"
 
+errVar syntaxOneWordStatement(vector<string> tokens);
+
 #endif /* defined(__SIP__one_word_statement__) */

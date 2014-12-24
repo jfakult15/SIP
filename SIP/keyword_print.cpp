@@ -7,7 +7,6 @@
 //
 
 #include "keyword_print.h"
-#include "object.h"
 
 using namespace std;
 
