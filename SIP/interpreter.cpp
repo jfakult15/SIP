@@ -37,7 +37,7 @@ void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, in
     if (err.errorPos != -1)
     {
         output.err.push_back("Runtime error: line "+to_string(curLine+1));
-        output.err.push_back("\"" + line[err.errorPos] + "\"\n" );
+        output.err.push_back("\"" + line[err.errorPos] + "\"\n" ); 
         output.err.push_back("Got error: " + err.message);
     }
 }
