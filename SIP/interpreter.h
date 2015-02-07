@@ -13,8 +13,10 @@
 #include <vector>
 #include "save_state.h"
 #include "output.h"
-//#include "keywords.h"
+#include "err.h"
+#include "keywords.h"
 
-void interpreter(SaveState &ss, vector<string> line, ExecutionOutput &output);
+void interpreter(SaveState &ss, vector<string> &code, vector<string> line, ExecutionOutput &output, int &curLine);
+void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, int curLine);
 
 #endif /* defined(__SIP__interpreter__) */

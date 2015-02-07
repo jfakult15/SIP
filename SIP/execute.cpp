@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 jfakult15. All rights reserved.
 //
 
+
 /*
  This is the main file. It ensures the execution of all tokenizing, syntax checking, and interpretation/execution aspects of the code
 */
@@ -31,9 +32,9 @@ void execute(vector<string> code, ExecutionOutput &output)
         
         if (syntaxError.errorPos>=0) //add error messages
         {
-            output.output.push_back("Syntax error: line " + to_string(i+1)+"\n");
-            output.output.push_back("\"" + tokens[syntaxError.errorPos] + "\"" );
-            output.output.push_back("Got error: " + syntaxError.message);
+            output.err.push_back("Syntax error: line " + to_string(i+1));
+            output.err.push_back("\"" + tokens[syntaxError.errorPos] + "\"\n" );
+            output.err.push_back("Got error: " + syntaxError.message);
             return;
         }
     }
@@ -46,7 +47,7 @@ void execute(vector<string> code, ExecutionOutput &output)
 vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
 {
     vector<string> output;
-    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")" };
+    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+" };
     vector<string> removables = {" "};
     
     //split and seperate chunks (i.e tokenize them)
@@ -87,21 +88,23 @@ errVar checkSyntax(vector<string> tokens, ExecutionOutput &output) //returns fir
     {
         err=syntaxVar(tokens);
     }
-    
-    if (tokens[0]=="for")
+    else if (tokens[0]=="for")
+    {
         err=syntaxFor(tokens);
-    
-    if (tokens[0]=="else" &&  tokens[1]=="if") //else if functions the same way as if... I think
+    }
+    else if (tokens[0]=="else" &&  tokens[1]=="if") //else if functions the same way as if... I think
     {
         tokens.erase(tokens.begin());
     }
-    
-    if (tokens[0]=="if" || tokens[0]=="while")
+    else if (tokens[0]=="if" || tokens[0]=="while")
     {
         err=syntaxIfWhile(tokens);
     }
-    
-    if (tokens[0] == "print")
+    else if (tokens[0] == "function")
+    {
+        err = syntaxFunction(tokens);
+    }
+    else if (tokens[0] == "print")
     {
         err = syntaxPrint(tokens);
     }
@@ -122,12 +125,13 @@ int getObjectNamed(vector<Object> &objects, string name)
 void executeCode(vector<string> code, ExecutionOutput &output)
 {
     output.info.push_back("Executing code...");
+    output.info.push_back("Output:");
     
     //actual execution
     int curLine=0; //which line we are curently executing
     while (curLine<code.size())
     {
-        interpreter(ss, tokenize(code[curLine]), output);
+        interpreter(ss, code, tokenize(code[curLine]), output, curLine);
     }
 }
 

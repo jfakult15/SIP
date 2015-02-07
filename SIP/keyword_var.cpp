@@ -88,3 +88,11 @@ errVar syntaxVar(vector<string> tokens)
     
     return err;
 }
+
+errVar executeVar(vector<string> tokens, SaveState &ss)
+{
+    errVar err;
+    return err;
+}
+
+

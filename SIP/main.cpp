@@ -25,20 +25,7 @@ vector<string> readFile(ifstream &file);
 
 int main(int argc, const char * argv[])
 {
-    /*input={"print 'hello my name is jacob!' + 'hi';"};
-    output=execute(input);
-    
-    for (int i=0; i<output.size(); i++)
-    {
-        cout << output[i] << "\n";
-    }
-    return 0;
-    
-    if (argc==1)
-    {
-        cout << "No file provided" << "\n";
-        return 1;
-    }*/
+    bool verbose = false;
     
     argc = 2;
     argv[1] = "/Users/jfakult/Desktop/SIP_test.txt";
@@ -49,11 +36,35 @@ int main(int argc, const char * argv[])
         if (file.is_open())
         {
             input=readFile(file);
-            execute(input, output);
+            execute(input, output/*, verbose*/);
             
-            for (int i=0; i<output.output.size(); i++)
+            if (verbose)
             {
-                cout << output.output[i] << "\n";
+                for (int i=0; i<output.info.size(); i++)
+                {
+                    cout << output.info[i] << "\n";
+                }
+            }
+            if (output.warnings.size()>0)
+            {
+                for (int i=0; i<output.warnings.size(); i++)
+                {
+                    cout << output.warnings[i] << "\n";
+                }
+            }
+            if (output.err.size()>0)
+            {
+                for (int i=0; i<output.err.size(); i++)
+                {
+                    cout << output.err[i] << "\n";
+                }
+            }
+            else
+            {
+                for (int i=0; i<output.output.size(); i++)
+                {
+                    cout << output.output[i] << "\n";
+                }
             }
             
             return 0; //we will exit as soon as we find and run a readable file

@@ -13,12 +13,14 @@
 
 #include "object.h"
 #include "function_object.h"
+#include <map>
 
 struct SaveState
 {
     int nestDepth = 1;
     vector<vector<Object> > definedVariables; //multidimensional because we keep track for every nested layer
-    vector<vector<FunctionObject> > definedFunctions;
+    vector<FunctionObject> definedFunctions;
+    //map<string, FunctionObject> definedFunctions;
 };
 
 #endif /* defined(__SIP__save_state__) */

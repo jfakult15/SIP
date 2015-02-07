@@ -127,3 +127,17 @@ string determineType(string value) //very simplistic, I hope this will satisfy a
     if (value=="true" || value=="false") return "bool";
     return "int";
 }
+
+Object getObjectByName(vector<Object> v, string name)
+{
+    for (int i=0; i<v.size(); i++)
+    {
+        if (v[i].name==name)
+        {
+            return v[i];
+        }
+    }
+    Object o;
+    o.name="invalid object name";
+    return o;
+}

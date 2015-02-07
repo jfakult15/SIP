@@ -16,10 +16,10 @@
 class FunctionObject
 {
 public:
-    FunctionObject(Object newReturn, string newName, int newStartLine, int newEndLine);
+    FunctionObject(string newName, int newStartLine, int newEndLine, int numParams);
     
     string name;
-    Object returnValue;
+    //Object returnValue;
     int startLine;
     int endLine;
     int numParams;

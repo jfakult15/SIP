@@ -16,5 +16,6 @@
 #include "object.h"
 
 errVar syntaxPrint(vector<string> tokens);
+errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &ss);
 
 #endif /* defined(__SIP__keyword_print__) */

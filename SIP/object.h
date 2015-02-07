@@ -40,4 +40,6 @@ public:
     string value;
 };
 
+Object getObjectByName(vector<Object> v, string name);
+
 #endif /* defined(__SIP__object__) */

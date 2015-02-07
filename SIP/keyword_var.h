@@ -14,7 +14,9 @@
 
 #include "err.h"
 #include "object.h"
+#include "save_state.h"
 
 errVar syntaxVar(vector<string> tokens);
+errVar executeVar(vector<string> tokens, SaveState &ss);
 
 #endif /* defined(__SIP__keyword_var__) */

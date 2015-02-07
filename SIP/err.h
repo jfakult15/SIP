@@ -11,6 +11,9 @@
 
 #include <iostream>
 
+#include "output.h"
+#include "save_state.h"
+
 using namespace std;
 
 //using namespace std;

@@ -13,7 +13,7 @@
 #include "keyword_var.h"
 #include "keyword_while_if.h"
 #include "keyword_print.h"
-
+#include "keyword_function.h"
 #include "one_word_statement.h"
 
 #include "helpers.h"

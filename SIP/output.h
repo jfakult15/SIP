@@ -11,9 +11,13 @@
 
 #include <vector>
 
+using namespace std;
+
 struct ExecutionOutput
 {
     vector<string> output;
+    vector<string> warnings;
+    vector<string> err;
     vector<string> info;
 };
 

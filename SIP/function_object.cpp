@@ -8,10 +8,11 @@
 
 #include "function_object.h"
 
-FunctionObject::FunctionObject(Object newReturn, string newName, int newStartLine, int newEndLine)
+FunctionObject::FunctionObject(string newName, int newStartLine, int newEndLine, int newNumParams)
 {
-    returnValue = newReturn;
+    //returnValue = newReturn;
     name=newName;
     startLine = newStartLine;
     endLine = newEndLine;
+    numParams = newNumParams;
 }
