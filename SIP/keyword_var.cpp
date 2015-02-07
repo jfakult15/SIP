@@ -92,6 +92,26 @@ errVar syntaxVar(vector<string> tokens)
 errVar executeVar(vector<string> tokens, SaveState &ss)
 {
     errVar err;
+    
+    Object obj;
+    
+    obj.name=tokens[1];
+    
+    string varValue=tokens[3];
+    
+    string type=determineType(varValue);
+    
+    obj.type=type;
+    obj.value=varValue;
+    
+    obj.value = obj.getStringValue();
+    
+    while (ss.nestDepth>=ss.definedVariables.size())
+    {
+        ss.definedVariables.push_back(vector<Object>());
+    }
+    ss.definedVariables[ss.nestDepth].push_back(obj);
+    
     return err;
 }
 

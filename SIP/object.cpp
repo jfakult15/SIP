@@ -41,6 +41,10 @@ double Object::getDoubleValue()
 
 string Object::getStringValue()
 {
+    if ((value[0]=='"' && value[value.length()-1]=='"') || (value[0]=='\'' && value[value.length()-1]=='\'')) //lets not assume a string will have literal embedded quotes
+    {
+        return value.substr(1, value.length()-2);
+    }
     return value;
 }
 

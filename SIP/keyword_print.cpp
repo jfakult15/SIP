@@ -85,13 +85,16 @@ errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &s
                 Object o;
                 bool tokenIsObject=false;
                 
-                for (int depth=0; depth<ss.definedVariables.size(); i++)
+                for (int depth=0; depth<ss.definedVariables.size(); depth++)
                 {
                     o = getObjectByName(ss.definedVariables[depth], tokens[i]);
+                    
                     if (o.name!="invalid object name") //we found a variable for this value!
                     {
                         tokenIsObject = true;
                         depth = ss.nestDepth;
+                        
+                        printStr += o.value;
                     }
                 }
                 if (!tokenIsObject)
@@ -115,7 +118,7 @@ errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &s
     
     if (err.errorPos == -1)
     {
-        output.info.push_back(printStr);
+        output.output.push_back(printStr);
     }
     /*else
     {

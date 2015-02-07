@@ -31,13 +31,17 @@ void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, in
     
     if (keyword=="print")
     {
-        err=executePrint(line, output, ss);
+        err = executePrint(line, output, ss);
+    }
+    else if (keyword=="var")
+    {
+        err = executeVar(line, ss);
     }
     
     if (err.errorPos != -1)
     {
         output.err.push_back("Runtime error: line "+to_string(curLine+1));
-        output.err.push_back("\"" + line[err.errorPos] + "\"\n" ); 
+        output.err.push_back("\"" + line[err.errorPos] + "\"\n" );
         output.err.push_back("Got error: " + err.message);
     }
 }
