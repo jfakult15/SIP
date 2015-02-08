@@ -337,28 +337,50 @@ void recombine(vector<string> &output, string str)
     }
 }
 
-void recombineBetween(vector<string> &output, string str) //for example combine all parts between two quotes
+void recombineBetween(vector<string> &output, string str, bool hasEscapeQuote) //for example combine all parts between two quotes (if str=='"')
 {
     bool delimOpen = false;
     for (int i=0; i<output.size()-1; i++)
     {
-        if (output[i] == str)
+        bool escape = (hasEscapeQuote && i>0);
+        if (output[i] == str && find(output.begin()+i+1, output.end(), str)!=output.end())
         {
-            //cout << output[i] << "---\n";
-            delimOpen = true;
+            if (escape)
+            {
+                if (output[i-1]!="\\")
+                {
+                    delimOpen = true;
+                }
+            }
+            else
+            {
+                delimOpen = true;
+            }
         }
         else if (delimOpen && output[i+1] == str)
         {
-            delimOpen = false;
-            output[i]+=output[i+1];
-            //cout << output[i] << " " << output[i+1] << "--\n";
-            output.erase(output.begin()+(i+1));
-            i--;
+            if (escape)
+            {
+                if (output[i][output[i].length()-1] != '\\')
+                {
+                    delimOpen = false;
+                    output[i]+=output[i+1];
+                    output.erase(output.begin()+(i+1));
+                    i--;
+                }
+            }
+            else
+            {
+                delimOpen = false;
+                output[i]+=output[i+1];
+                output.erase(output.begin()+(i+1));
+                i--;
+            }
         }
+        
         if (delimOpen)
         {
             output[i]+=output[i+1];
-            //cout << output[i] << " " << output[i+1] << "--\n";
             output.erase(output.begin()+(i+1));
             i--;
         }

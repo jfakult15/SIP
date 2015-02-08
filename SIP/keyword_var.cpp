@@ -70,7 +70,6 @@ errVar syntaxVar(vector<string> tokens)
     if (tokens[tokens.size()-1]!=";")
     {
         err.errorPos=int(tokens.size()-1);
-        //cout << "Error pos: " << err.errorPos << "\n";
         err.message="Did you forget a semicolon (;)?";
         return err;
     }
@@ -103,7 +102,6 @@ errVar executeVar(vector<string> tokens, SaveState &ss)
     
     obj.type=type;
     obj.value=varValue;
-    
     obj.value = obj.getStringValue();
     
     while (ss.nestDepth>=ss.definedVariables.size())

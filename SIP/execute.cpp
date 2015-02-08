@@ -55,10 +55,16 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
     
     //recombine necessary parts
     recombine(output, "=");
-    recombineBetween(output, "'");
-    recombineBetween(output, "\"");
+    //recombine(output, "\"", "\"", true);
+    recombineBetween(output, "'", true);
+    recombineBetween(output, "\"", true);
     
     removeVectorParts(output, removables);
+    
+    /*for (int i=0; i<output.size(); i++)
+    {
+        cout << output[i] << "\n";
+    }*/
     
     return output;
 }
@@ -107,6 +113,10 @@ errVar checkSyntax(vector<string> tokens, ExecutionOutput &output) //returns fir
     else if (tokens[0] == "print")
     {
         err = syntaxPrint(tokens);
+    }
+    else if (tokens[0][0] == '#') //comment
+    {
+        //do nothing
     }
     
     return err;
