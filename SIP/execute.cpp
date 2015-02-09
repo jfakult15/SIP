@@ -15,9 +15,9 @@
 
 using namespace std;
 
-map<string, KeywordObject> keywords=initKeywordObjects();
+//map<string, KeywordObject> keywords=initKeywordObjects();
 
-SaveState ss;
+struct SaveState ss;
 
 void execute(vector<string> code, ExecutionOutput &output)
 {

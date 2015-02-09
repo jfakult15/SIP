@@ -9,6 +9,7 @@
 #ifndef __SIP__object__
 #define __SIP__object__
 
+#include <stdio.h>
 #include <iostream>
 
 #include "helpers.h"

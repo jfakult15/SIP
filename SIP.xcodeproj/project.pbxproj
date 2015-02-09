@@ -40,7 +40,7 @@
 
 /* Begin PBXFileReference section */
 		3F0DD68C19E57E59005F511F /* helpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helpers.cpp; sourceTree = "<group>"; };
-		3F0DD68D19E57E59005F511F /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
+		3F0DD68D19E57E59005F511F /* helpers.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = helpers.h; sourceTree = "<group>"; };
 		3F777C3919C0D16700E4F0DE /* SIP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SIP; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F777C3C19C0D16700E4F0DE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		3F777C3E19C0D16700E4F0DE /* SIP.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SIP.1; sourceTree = "<group>"; };
@@ -63,7 +63,7 @@
 		3FAE21561A4887FC000FEB2E /* one_word_statement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = one_word_statement.h; sourceTree = "<group>"; };
 		3FAE21581A4889A1000FEB2E /* interpreter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = interpreter.cpp; sourceTree = "<group>"; };
 		3FAE21591A4889A1000FEB2E /* interpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interpreter.h; sourceTree = "<group>"; };
-		3FAE215C1A488AC5000FEB2E /* save_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = save_state.h; sourceTree = "<group>"; };
+		3FAE215C1A488AC5000FEB2E /* save_state.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = save_state.h; sourceTree = "<group>"; };
 		3FAE215E1A48AD5E000FEB2E /* output.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		3FAE215F1A4B46A2000FEB2E /* function_object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = function_object.cpp; sourceTree = "<group>"; };
 		3FAE21601A4B46A2000FEB2E /* function_object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = function_object.h; sourceTree = "<group>"; };

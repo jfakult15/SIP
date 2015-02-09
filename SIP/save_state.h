@@ -10,10 +10,12 @@
 #define __SIP__save_state__
 
 #include <stdio.h>
+#include <iostream>
 
-#include "object.h"
 #include "function_object.h"
-#include <map>
+#include "object.h"
+
+//using namespace std;
 
 struct SaveState
 {

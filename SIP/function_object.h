@@ -10,8 +10,13 @@
 #define __SIP__function_object__
 
 #include <stdio.h>
+#include <iostream>
 
-#include "object.h"
+//#include "object.h"
+
+//#include <string>
+
+using namespace std;
 
 class FunctionObject
 {

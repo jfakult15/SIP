@@ -9,8 +9,6 @@
 #include "helpers.h"
 #include <cmath>
 
-int countOfChars(string str, string match);
-
 using namespace std;
 
 string parseString(string str)
@@ -18,39 +16,75 @@ string parseString(string str)
     return "hi";
 }
 
-int boolEval(string expr) //we will assume that parameters will be passed in with the outmost parentheses
-{/*
-    expr=expr.substr(1, expr.length()-1);
-    vector<string> parts=split(expr, "==");
+int quickEval(string expr, SaveState &ss) //should be just a single bool part (no parenths, &&'s , etc)
+{
+    //cout << expr << "=\n";
+    if (expr=="true") return 1;
+    if (expr=="false") return 0;
     
-    //if (isBool(val))
-        //return val;//atof(val.c_str());
+    return -1;
+}
+
+int boolEval(string expr, SaveState &ss) //we will assume that parameters will be passed in with the outmost parentheses
+{
+    //cout << "=" << expr << "=\n";
     
-    //if (val[0]=='(')
-    for (int i=0; i<val.length(); i++)
+    //cout << countOfChars(expr, "(") << "-" << countOfChars(expr, ")") << "\n";
+    
+    if (countOfChars(expr, "(") != countOfChars(expr, ")"))
     {
-        if (val[i]=='(')
+        return -1;
+    }
+    
+    for (int i=0; i<ss.definedVariables.size(); i++)
+    {
+        Object o = getObjectByName(ss.definedVariables[i], expr);
+        //cout << o.name << "=" << expr << "=\n";
+        if (o.name != "invalid object name")
         {
-            //cout << getFirstParentheses(val.substr(i)) << "\n";
-            string subParenth = getFirstParentheses(val.substr(i));
-            string append = "";
-            if (val.length()>i+subParenth.length())
-            {
-                append = val.substr(i+subParenth.length()+2);
-            }
-            //cout << val << "\n";
-            val = val.substr(0, i) + eval(subParenth) + append;
+            //cout << o.value << " " << o.getB
+            bool temp = o.getBoolValue();
+            if (temp) expr="true";
+            else expr="false";
         }
     }
     
-    */return -1;
-}
-
-bool isValidBool(string expr)
-{
-    if (countOfChars(expr, "(") != countOfChars(expr, ")"))
+    cout << "=" << expr << "=\n";
+    
+    if (expr=="true") return 1;
+    if (expr=="false") return 0;
+    
+    bool result=true;
+    
+    for (int i=0; i<expr.length(); i++)
     {
-        return false;
+        if (expr[i]=='(')
+        {
+            string subParenth = getFirstParentheses(expr.substr(i));
+            string append = "";
+            if (expr.length()>i+subParenth.length())
+            {
+                append = expr.substr(i+subParenth.length()+2);
+            }
+            
+            int temp2 = quickEval(expr.substr(0, i), ss);
+            int temp3 = quickEval(append, ss);
+            //cout << "=" << subParenth << "1=\n";
+            int temp1 = boolEval(subParenth, ss);
+            if (temp1==-1 && subParenth.length()!=0) return -1;
+            if (temp2==-1  && expr.substr(0,i).length()!=0) return -1;
+            if (temp3==-1 && append.length()!=0) return -1;
+            
+            bool boolVal1 = temp1==1 || subParenth.length()==0;
+            bool boolVal2 = temp2==1 || expr.substr(0,i).length()==0;
+            bool boolVal3 = temp3==1 || append.length()==0;
+            
+            //cout << boolVal1 << "=" << boolVal2 << "=" << boolVal3 << "=\n";
+            
+            result = result && boolVal2 && boolVal1 && boolVal3;
+            //cout << result << "==\n";
+            if (!result) return false;
+        }
     }
     
     return true;
@@ -303,7 +337,7 @@ bool isLetter(int ch)
 int countOfChars(string str, string match)
 {
     int count = 0;
-    for (int i=0;str.length()-match.length(); i++)
+    for (int i=0; i<str.length()-match.length()+1; i++)
     {
         if (str.substr(i, match.length())==match)
         {

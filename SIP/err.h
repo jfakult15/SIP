@@ -16,8 +16,6 @@
 
 using namespace std;
 
-//using namespace std;
-
 void err(string e);
 
 struct errVar
