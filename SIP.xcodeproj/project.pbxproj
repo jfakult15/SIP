@@ -23,6 +23,7 @@
 		3FAE21641A4B4940000FEB2E /* keyword_object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FAE21621A4B4940000FEB2E /* keyword_object.cpp */; };
 		3FCFB2701A854B5700B5B3AF /* execution_startup_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FCFB26E1A854B5700B5B3AF /* execution_startup_manager.cpp */; };
 		3FCFB2731A854F5E00B5B3AF /* keyword_function.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FCFB2711A854F5E00B5B3AF /* keyword_function.cpp */; };
+		3FFF17881A8997F0000B13DB /* keyword_input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FFF17861A8997F0000B13DB /* keyword_input.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -73,6 +74,8 @@
 		3FCFB26F1A854B5700B5B3AF /* execution_startup_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = execution_startup_manager.h; sourceTree = "<group>"; };
 		3FCFB2711A854F5E00B5B3AF /* keyword_function.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keyword_function.cpp; sourceTree = "<group>"; };
 		3FCFB2721A854F5E00B5B3AF /* keyword_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyword_function.h; sourceTree = "<group>"; };
+		3FFF17861A8997F0000B13DB /* keyword_input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keyword_input.cpp; sourceTree = "<group>"; };
+		3FFF17871A8997F0000B13DB /* keyword_input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyword_input.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +135,8 @@
 			isa = PBXGroup;
 			children = (
 				3FAE21451A463C3E000FEB2E /* keywords.h */,
+				3FFF17861A8997F0000B13DB /* keyword_input.cpp */,
+				3FFF17871A8997F0000B13DB /* keyword_input.h */,
 				3FCFB2711A854F5E00B5B3AF /* keyword_function.cpp */,
 				3FCFB2721A854F5E00B5B3AF /* keyword_function.h */,
 				3FAE21491A463D84000FEB2E /* keyword_for.cpp */,
@@ -207,6 +212,7 @@
 				3FAE21641A4B4940000FEB2E /* keyword_object.cpp in Sources */,
 				3F777C4D19CA33E600E4F0DE /* err.cpp in Sources */,
 				3FCFB2731A854F5E00B5B3AF /* keyword_function.cpp in Sources */,
+				3FFF17881A8997F0000B13DB /* keyword_input.cpp in Sources */,
 				3F777C4A19CA0A7C00E4F0DE /* object.cpp in Sources */,
 				3FAE215A1A4889A1000FEB2E /* interpreter.cpp in Sources */,
 				3F0DD68E19E57E59005F511F /* helpers.cpp in Sources */,

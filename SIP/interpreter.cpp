@@ -88,6 +88,10 @@ void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, in
     {
         err = executeVar(line, ss);
     }
+    else if (keyword=="input")
+    {
+        err = executeInput(line, ss);
+    }
     else
     {
         Object o;

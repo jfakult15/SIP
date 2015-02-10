@@ -15,6 +15,7 @@
 #include "keyword_print.h"
 #include "keyword_function.h"
 #include "one_word_statement.h"
+#include "keyword_input.h"
 
 #include "helpers.h"
 

@@ -162,4 +162,31 @@ Object getAnyObjectNamed(vector<vector<Object> > &v, string name)
     return o;
 }
 
+bool objectExistsWithName(vector<vector<Object> > &v, string name)
+{
+    Object o = getAnyObjectNamed(v, name);
+    if (o.name != "invalid object name")
+    {
+        return true;
+    }
+    return false;
+}
+
+bool setObjectWithName(vector<vector<Object> > &v, string name, string value)
+{
+    for (int i=v.size()-1; i>=0; i--)
+    {
+        for (int j=0; j<v[i].size(); j++)
+        {
+            if (v[i][j].name == name)
+            {
+                v[i][j].value = value;
+                v[i][j].type = v[i][j].getType();
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 

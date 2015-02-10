@@ -43,5 +43,7 @@ public:
 
 Object getObjectByName(vector<Object> &v, string name);
 Object getAnyObjectNamed(vector<vector<Object> > &v, string name);
+bool objectExistsWithName(vector<vector<Object> > &v, string name);
+bool setObjectWithName(vector<vector<Object> > &v, string name, string value);
 
 #endif /* defined(__SIP__object__) */
