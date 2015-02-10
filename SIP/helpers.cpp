@@ -37,9 +37,58 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
     
     if (openPar != closePar)
     {
-        
+        e.errorPos = 0;
+        e.message = "Different number of closing and opening parentheses in boolean expression";
     }
-        
+    
+    vector<vector<string> > chunks;// = vector<vector<string> >();
+    chunks.push_back(vector<string>());
+    
+    int chunkNum = 0;
+    
+    for (int i=0; i<parts.size(); i++)
+    {
+        string s = parts[i];
+        if (s!="&&" && s!="||")
+        {
+            if (s=="(" && find(chunks[chunkNum].begin(), chunks[chunkNum].end(), "(")!=chunks[chunkNum].end())
+            {
+                chunkNum++;
+                chunks.push_back(vector<string>());
+            }
+            chunks[chunkNum].push_back(s);
+            if (s==")")
+            {
+                chunkNum++;
+                chunks.push_back(vector<string>());
+            }
+        }
+        else
+        {
+            chunkNum++;
+            chunks.push_back(vector<string>());
+            chunks[chunkNum].push_back(s);
+            
+            chunkNum++;
+            chunks.push_back(vector<string>());
+        }
+    }
+    
+    for (int i=0; i<chunks.size(); i++)
+    {
+        if (chunks[i].size()==0)
+        {
+            chunks.erase(chunks.begin()+i);
+            i--;
+            continue;
+        }
+        for (int j=0; j<chunks[i].size(); j++)
+        {
+            cout << chunks[i][j] << "";
+        }
+        cout << "\n";
+    }
+    
     return e;
 }
 

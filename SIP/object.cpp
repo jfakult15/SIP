@@ -12,9 +12,9 @@
 
 Object::Object()
 {
-    type="int";
-    name="x";
-    value="1.4";
+    type="string";
+    name="invalid object name";
+    value="Jacob Fakult";
 }
 
 Object::Object(string newType, string newName, string newValue)
@@ -152,6 +152,7 @@ Object getAnyObjectNamed(vector<vector<Object> > &v, string name)
     for (int i=0; i<v.size(); i++)
     {
         o = getObjectByName(v[i], name);
+        //cout << o.name <<"==\n";
         
         if (o.name!="invalid object name") //we found a variable for this value!
         {

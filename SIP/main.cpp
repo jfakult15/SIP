@@ -27,6 +27,11 @@ int main(int argc, const char * argv[])
 {
     bool verbose = false;
     
+    vector<string> temp = tokenize("((7+1>5) && true || ('byebye'=='hello'))");
+    SaveState ss;
+    boolEval(temp, ss);
+    exit(0);
+    
     argc = 2;
     argv[1] = "/Users/jfakult/Desktop/SIP_test.txt";
     //I am trying to be flexible with command line errors. Ill check every arg until one is a good file

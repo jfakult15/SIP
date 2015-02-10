@@ -47,7 +47,7 @@ void execute(vector<string> code, ExecutionOutput &output)
 vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
 {
     vector<string> output;
-    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+" };
+    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+", "<", ">", "<=", ">=" };
     vector<string> removables = {" "};
     
     //split and seperate chunks (i.e tokenize them)
