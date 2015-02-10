@@ -44,31 +44,6 @@ void execute(vector<string> code, ExecutionOutput &output)
     executeCode(code, output);
 }
 
-vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
-{
-    vector<string> output;
-    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+", "<", ">", "<=", ">=" };
-    vector<string> removables = {" "};
-    
-    //split and seperate chunks (i.e tokenize them)
-    output = seperateAll(line, splits);
-    
-    //recombine necessary parts
-    recombine(output, "=");
-    //recombine(output, "\"", "\"", true);
-    recombineBetween(output, "'", true);
-    recombineBetween(output, "\"", true);
-    
-    removeVectorParts(output, removables);
-    
-    /*for (int i=0; i<output.size(); i++)
-    {
-        cout << output[i] << "\n";
-    }*/
-    
-    return output;
-}
-
 //the int this (and all other syntax functions) return the character position of the error or a value less than zero on no errors
 errVar checkSyntax(vector<string> tokens, ExecutionOutput &output) //returns first character that caused the issue
 {

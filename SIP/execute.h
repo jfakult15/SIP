@@ -26,7 +26,6 @@
 void execute(vector<string> code, ExecutionOutput &output);
 int executeLine(string line, int curLine);
 errVar checkSyntax(vector<string> line, ExecutionOutput &output);
-vector<string> tokenize(string line);
 int getObjectNamed(vector<Object> &objects, string name);
 void executeCode(vector<string> code, ExecutionOutput &output);
 

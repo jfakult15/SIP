@@ -27,10 +27,10 @@ int main(int argc, const char * argv[])
 {
     bool verbose = false;
     
-    /*vector<string> temp = tokenize("((7+1>5) && true && (5+(2*6)>3)|| ('byebye'=='hello'))");
+    vector<string> temp = tokenize("((7+1>5) && true && (5+(2*6)>3)|| ('byebye'=='hello'))");
     SaveState ss;
     boolEval(temp, ss);
-    exit(0);*/
+    exit(0);
     
     argc = 2;
     argv[1] = "/Users/jfakult/Desktop/SIP_test.txt";

@@ -16,7 +16,23 @@ string parseString(string str)
     return "hi";
 }
 
+string vectorToString(vector<string> v)
+{
+    string temp="";
+    for (int i=0; i<v.size(); i++)
+    {
+        temp+=v[i];
+    }
+    return temp;
+}
 
+string simplifyExpr(string expr)
+{
+    //cout << "1: " << expr << "\n";
+    string mathEval = eval(expr);
+    //cout << "2: " << mathEval << "\n";
+    return mathEval;
+}
 
 errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that parameters will be passed in with the outermost parentheses
 {
@@ -82,8 +98,16 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
             i--;
             continue;
         }
+        
+        string temp = vectorToString(chunks[i]);
+        
+        if (temp[0]=='(' && temp[temp.length()-1]==')') //chunk starts and ends with parentheses
+        {
+            chunks[i] = tokenize(simplifyExpr(temp));
+        }
         for (int j=0; j<chunks[i].size(); j++)
         {
+            //cout << chunks[i][j][chunks[i][j].length()-1] << "";
             cout << chunks[i][j] << "";
         }
         cout << "\n";
@@ -421,5 +445,30 @@ void recombineBetween(vector<string> &output, string str, bool hasEscapeQuote) /
             i--;
         }
     }
+}
+
+vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
+{
+    vector<string> output;
+    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+", "<", ">", "<=", ">=" };
+    vector<string> removables = {" "};
+    
+    //split and seperate chunks (i.e tokenize them)
+    output = seperateAll(line, splits);
+    
+    //recombine necessary parts
+    recombine(output, "=");
+    //recombine(output, "\"", "\"", true);
+    recombineBetween(output, "'", true);
+    recombineBetween(output, "\"", true);
+    
+    removeVectorParts(output, removables);
+    
+    /*for (int i=0; i<output.size(); i++)
+     {
+     cout << output[i] << "\n";
+     }*/
+    
+    return output;
 }
 

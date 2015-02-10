@@ -36,5 +36,6 @@ void recombine(vector<string> &output, string str1);
 void recombineBetween(vector<string> &output, string str, bool hasEscapeQuote);
 int countOfChars(string str, string match);
 string getFirstParentheses(string val);
+vector<string> tokenize(string line);
 
 #endif /* defined(__SIP__helpers__) */
