@@ -14,7 +14,7 @@ Object::Object()
 {
     type="string";
     name="invalid object name";
-    value="Jacob Fakult";
+    value="0";
 }
 
 Object::Object(string newType, string newName, string newValue)

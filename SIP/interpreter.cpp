@@ -22,20 +22,17 @@ void interpreter(SaveState &ss, vector<string> &code, vector<string> line, Execu
         {
             if (keyword=="if" || keyword=="while")
             {
-                /*string temp="";
-                for (int i=1; i<line.size(); i++)
-                {
-                    temp += line[i];
-                }*/
+                line.erase(line.begin()); //we don't need if, while, var statements here etc
                 errVar e = boolEval(line, ss);
                 if (e.errorPos>=0)
                 {
-                    output.err.push_back("blah");
+                    output.err.push_back(e.message);
+                    curLine++;
                     return;
                 }
                 else
                 {
-                    //bool val = e.message (true or false)
+                    output.output.push_back(e.message);
                 }
                 
                 curLine++;
