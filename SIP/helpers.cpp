@@ -508,6 +508,253 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
 
 bool compare(string left, string right, string comparator, string type)
 {
+    if (comparator=="==")
+    {
+        if (type=="bool")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getBoolValue()==o2.getBoolValue();
+        }
+        else if (type=="int")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getIntValue()==o2.getIntValue();
+        }
+        else if (type=="double")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getDoubleValue()==o2.getDoubleValue();
+        }
+        else if (type=="string")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getStringValue()==o2.getStringValue();
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (comparator=="<")
+    {
+        //no bool
+        if (type=="int")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getIntValue() < o2.getIntValue();
+        }
+        else if (type=="double")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getDoubleValue() < o2.getDoubleValue();
+        }
+        else if (type=="string")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getStringValue() < o2.getStringValue();
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (comparator==">")
+    {
+        //no bool
+        if (type=="int")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getIntValue() > o2.getIntValue();
+        }
+        else if (type=="double")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getDoubleValue() > o2.getDoubleValue();
+        }
+        else if (type=="string")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getStringValue() > o2.getStringValue();
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (comparator=="<=")
+    {
+        if (type=="bool")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getBoolValue()==o2.getBoolValue();
+        }
+        else if (type=="int")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getIntValue()==o2.getIntValue();
+        }
+        else if (type=="double")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getDoubleValue()==o2.getDoubleValue();
+        }
+        else if (type=="string")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getStringValue()==o2.getStringValue();
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (comparator==">=")
+    {
+        if (type=="bool")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getBoolValue()==o2.getBoolValue();
+        }
+        else if (type=="int")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getIntValue()==o2.getIntValue();
+        }
+        else if (type=="double")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getDoubleValue()==o2.getDoubleValue();
+        }
+        else if (type=="string")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getStringValue()==o2.getStringValue();
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (comparator=="!=")
+    {
+        if (type=="bool")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getBoolValue()==o2.getBoolValue();
+        }
+        else if (type=="int")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getIntValue()==o2.getIntValue();
+        }
+        else if (type=="double")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getDoubleValue()==o2.getDoubleValue();
+        }
+        else if (type=="string")
+        {
+            Object o1;
+            o1.value = left;
+            Object o2;
+            o2.value = right;
+            
+            return o1.getStringValue()==o2.getStringValue();
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else //unknown comparator?
+    {
+        return false;
+    }
+    
     return false;
 }
 
