@@ -27,7 +27,7 @@ int main(int argc, const char * argv[])
 {
     bool verbose = false;
     
-    vector<string> temp = tokenize("((7+1>5) && true && (5+(2*6)>3)|| ('byebye'=='hello'))");
+    vector<string> temp = tokenize("(true || (7+1>5) && true && (5+(2*6)>3)|| ('byebye'=='hello'))");
     SaveState ss;
     boolEval(temp, ss);
     exit(0);

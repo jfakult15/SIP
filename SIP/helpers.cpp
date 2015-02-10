@@ -26,12 +26,46 @@ string vectorToString(vector<string> v)
     return temp;
 }
 
-string simplifyExpr(string expr)
+string simplifyExpr(string expr, vector<string> parts)
 {
-    //cout << "1: " << expr << "\n";
-    string mathEval = eval(expr);
-    //cout << "2: " << mathEval << "\n";
-    return mathEval;
+    cout << "Evaluating line: " << expr << "\n";
+    string lastType="bool"; //lowest level data type according to the casting hierarchy defined in object.cpp
+    
+    string first=""; string last=""; string comparator="";
+    bool gotLeftHandOperation=false;
+    for (int i=0; i<parts.size(); i++)
+    {
+        if (parts[i]!="(" && parts[i]!=")")
+        {
+            if (parts[i]=="<" || parts[i]==">" || parts[i]=="==" || parts[i]==">=" || parts[i]=="<=" || parts[i]=="!=")
+            {
+                comparator = parts[i];
+                gotLeftHandOperation = true;
+                continue;
+            }
+            Object o;
+            o.value = parts[i];
+            o.type = o.getType();
+            if (!gotLeftHandOperation)
+            {
+                first += parts[i];
+            }
+            else
+            {
+                last += parts[i];
+            }
+            if (o.type != "invalid type")
+            {
+                lastType = compareTypes(lastType, o.type);
+            }
+        }
+    }
+    //cout << first << " " << comparator << " " << last << " " << lastType << "\n";
+    
+    bool temp=compare(first, last, comparator, lastType);
+    if (temp==true) return "true";
+    
+    return "false";
 }
 
 errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that parameters will be passed in with the outermost parentheses
@@ -103,14 +137,14 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
         
         if (temp[0]=='(' && temp[temp.length()-1]==')') //chunk starts and ends with parentheses
         {
-            chunks[i] = tokenize(simplifyExpr(temp));
+            chunks[i] = tokenize(simplifyExpr(temp, chunks[i]));
         }
         for (int j=0; j<chunks[i].size(); j++)
         {
             //cout << chunks[i][j][chunks[i][j].length()-1] << "";
-            cout << chunks[i][j] << "";
+            //cout << chunks[i][j] << "";
         }
-        cout << "\n";
+        //cout << "\n";
     }
     
     return e;
@@ -450,7 +484,7 @@ void recombineBetween(vector<string> &output, string str, bool hasEscapeQuote) /
 vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
 {
     vector<string> output;
-    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+", "<", ">", "<=", ">=" };
+    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+", "-", "*", "/", "<", ">", "<=", ">=" };
     vector<string> removables = {" "};
     
     //split and seperate chunks (i.e tokenize them)
@@ -470,5 +504,10 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
      }*/
     
     return output;
+}
+
+bool compare(string left, string right, string comparator, string type)
+{
+    return false;
 }
 

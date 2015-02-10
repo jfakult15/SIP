@@ -129,7 +129,8 @@ string determineType(string value) //very simplistic, I hope this will satisfy a
     if (value.find("\"")!=string::npos || value.find("'")!=string::npos) return "string";
     if (value.find(".")!=string::npos) return "double";
     if (value=="true" || value=="false") return "bool";
-    return "int";
+    if (isNum(value)) return "int";
+    return "invalid type";
 }
 
 Object getObjectByName(vector<Object> &v, string name)
@@ -187,6 +188,22 @@ bool setObjectWithName(vector<vector<Object> > &v, string name, string value)
         }
     }
     return false;
+}
+
+int objectTypeValue(string t) //casting hierarchy helper
+{
+    if (t=="bool") return 1;
+    if (t=="int") return 2;
+    if (t=="double") return 3;
+    if (t=="string") return 4;
+    return 5; //invalid type
+    
+}
+
+string compareTypes(string t1, string t2) //casting hierarchy
+{
+    if (objectTypeValue(t1)>objectTypeValue(t2)) return t1;
+    return t2;
 }
 
 
