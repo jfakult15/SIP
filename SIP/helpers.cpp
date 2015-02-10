@@ -31,6 +31,11 @@ bool isComparator(string c)
     return c=="==" || c=="!=" || c=="<" || c==">" || c=="<=" || c==">=";
 }
 
+bool isMathFunc(string c)
+{
+    return c=="+" || c=="-" || c=="*" || c=="/" || c=="^";
+}
+
 string simplifyExpr(string expr, vector<string> parts)
 {
     //cout << "Evaluating line: " << expr << "\n";
@@ -65,7 +70,7 @@ string simplifyExpr(string expr, vector<string> parts)
             }
         }
     }
-    //cout << first << " " << comparator << " " << last << " " << lastType << "\n";
+    cout << first << " " << comparator << " " << last << " " << lastType << "\n";
     
     bool temp=compare(first, last, comparator, lastType);
     //cout << "Result was: " << temp << "\n";
@@ -94,7 +99,7 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
             Object o;
             o.value = parts[i];
             o.type = o.getType();
-            if (o.type=="invalid type" && parts[i]!="(" && parts[i]!=")" && parts[i]!="&&" && parts[i]!="||" && !isComparator(parts[i]))
+            if (o.type=="invalid type" && parts[i]!="(" && parts[i]!=")" && parts[i]!="&&" && parts[i]!="||" && !isComparator(parts[i]) &&!isMathFunc(parts[i]))
             {
                 e.errorPos = i;
                 e.message = "Undefined variable in boolean expression";
@@ -117,13 +122,7 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
     for (int i=0; i<parts.size(); i++)
     {
         string s = parts[i];
-        /*if ((i==0 && s=="(") || (i==parts.size()-1 && s==")"))
-        {
-            chunks[chunkNum].push_back(s);
-            chunks.push_back(vector<string>());
-            chunkNum++;
-            continue;
-        }*/
+        
         if (s!="&&" && s!="||")
         {
             if (i>0 && (parts[i-1]=="+" && s[0]=='('))
@@ -159,10 +158,11 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
     {
         for (int j=0; j<chunks[i].size(); j++)
         {
-            //cout << chunks[i][j] << " ";
+            cout << chunks[i][j] << " ";
         }
+        cout << "\n";
     }
-    //cout << "\n";*/
+    cout << "\n";*/
     
     for (int i=0; i<chunks.size(); i++)
     {
@@ -184,12 +184,13 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
         {
             //cout << chunks[i][j] << " ";
             e.message += chunks[i][j] + " ";
+            //cout << e.message << "\n";
         }
-        e.message += "\n";
+        //e.message += "\n";
         //cout << "\n";
     }
     
-    cout << "e: " << e.message << "\n";
+    //cout << "e: " << e.message << "\n";
     
     return e;
 }
@@ -566,18 +567,18 @@ bool compare(string left, string right, string comparator, string type)
         else if (type=="int")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getIntValue() == o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getDoubleValue() == o2.getDoubleValue();
         }
@@ -601,18 +602,18 @@ bool compare(string left, string right, string comparator, string type)
         if (type=="int")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getIntValue() < o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getDoubleValue() < o2.getDoubleValue();
         }
@@ -636,18 +637,18 @@ bool compare(string left, string right, string comparator, string type)
         if (type=="int")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getIntValue() > o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getDoubleValue() > o2.getDoubleValue();
         }
@@ -671,18 +672,18 @@ bool compare(string left, string right, string comparator, string type)
         if (type=="int")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getIntValue() <= o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getDoubleValue() <= o2.getDoubleValue();
         }
@@ -706,18 +707,18 @@ bool compare(string left, string right, string comparator, string type)
         if (type=="int")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getIntValue() >= o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getDoubleValue() >= o2.getDoubleValue();
         }
@@ -749,18 +750,18 @@ bool compare(string left, string right, string comparator, string type)
         else if (type=="int")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getIntValue() != o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = left;
+            o1.value = eval(left);
             Object o2;
-            o2.value = right;
+            o2.value = eval(right);
             
             return o1.getDoubleValue() != o2.getDoubleValue();
         }
