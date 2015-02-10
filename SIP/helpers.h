@@ -15,12 +15,13 @@
 #include <cmath>
 #include <vector>
 
+#include "err.h"
 #include "save_state.h"
 
 //using namespace std;
 
 string parseString(string str); //parse backquotes and whatnot. Returns "" if error
-int boolEval(string expr, struct SaveState &ss); //-1 for error, 0 for false, 1 for true
+struct errVar boolEval(vector<string> expr, struct SaveState &ss); //-1 for error, 0 for false, 1 for true
 string eval(string val);
 string findAfter(string val, int pos);
 string findBefore(string val, int pos);

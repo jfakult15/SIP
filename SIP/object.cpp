@@ -55,7 +55,7 @@ char Object::getCharValue()
 
 bool Object::getBoolValue()
 {
-    return value.length()>0 && value!="0";
+    return value.length()>0 && (value!="0" && value != "false");
 }
 
 bool Object::isCorrectDataFormat()
@@ -132,7 +132,7 @@ string determineType(string value) //very simplistic, I hope this will satisfy a
     return "int";
 }
 
-Object getObjectByName(vector<Object> v, string name)
+Object getObjectByName(vector<Object> &v, string name)
 {
     for (int i=0; i<v.size(); i++)
     {
@@ -145,3 +145,20 @@ Object getObjectByName(vector<Object> v, string name)
     o.name="invalid object name";
     return o;
 }
+
+Object getAnyObjectNamed(vector<vector<Object> > &v, string name)
+{
+    Object o;
+    for (int i=0; i<v.size(); i++)
+    {
+        o = getObjectByName(v[i], name);
+        
+        if (o.name!="invalid object name") //we found a variable for this value!
+        {
+            return o;
+        }
+    }
+    return o;
+}
+
+

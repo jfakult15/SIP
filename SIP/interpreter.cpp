@@ -22,12 +22,22 @@ void interpreter(SaveState &ss, vector<string> &code, vector<string> line, Execu
         {
             if (keyword=="if" || keyword=="while")
             {
-                string temp="";
+                /*string temp="";
                 for (int i=1; i<line.size(); i++)
                 {
                     temp += line[i];
+                }*/
+                errVar e = boolEval(line, ss);
+                if (e.errorPos>=0)
+                {
+                    output.err.push_back("blah");
+                    return;
                 }
-                cout << "bool: " << boolEval(temp, ss) << "\n";
+                else
+                {
+                    //bool val = e.message (true or false)
+                }
+                
                 curLine++;
             }
             else if (keyword=="function")

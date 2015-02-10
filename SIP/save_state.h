@@ -20,7 +20,7 @@
 struct SaveState
 {
     int nestDepth = 0;
-    vector<vector<Object> > definedVariables = vector<vector<Object> >(); //multidimensional because we keep track for every nested layer
+    vector<vector<class Object> > definedVariables = vector<vector<class Object> >(); //multidimensional because we keep track for every nested layer
     vector<FunctionObject> definedFunctions = vector<FunctionObject>();
     //map<string, FunctionObject> definedFunctions;
 };

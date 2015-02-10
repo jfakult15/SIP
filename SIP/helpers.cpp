@@ -16,78 +16,31 @@ string parseString(string str)
     return "hi";
 }
 
-int quickEval(string expr, SaveState &ss) //should be just a single bool part (no parenths, &&'s , etc)
-{
-    //cout << expr << "=\n";
-    if (expr=="true") return 1;
-    if (expr=="false") return 0;
-    
-    return -1;
-}
 
-int boolEval(string expr, SaveState &ss) //we will assume that parameters will be passed in with the outmost parentheses
+
+errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that parameters will be passed in with the outermost parentheses
 {
-    //cout << "=" << expr << "=\n";
+    errVar e;
     
-    //cout << countOfChars(expr, "(") << "-" << countOfChars(expr, ")") << "\n";
-    
-    if (countOfChars(expr, "(") != countOfChars(expr, ")"))
+    int openPar = 0;
+    int closePar = 0;
+    for (int i=0; i<parts.size(); i++)
     {
-        return -1;
-    }
-    
-    for (int i=0; i<ss.definedVariables.size(); i++)
-    {
-        Object o = getObjectByName(ss.definedVariables[i], expr);
-        //cout << o.name << "=" << expr << "=\n";
+        openPar += countOfChars(parts[i], "(");
+        closePar += countOfChars(parts[i], ")");
+        Object o = getAnyObjectNamed(ss.definedVariables, parts[i]);
         if (o.name != "invalid object name")
         {
-            //cout << o.value << " " << o.getB
-            bool temp = o.getBoolValue();
-            if (temp) expr="true";
-            else expr="false";
+            parts[i] = o.value;
         }
     }
     
-    cout << "=" << expr << "=\n";
-    
-    if (expr=="true") return 1;
-    if (expr=="false") return 0;
-    
-    bool result=true;
-    
-    for (int i=0; i<expr.length(); i++)
+    if (openPar != closePar)
     {
-        if (expr[i]=='(')
-        {
-            string subParenth = getFirstParentheses(expr.substr(i));
-            string append = "";
-            if (expr.length()>i+subParenth.length())
-            {
-                append = expr.substr(i+subParenth.length()+2);
-            }
-            
-            int temp2 = quickEval(expr.substr(0, i), ss);
-            int temp3 = quickEval(append, ss);
-            //cout << "=" << subParenth << "1=\n";
-            int temp1 = boolEval(subParenth, ss);
-            if (temp1==-1 && subParenth.length()!=0) return -1;
-            if (temp2==-1  && expr.substr(0,i).length()!=0) return -1;
-            if (temp3==-1 && append.length()!=0) return -1;
-            
-            bool boolVal1 = temp1==1 || subParenth.length()==0;
-            bool boolVal2 = temp2==1 || expr.substr(0,i).length()==0;
-            bool boolVal3 = temp3==1 || append.length()==0;
-            
-            //cout << boolVal1 << "=" << boolVal2 << "=" << boolVal3 << "=\n";
-            
-            result = result && boolVal2 && boolVal1 && boolVal3;
-            //cout << result << "==\n";
-            if (!result) return false;
-        }
+        
     }
-    
-    return true;
+        
+    return e;
 }
 
 string getFirstParentheses(string val) //under the assumption that val[0] == "("

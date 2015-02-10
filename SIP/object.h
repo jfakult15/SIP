@@ -41,6 +41,7 @@ public:
     string value;
 };
 
-Object getObjectByName(vector<Object> v, string name);
+Object getObjectByName(vector<Object> &v, string name);
+Object getAnyObjectNamed(vector<vector<Object> > &v, string name);
 
 #endif /* defined(__SIP__object__) */
