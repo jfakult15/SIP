@@ -38,5 +38,6 @@ int countOfChars(string str, string match);
 string getFirstParentheses(string val);
 vector<string> tokenize(string line);
 bool compare(string left, string right, string comparator, string type);
+int getClosingBraceLine(vector<string> &code, int curLine, int startPos);
 
 #endif /* defined(__SIP__helpers__) */

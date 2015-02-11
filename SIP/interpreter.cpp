@@ -32,7 +32,7 @@ void interpreter(SaveState &ss, vector<string> &code, vector<string> line, Execu
                 }
                 else
                 {
-                    output.output.push_back(e.message);
+                    
                 }
                 
                 curLine++;
@@ -91,6 +91,7 @@ void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, in
     }
     else
     {
+        cout << "yes\n";
         Object o;
         bool tokenIsObject=false;
         
@@ -106,6 +107,7 @@ void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, in
         }
         if (!tokenIsObject)
         {
+            
         }
         else
         {

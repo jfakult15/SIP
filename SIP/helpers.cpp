@@ -70,8 +70,13 @@ string simplifyExpr(string expr, vector<string> parts)
             }
         }
     }
-    cout << first << " " << comparator << " " << last << " " << lastType << "\n";
+    //cout << first << " " << comparator << " " << last << " " << lastType << "\n";
     
+    if (lastType=="int" || lastType=="double")
+    {
+        first = eval(first);
+        last = eval(last);
+    }
     bool temp=compare(first, last, comparator, lastType);
     //cout << "Result was: " << temp << "\n";
     if (temp==true) return "true";
@@ -164,6 +169,12 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
     }
     cout << "\n";*/
     
+    bool seenFirstResult=false;
+    
+    bool result=false;
+    bool lastResult=false;
+    string comparator="";
+    
     for (int i=0; i<chunks.size(); i++)
     {
         if (chunks[i].size()==0)
@@ -176,21 +187,60 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
         string temp = vectorToString(chunks[i]);
         
         
-        if (temp!="&&" && temp!="||")//temp[0]=='(' && temp[temp.length()-1]==')') //chunk starts and ends with parentheses
+        if (temp!="&&" && temp!="||" && temp!="(" && temp!=")")//temp[0]=='(' && temp[temp.length()-1]==')') //chunk starts and ends with parentheses
         {
             chunks[i] = tokenize(simplifyExpr(temp, chunks[i]));
         }
         for (int j=0; j<chunks[i].size(); j++)
         {
-            //cout << chunks[i][j] << " ";
-            e.message += chunks[i][j] + " ";
-            //cout << e.message << "\n";
+            string temp = chunks[i][j];
+            
+            if (temp=="true")
+            {
+                lastResult = true;
+            }
+            else if (temp=="false")
+            {
+                lastResult = false;
+            }
+            
+            if (comparator=="&&")
+            {
+                if (!seenFirstResult)
+                {
+                    seenFirstResult=true;
+                    result=true;
+                }
+                result = result && lastResult;
+                comparator = "";
+            }
+            else if (comparator=="||")
+            {
+                if (!seenFirstResult)
+                {
+                    seenFirstResult=true;
+                    result=false;
+                }
+                result = result || lastResult;
+                comparator = "";
+            }
+            
+            if (temp=="&&" || temp=="||")
+            {
+                comparator = temp;
+            }
+            
+            
+            //e.message += chunks[i][j] + " ";
+            cout << chunks[i][j] << " ";
         }
         //e.message += "\n";
         //cout << "\n";
     }
     
-    //cout << "e: " << e.message << "\n";
+    cout << result << "\n";
+    if (result) e.message = "true";
+    else e.message = "false";
     
     return e;
 }
@@ -567,18 +617,18 @@ bool compare(string left, string right, string comparator, string type)
         else if (type=="int")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getIntValue() == o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getDoubleValue() == o2.getDoubleValue();
         }
@@ -602,18 +652,18 @@ bool compare(string left, string right, string comparator, string type)
         if (type=="int")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getIntValue() < o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getDoubleValue() < o2.getDoubleValue();
         }
@@ -637,18 +687,18 @@ bool compare(string left, string right, string comparator, string type)
         if (type=="int")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getIntValue() > o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getDoubleValue() > o2.getDoubleValue();
         }
@@ -672,18 +722,18 @@ bool compare(string left, string right, string comparator, string type)
         if (type=="int")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getIntValue() <= o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getDoubleValue() <= o2.getDoubleValue();
         }
@@ -707,18 +757,18 @@ bool compare(string left, string right, string comparator, string type)
         if (type=="int")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getIntValue() >= o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getDoubleValue() >= o2.getDoubleValue();
         }
@@ -750,18 +800,18 @@ bool compare(string left, string right, string comparator, string type)
         else if (type=="int")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getIntValue() != o2.getIntValue();
         }
         else if (type=="double")
         {
             Object o1;
-            o1.value = eval(left);
+            o1.value = left;
             Object o2;
-            o2.value = eval(right);
+            o2.value = right;
             
             return o1.getDoubleValue() != o2.getDoubleValue();
         }
@@ -787,3 +837,31 @@ bool compare(string left, string right, string comparator, string type)
     return false;
 }
 
+int getClosingBraceLine(vector<string> &code, int curLine, int startPos)
+{
+    int numOpen = 1;
+    int numClosed = 0;
+    for (int i=0; i<code.size(); i++)
+    {
+        string temp = code[i];
+        if (i==0) temp = temp.substr(startPos);
+        
+        for (int j=0; j<temp.length(); j++)
+        {
+            if (temp[i]=='{')
+            {
+                numOpen++;
+            }
+            else if (temp[i]=='}')
+            {
+                numClosed++;
+                if (numClosed==numOpen)
+                {
+                    return i;
+                }
+            }
+        }
+    }
+    
+    return -1;
+}
