@@ -232,13 +232,13 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
             
             
             //e.message += chunks[i][j] + " ";
-            cout << chunks[i][j] << " ";
+            //cout << chunks[i][j] << " ";
         }
         //e.message += "\n";
         //cout << "\n";
     }
     
-    cout << result << "\n";
+    //cout << result << "\n";
     if (result) e.message = "true";
     else e.message = "false";
     
@@ -839,22 +839,25 @@ bool compare(string left, string right, string comparator, string type)
 
 int getClosingBraceLine(vector<string> &code, int curLine, int startPos)
 {
+    if (curLine>=code.size()) return -1;
     int numOpen = 1;
     int numClosed = 0;
-    for (int i=0; i<code.size(); i++)
+    for (int i=curLine; i<code.size(); i++)
     {
         string temp = code[i];
+        //cout << temp << "==\n";
         if (i==0) temp = temp.substr(startPos);
         
         for (int j=0; j<temp.length(); j++)
         {
-            if (temp[i]=='{')
+            if (temp[j]=='{')
             {
                 numOpen++;
             }
-            else if (temp[i]=='}')
+            else if (temp[j]=='}')
             {
                 numClosed++;
+                //cout << numClosed << " " << numOpen << "\n";
                 if (numClosed==numOpen)
                 {
                     return i;

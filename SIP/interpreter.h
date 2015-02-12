@@ -16,6 +16,7 @@
 #include "output.h"
 #include "err.h"
 #include "keywords.h"
+#include "execute.h"
 
 #include "keyword_object.h"
 

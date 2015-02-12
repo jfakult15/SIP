@@ -32,10 +32,34 @@ void interpreter(SaveState &ss, vector<string> &code, vector<string> line, Execu
                 }
                 else
                 {
-                    
+                    if (keyword=="if")
+                    {
+                        curLine++;
+                        if (code[curLine]!="{")
+                        {
+                            output.err.push_back("If statement requires block (starting with opening bracket)");
+                            return;
+                        }
+                        int blockEnd = getClosingBraceLine(code, curLine+1, 0);
+                        if (blockEnd==-1)
+                        {
+                            output.err.push_back("If statement missing closing brace '}'");
+                            return;
+                        }
+                        curLine++;
+                        if (e.message=="false")
+                        {
+                            curLine=blockEnd+1;
+                            return;
+                        }
+                        vector<string> block(code.begin()+curLine, code.begin()+blockEnd);
+                        ss.nestDepth++;
+                        execute(block, output);
+                        ss.nestDepth--;
+                        curLine=blockEnd+1;
+                        //execute code in block!
+                    }
                 }
-                
-                curLine++;
             }
             else if (keyword=="function")
             {
@@ -91,7 +115,7 @@ void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, in
     }
     else
     {
-        cout << "yes\n";
+        //cout << "yes\n";
         Object o;
         bool tokenIsObject=false;
         
