@@ -89,6 +89,10 @@ errVar checkSyntax(vector<string> tokens, ExecutionOutput &output) //returns fir
     {
         err = syntaxPrint(tokens);
     }
+    else if (tokens[0] == "printf")
+    {
+        err = syntaxPrint(tokens);
+    }
     else if (tokens[0] == "input")
     {
         err = syntaxInput(tokens);
@@ -116,11 +120,19 @@ void executeCode(vector<string> code, ExecutionOutput &output)
     output.info.push_back("Executing code...");
     output.info.push_back("Output:");
     
+    errVar e;
+    
     //actual execution
     int curLine=0; //which line we are curently executing
     while (curLine<code.size())
     {
-        interpreter(ss, code, tokenize(code[curLine]), output, curLine);
+        vector<string> tokens = tokenize(code[curLine]);
+        e = interpreter(ss, code, tokens, output, curLine);
+        if (e.errorPos != -1)
+        {
+            output.err.push_back("Runtime error: line " + to_string(curLine) + "\nToken: '" + tokens[e.errorPos] + "'\n\nGot error: " + e.message);
+            return;
+        }
     }
 }
 

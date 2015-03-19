@@ -39,5 +39,9 @@ string getFirstParentheses(string val);
 vector<string> tokenize(string line);
 bool compare(string left, string right, string comparator, string type);
 int getClosingBraceLine(vector<string> &code, int curLine, int startPos);
+errVar anyEval(vector<string> expr, SaveState &ss);
+errVar stringEval(vector<string> expr, SaveState &ss);
+string determineEvalType(vector<string> expr, SaveState &ss);
+string vectorToString(vector<string> v);
 
 #endif /* defined(__SIP__helpers__) */

@@ -84,6 +84,147 @@ string simplifyExpr(string expr, vector<string> parts)
     return "false";
 }
 
+string determineEvalType(vector<string> expr, SaveState &ss)
+{
+    errVar e;
+    
+    string lastType="bool"; //lowest level data type according to the casting hierarchy defined in object.cpp
+    bool currentIsVar=true; //in format e.g x+5+6+y (we are changing between values and concatenation symbols (i.e '+')
+    
+    for (int i=0; i<expr.size(); i++)
+    {
+        if (currentIsVar)
+        {
+            string val = expr[i];
+            
+            if (val=="(" || val==")")
+            {
+                continue;
+            }
+            
+            if (isProperVarName(val))
+            {
+                Object o = getAnyObjectNamed(ss.definedVariables, val);
+                if (o.name != "invalid object name")
+                {
+                    val = o.value;
+                }
+            }
+            Object o;
+            o.value = val;
+            o.type = o.getType();
+            if (objectTypeValue(o.type) > objectTypeValue(lastType))
+            {
+                lastType = o.type;
+            }
+        }
+        else
+        {
+            string v = expr[i];
+            //cout << v << "--\n";
+            if (v!="+" && v!="-" && v!="*" && v!="/" && v!="^" && v!="+=" && v!="-=" && v!="*=" && v!="/=" && v!="^=")
+            {
+                lastType = "Couldn't parse expression";
+            }
+        }
+        currentIsVar = !currentIsVar;
+    }
+    
+    return lastType;
+}
+
+errVar stringEval(vector<string> expr, SaveState &ss)
+{
+    errVar e;
+    
+    string build = "";
+    bool currentIsConcat = false; //i.e '+' symbol
+    for (int i=0; i<expr.size(); i++)
+    {
+        string val = expr[i];
+        
+        if (!currentIsConcat)
+        {
+            Object o;
+            o.value = val;
+            o.type = o.getType();
+            
+            if (o.type != "invalid type")
+            {
+                build += o.getStringValue();
+            }
+            else
+            {
+                cout << "Got: " << val << "\n";
+                e.errorPos = i;
+                e.message = "Unable to parse data type for string";
+                return e;
+            }
+        }
+        else
+        {
+            if (val != "+")
+            {
+                e.message = "You can only add strings: i.e add using '+' operator";
+                e.errorPos = i;
+                return e;
+            }
+        }
+        currentIsConcat = !currentIsConcat;
+    }
+    e.message = build;
+    
+    return e;
+}
+
+errVar anyEval(vector<string> expr, SaveState &ss) //will evaluate expressions of any type using helper eval functions of course
+{
+    errVar e;
+    
+    for (int i=0; i<expr.size(); i++)
+    {
+        if (isProperVarName(expr[i]))
+        {
+            Object o = getAnyObjectNamed(ss.definedVariables, expr[i]);
+            if (o.name != "invalid object name")
+            {
+                expr[i] = o.value;
+            }
+        }
+    }
+    
+    string exprType = determineEvalType(expr, ss);
+    //cout << exprType << "==\n";
+    if (exprType == "bool")
+    {
+        errVar temp = boolEval(expr, ss);
+        e.message = temp.message;
+    }
+    else if (exprType == "int" || exprType == "double")
+    {
+        for (int i=0; i<expr.size(); i++)
+        {
+            if (expr[i]=="true") expr[i]="1";
+            if (expr[i]=="false") expr[i]="0";
+        }
+        string temp = eval(vectorToString(expr));
+        e.message = temp;
+    }
+    else if (exprType == "string")
+    {
+        for (int i=0; i<expr.size(); i++)
+        {
+            if (expr[i]=="true") expr[i]="1";
+            if (expr[i]=="false") expr[i]="0";
+        }
+        errVar temp = stringEval(expr, ss);
+        e.message = temp.message;
+    }
+    //cout << e.message << "-\n";
+    
+    return e;
+}
+
 errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that parameters will be passed in with the outermost parentheses
 {
     errVar e;
@@ -95,6 +236,7 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
         openPar += countOfChars(parts[i], "(");
         closePar += countOfChars(parts[i], ")");
         Object o = getAnyObjectNamed(ss.definedVariables, parts[i]);
+        //cout << parts[i] << "==\n";
         if (o.name != "invalid object name")
         {
             parts[i] = o.value;
@@ -194,7 +336,6 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
         for (int j=0; j<chunks[i].size(); j++)
         {
             string temp = chunks[i][j];
-            
             if (temp=="true")
             {
                 lastResult = true;
@@ -224,6 +365,15 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
                 result = result || lastResult;
                 comparator = "";
             }
+            else
+            {
+                if (!seenFirstResult)
+                {
+                    result = true;
+                    seenFirstResult=true;
+                }
+                result = result && lastResult;
+            }
             
             if (temp=="&&" || temp=="||")
             {
@@ -238,7 +388,7 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
         //cout << "\n";
     }
     
-    //cout << result << "\n";
+    //cout << result << "==\n";
     if (result) e.message = "true";
     else e.message = "false";
     
@@ -269,6 +419,7 @@ string getFirstParentheses(string val) //under the assumption that val[0] == "("
 
 string eval(string val)
 {
+    
     if (isNum(val))
         return val;//atof(val.c_str());
     
@@ -295,6 +446,7 @@ string eval(string val)
         int pos=int(val.find("^"));
         string before=findBefore(val, pos-1);
         string after=findAfter(val, pos+1);
+        
         double temp = pow(atof(before.c_str()), atof(after.c_str()));
         string pow=to_string(temp);
         val=val.substr(0,pos-int(before.length()))+pow+val.substr(pos+int(after.length())+1);
@@ -323,6 +475,7 @@ string eval(string val)
         int pos=int(val.find("+"));
         string before=findBefore(val, pos-1);
         string after=findAfter(val, pos+1);
+        
         string add=to_string(int(round(atof(before.c_str()) + atof(after.c_str()))));
         val=val.substr(0,pos-int(before.length()))+add+val.substr(pos+int(after.length())+1);
     }
@@ -503,7 +656,7 @@ int countOfChars(string str, string match)
     return count;
 }
 
-void recombine(vector<string> &output, string str)
+void recombine(vector<string> &output, string str1, string str2)
 {
     if (output.size()<=1) //nothing to combine
     {
@@ -516,9 +669,9 @@ void recombine(vector<string> &output, string str)
     for (int i=1; i<output.size(); i++)
     {
         thisStr = output[i];
-        if (lastStr == thisStr && thisStr == str)
+        if (lastStr == str1 && thisStr == str2)
         {
-            output[i-1] += str;
+            output[i-1] += str2;
             output.erase(output.begin()+i);
         }
         
@@ -586,7 +739,9 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
     output = seperateAll(line, splits);
     
     //recombine necessary parts
-    recombine(output, "=");
+    recombine(output, "=", "=");
+    recombine(output, "<", "=");
+    recombine(output, ">", "=");
     //recombine(output, "\"", "\"", true);
     recombineBetween(output, "'", true);
     recombineBetween(output, "\"", true);
@@ -718,6 +873,7 @@ bool compare(string left, string right, string comparator, string type)
     }
     else if (comparator=="<=")
     {
+        //cout << left << " " << right << "\n";
         //no bool
         if (type=="int")
         {

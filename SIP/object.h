@@ -28,6 +28,7 @@ public:
     int getIntValue();
     double getDoubleValue();
     string getStringValue();
+    string toString();
     char getCharValue();
     bool getBoolValue();
     bool isCorrectDataFormat();

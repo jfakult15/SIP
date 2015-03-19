@@ -7,6 +7,7 @@
 //
 
 #include "keyword_while_if.h"
+#include "execute.h"
 
 using namespace std;
 
@@ -21,4 +22,124 @@ errVar syntaxIfWhile(vector<string> tokens)
     }
     
     return err;
+}
+
+errVar executeIf(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss)
+{
+    string keyword = line[0];
+    
+    line.erase(line.begin()); //we don't need keyword parts of the statements here
+    errVar e = boolEval(line, ss);
+    if (e.errorPos>=0)
+    {
+        //output.err.push_back(e.message);
+        curLine++;
+        return e;
+    }
+    else
+    {
+        curLine++;
+        if (code[curLine]!="{")
+        {
+            //output.err.push_back("If statement requires block (starting with opening bracket)");
+            e.message = "If statement requires block (starting with opening bracket)";
+            e.errorPos = curLine;
+            return e;
+        }
+        int blockEnd = getClosingBraceLine(code, curLine+1, 0);
+        if (blockEnd==-1)
+        {
+            //output.err.push_back("If statement missing closing brace '}'");
+            e.message = "If statement missing closing brace '}'";
+            e.errorPos = curLine;
+            return e;
+        }
+        curLine++;
+        if (e.message=="false")
+        {
+            curLine=blockEnd+1;
+            return e;
+        }
+        vector<string> block(code.begin()+curLine, code.begin()+blockEnd);
+        ss.nestDepth++;
+        execute(block, output);
+        ss.nestDepth--;
+        curLine=blockEnd+1;
+        //execute code in block!
+    }
+    
+    return e;
+}
+
+errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss)
+{
+    int firstLine = curLine;
+    string keyword = line[0];
+    
+    line.erase(line.begin()); //we don't need keyword parts of the statements here
+    errVar e;// = boolEval(line, ss);
+    int blockEnd = getClosingBraceLine(code, curLine+1, 0);
+    
+    if (e.errorPos>=0)
+    {
+        return e;
+    }
+    
+    while (true)//e.message!="false")
+    {
+        e = boolEval(line, ss);
+        //cout << getAnyObjectNamed(ss.definedVariables, "x").value << " " << e.message << "\n";
+        //cout << e.message << " " << vectorToString(line) << "--1\n";
+        if (e.message != "true" && e.message != "false")
+        {
+            e.errorPos = curLine;
+            curLine = blockEnd;
+            return e;
+        }
+        //cout << e.message << " " << vectorToString(line) << "--\n";
+        if (e.message!="true")
+        {
+            break;
+        }
+        
+        //cout << getAnyObjectNamed(ss.definedVariables, "x").value << " " << e.message << "\n";
+        
+        curLine++;
+        if (code[curLine]!="{")
+        {
+            //output.err.push_back("If statement requires block (starting with opening bracket)");
+            e.message = "If statement requires block (starting with opening bracket)";
+            e.errorPos = curLine;
+            return e;
+        }
+        blockEnd = getClosingBraceLine(code, curLine+1, 0);
+        if (blockEnd==-1)
+        {
+            //output.err.push_back("If statement missing closing brace '}'");
+            e.message = "If statement missing closing brace '}'";
+            e.errorPos = curLine;
+            return e;
+        }
+        curLine++;
+        /*if (e.message=="false")
+        {
+            curLine=blockEnd+1;
+            return e;
+        }*/
+        vector<string> block(code.begin()+curLine, code.begin()+blockEnd);
+        ss.nestDepth++;
+        //cout << getAnyObjectNamed(ss.definedVariables, "x").value << " " << e.message << "\n";
+        execute(block, output);
+        ss.nestDepth--;
+        //execute code in block!
+        curLine = firstLine;
+    }
+    
+    if (e.message!="false")
+    {
+        return e;
+    }
+    
+    curLine = blockEnd + 1;
+    return e;
 }

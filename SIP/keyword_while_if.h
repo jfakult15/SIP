@@ -14,5 +14,7 @@
 #include <vector>
 
 errVar syntaxIfWhile(vector<string> tokens);
+errVar executeIf(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss);
+errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss);
 
 #endif /* defined(__SIP__keyword_while_if__) */

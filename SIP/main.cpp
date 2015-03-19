@@ -27,10 +27,10 @@ int main(int argc, const char * argv[])
 {
     bool verbose = false;
     
-    /*vector<string> temp = tokenize("(true || (5>5))");
+    /*vector<string> temp = tokenize("5+72+'hi'+false");
     //vector<string> temp = tokenize("(true || (7+1>5) && true && (5+(2*6)>31.6)|| ('byebye'=='hello'))");
     SaveState ss;
-    cout << boolEval(temp, ss).message;
+    cout << anyEval(temp, ss).message << "==\n";
     exit(0);*/
     
     argc = 2;
@@ -65,12 +65,12 @@ int main(int argc, const char * argv[])
                     cout << output.err[i] << "\n";
                 }
             }
-            else
+            else //everything is printed dynamically?
             {
-                for (int i=0; i<output.output.size(); i++)
+                /*for (int i=0; i<output.output.size(); i++)
                 {
                     cout << output.output[i] << "\n";
-                }
+                }*/
             }
             
             return 0; //we will exit as soon as we find and run a readable file

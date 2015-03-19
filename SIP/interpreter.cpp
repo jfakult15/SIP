@@ -12,54 +12,26 @@ using namespace std;
 
 map<string, KeywordObject> keywords=initKeywordObjects();
 
-void interpreter(SaveState &ss, vector<string> &code, vector<string> line, ExecutionOutput &output, int &curLine)
+errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, ExecutionOutput &output, int &curLine)
 {
     string keyword = line[0];
+    errVar e;
     
     if (keywords.find(keyword) != keywords.end()) //keyword exists (is defined)
     {
         if (keywords[keyword].isBlockStatement)
         {
-            if (keyword=="if" || keyword=="while")
+            if (keyword=="if")
             {
-                line.erase(line.begin()); //we don't need if, while, var statements here etc
-                errVar e = boolEval(line, ss);
-                if (e.errorPos>=0)
-                {
-                    output.err.push_back(e.message);
-                    curLine++;
-                    return;
-                }
-                else
-                {
-                    if (keyword=="if")
-                    {
-                        curLine++;
-                        if (code[curLine]!="{")
-                        {
-                            output.err.push_back("If statement requires block (starting with opening bracket)");
-                            return;
-                        }
-                        int blockEnd = getClosingBraceLine(code, curLine+1, 0);
-                        if (blockEnd==-1)
-                        {
-                            output.err.push_back("If statement missing closing brace '}'");
-                            return;
-                        }
-                        curLine++;
-                        if (e.message=="false")
-                        {
-                            curLine=blockEnd+1;
-                            return;
-                        }
-                        vector<string> block(code.begin()+curLine, code.begin()+blockEnd);
-                        ss.nestDepth++;
-                        execute(block, output);
-                        ss.nestDepth--;
-                        curLine=blockEnd+1;
-                        //execute code in block!
-                    }
-                }
+                e = executeIf(line, code, output, curLine, ss);
+            }
+            else if (keyword=="while")
+            {
+                e = executeWhile(line, code, output, curLine, ss);
+            }
+            else if (keyword=="for")
+            {
+                
             }
             else if (keyword=="function")
             {
@@ -69,17 +41,17 @@ void interpreter(SaveState &ss, vector<string> &code, vector<string> line, Execu
         else if (keywords[keyword].isSingleWordStatement) //break or continue mostly
         {
             //do something
-            analyzeLine(line, ss, output, curLine);
+            e = analyzeLine(line, ss, output, curLine);
             curLine++;
         }
         else if (keywords[keyword].isSingleLineStatement)
         {
-            analyzeLine(line, ss, output, curLine);
+            e = analyzeLine(line, ss, output, curLine);
             curLine++;
         }
         else
         {
-            output.err.push_back("wtf kind of statement is this?");
+            output.err.push_back("What kind of statement is this?");
         }
     }
     else //probably a variable that is starting the line
@@ -87,13 +59,15 @@ void interpreter(SaveState &ss, vector<string> &code, vector<string> line, Execu
         analyzeLine(line, ss, output, curLine);
         curLine++;
     }
+    
+    return e;
 }
 
-void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, int &curLine)
+errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, int &curLine)
 {
     if (line.size()==0)
     {
-        return;
+        return errVar();
     }
     
     errVar err;
@@ -103,7 +77,11 @@ void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, in
     
     if (keyword=="print")
     {
-        err = executePrint(line, output, ss);
+        err = executePrint(line, output, ss, true);
+    }
+    else if (keyword=="printf")
+    {
+        err = executePrint(line, output, ss, false);
     }
     else if (keyword=="var")
     {
@@ -115,7 +93,6 @@ void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, in
     }
     else
     {
-        //cout << "yes\n";
         Object o;
         bool tokenIsObject=false;
         
@@ -126,12 +103,37 @@ void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, in
             if (o.name!="invalid object name") //we found a variable for this value!
             {
                 tokenIsObject = true;
-                depth = ss.nestDepth;
+                depth = ss.definedVariables.size();
             }
         }
-        if (!tokenIsObject)
+        if (tokenIsObject)
         {
-            
+            if (line[1] != "=")
+            {
+                err.errorPos = 1;
+                err.message = "Invalid assignment operator (i.e use "+keyword+" = value";
+                return err;
+            }
+            string expr = vectorToString(vector<string>(line.begin()+2, line.end()-1));
+            //cout << expr << "=\n";
+            expr = anyEval(tokenize(expr), ss).message;
+            Object o;
+            o.value = expr;
+            //cout << o.value << " yes==\n";
+            o.type = o.getType();
+            if (o.type == "invalid type")
+            {
+                err.errorPos = 2;
+                err.message = "Invalid assignment value";
+                return err;
+            }
+            if (line[line.size()-1] != ";")
+            {
+                err.errorPos = 3;
+                err.message = "Variable assignment missing semicolon";
+                return err;
+            }
+            setObjectWithName(ss.definedVariables, keyword, o.value);
         }
         else
         {
@@ -140,10 +142,11 @@ void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, in
         }
     }
     
-    if (err.errorPos != -1)
+    /*if (err.errorPos != -1)
     {
         output.err.push_back("Runtime error: line "+to_string(curLine+1));
         output.err.push_back("\"" + line[err.errorPos] + "\"\n" );
         output.err.push_back("Got error: " + err.message);
-    }
+    }*/
+    return err;
 }

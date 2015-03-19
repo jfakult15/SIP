@@ -17,10 +17,11 @@
 #include "err.h"
 #include "keywords.h"
 #include "execute.h"
+#include "helpers.h"
 
 #include "keyword_object.h"
 
-void interpreter(SaveState &ss, vector<string> &code, vector<string> line, ExecutionOutput &output, int &curLine);
-void analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, int &curLine);
+errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, ExecutionOutput &output, int &curLine);
+errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, int &curLine);
 
 #endif /* defined(__SIP__interpreter__) */

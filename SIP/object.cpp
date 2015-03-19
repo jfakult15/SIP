@@ -31,11 +31,29 @@ string Object::getType()
 
 int Object::getIntValue()
 {
-    return stoi(value);
+    if (value=="true")
+    {
+        return 1;
+    }
+    else if (value=="false")
+    {
+        return 0;
+    }
+    return stoi(value.c_str());
 }
 
 double Object::getDoubleValue()
 {
+    //cout << value << "---\n";
+    if (value=="true")
+    {
+        return 1.0;
+    }
+    else if (value=="false")
+    {
+        return 0.0;
+    }
+    
     return atof(value.c_str());
 }
 
@@ -181,6 +199,7 @@ bool setObjectWithName(vector<vector<Object> > &v, string name, string value)
         {
             if (v[i][j].name == name)
             {
+                //cout << "Value: " << value << "\n";
                 v[i][j].value = value;
                 v[i][j].type = v[i][j].getType();
                 return true;

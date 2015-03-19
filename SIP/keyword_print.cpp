@@ -59,12 +59,14 @@ errVar syntaxPrint(vector<string> tokens)
 
 #include "object.h"
 
-errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &ss)
+errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &ss, bool lineBreak)
 {
     errVar err;
     err.errorPos=-1;
     
     string printStr = "";
+    
+    bool concatFromString = false;;
     
     for (int i=1; i<tokens.size()-1; i++)
     {
@@ -74,56 +76,56 @@ errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &s
         
         bool isString = ((tokens[i][0]=='"' && tokens[i][tokens[i].length()-1]=='"') || (tokens[i][0]=='\'' && tokens[i][tokens[i].length()-1]=='\''));
         
-        if (!isString)
+        if (isString)
         {
-            if (tokens[i] == "+")
+            concatFromString = true;
+            printStr+=tokens[i].substr(1, tokens[i].length()-2);
+            continue;
+        }
+
+        vector<string> eval;
+        while (!isString && i<tokens.size()-1)
+        {
+            if (concatFromString)
             {
+                concatFromString = false;
+                i++;
                 continue;
             }
-            if (tokens[i]!="+")
+            eval.push_back(tokens[i]);
+            i++;
+            isString = ((tokens[i][0]=='"' && tokens[i][tokens[i].length()-1]=='"') || (tokens[i][0]=='\'' && tokens[i][tokens[i].length()-1]=='\''));
+        }
+        
+        
+        if (eval.size() > 0)
+        {
+            Object o;
+            errVar e = anyEval(eval, ss);
+            //cout << e.message << "==\n";
+            if (e.errorPos == -1)
             {
-                Object o;
-                bool tokenIsObject=false;
-                
-                for (int depth=0; depth<ss.definedVariables.size(); depth++)
-                {
-                    o = getObjectByName(ss.definedVariables[depth], tokens[i]);
-                    
-                    if (o.name!="invalid object name") //we found a variable for this value!
-                    {
-                        tokenIsObject = true;
-                        depth = ss.nestDepth;
-                        
-                        printStr += o.value;
-                    }
-                }
-                if (!tokenIsObject)
-                {
-                    err.errorPos = i;
-                    err.message = "Unknown variable";
-                }
+                printStr += e.message;
             }
             else
             {
-                err.errorPos = i;
-                string type = temp.getType();
-                err.message = "Unable to cast '" + type + "' to string";
+                //output.err.push_back("Runtime error: \nToken: '" + eval[e.errorPos] + "'\n\nGot error: " + e.message);
+                output.err.push_back("Runtime error: unable to evaluate print expression");
             }
-        }
-        else
-        {
-            printStr+=tokens[i].substr(1, tokens[i].length()-2);
         }
     }
     
     if (err.errorPos == -1)
     {
         output.output.push_back(printStr);
+        cout << printStr;
+        if (lineBreak) cout << "\n";
     }
     /*else
     {
         output.err.push_back(err.message);
     }*/
+    //cout << printStr;
     return err;
 }
 
