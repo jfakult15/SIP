@@ -54,7 +54,7 @@ errVar syntaxPrint(vector<string> tokens)
         err.message = "Missing a semicolon";
     }
     
-    return err;
+    return err; 
 }
 
 #include "object.h"
