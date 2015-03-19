@@ -1,7 +1,7 @@
 
 SIP - The Students Introduction to Programing
 -
-
+A work in progress...
 
 ---
 
