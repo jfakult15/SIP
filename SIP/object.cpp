@@ -215,7 +215,7 @@ int objectTypeValue(string t) //casting hierarchy helper
     if (t=="int") return 2;
     if (t=="double") return 3;
     if (t=="string") return 4;
-    return 5; //invalid type
+    return 5;  //invalid type
     
 }
 
