@@ -7,6 +7,7 @@
 //
 
 #include "keyword_print.h"
+#include "object.h"
 
 using namespace std;
 
@@ -54,10 +55,8 @@ errVar syntaxPrint(vector<string> tokens)
         err.message = "Missing a semicolon";
     }
     
-    return err; 
+    return err;
 }
-
-#include "object.h"
 
 errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &ss, bool lineBreak)
 {
