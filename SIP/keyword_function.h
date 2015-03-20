@@ -17,5 +17,6 @@
 #include "keyword_var.h"
 
 errVar syntaxFunction(vector<string> tokens);
+errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss);
 
 #endif /* defined(__SIP__keyword_function__) */

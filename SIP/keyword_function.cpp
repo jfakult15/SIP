@@ -103,11 +103,18 @@ errVar syntaxFunction(vector<string> tokens)
     return e;
 }
 
-errVar executeFunction()
+errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss)
 {
     errVar e;
     
+    int firstLine = curLine;
+    //string keyword = line[0];
     
+    //line.erase(line.begin()); //we don't need keyword parts of the statements here
+    int blockEnd = getClosingBraceLine(code, curLine+1, 0);
+    curLine = blockEnd;
+    
+    cout << "Hi :)\n";
     
     return e;
 }
