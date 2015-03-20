@@ -29,6 +29,11 @@ errVar syntaxVar(vector<string> tokens)
         err.message="Invalid variable name";
     }
     
+    if (tokens.size() == 3)
+    {
+        if (tokens[2]==";") return err;
+    }
+    
     obj.name=varName;
     
     //cout << tokens[1] << "--\n";
@@ -96,9 +101,13 @@ errVar executeVar(vector<string> tokens, SaveState &ss)
     
     obj.name=tokens[1];
     
-    string varValue=tokens[3];
-    
-    string type=determineType(varValue);
+    string varValue = "";
+    string type = "string";
+    if (tokens.size() > 3)
+    {
+        varValue=tokens[3];
+        type=determineType(varValue);
+    }
     
     obj.type=type;
     obj.value=varValue;

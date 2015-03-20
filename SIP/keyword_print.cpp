@@ -69,14 +69,17 @@ errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &s
     
     for (int i=1; i<tokens.size()-1; i++)
     {
+        //cout << tokens[i] << "==\n";
         Object temp;
         temp.value = tokens[i];
         string value = temp.value;
         
         bool isString = ((tokens[i][0]=='"' && tokens[i][tokens[i].length()-1]=='"') || (tokens[i][0]=='\'' && tokens[i][tokens[i].length()-1]=='\''));
         
+        //cout << tokens[i] << "==\n";
         if (isString)
         {
+            //cout << tokens[i] << "--\n";
             concatFromString = true;
             printStr+=tokens[i].substr(1, tokens[i].length()-2);
             continue;
@@ -95,10 +98,12 @@ errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &s
             i++;
             isString = ((tokens[i][0]=='"' && tokens[i][tokens[i].length()-1]=='"') || (tokens[i][0]=='\'' && tokens[i][tokens[i].length()-1]=='\''));
         }
+        i--;
         
         
         if (eval.size() > 0)
         {
+            //cout << vectorToString(eval) << "==\n";
             Object o;
             errVar e = anyEval(eval, ss);
             //cout << e.message << "==\n";

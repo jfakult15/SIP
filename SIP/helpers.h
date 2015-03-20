@@ -43,5 +43,6 @@ errVar anyEval(vector<string> expr, SaveState &ss);
 errVar stringEval(vector<string> expr, SaveState &ss);
 string determineEvalType(vector<string> expr, SaveState &ss);
 string vectorToString(vector<string> v);
+string toLowerCase(string s);
 
 #endif /* defined(__SIP__helpers__) */

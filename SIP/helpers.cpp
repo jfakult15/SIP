@@ -155,7 +155,7 @@ errVar stringEval(vector<string> expr, SaveState &ss)
             }
             else
             {
-                cout << "Got: " << val << "\n";
+                //cout << "Got: " << val << "\n";
                 e.errorPos = i;
                 e.message = "Unable to parse data type for string";
                 return e;
@@ -181,6 +181,8 @@ errVar anyEval(vector<string> expr, SaveState &ss) //will evaluate expressions o
 {
     errVar e;
     
+    string exprType = determineEvalType(expr, ss);;
+    
     for (int i=0; i<expr.size(); i++)
     {
         if (isProperVarName(expr[i]))
@@ -189,11 +191,12 @@ errVar anyEval(vector<string> expr, SaveState &ss) //will evaluate expressions o
             if (o.name != "invalid object name")
             {
                 expr[i] = o.value;
+                //cout << expr[i] << "--\n";
+                exprType = o.type;
             }
         }
     }
     
-    string exprType = determineEvalType(expr, ss);
     //cout << exprType << "==\n";
     if (exprType == "bool")
     {
@@ -732,8 +735,8 @@ void recombineBetween(vector<string> &output, string str, bool hasEscapeQuote) /
 vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
 {
     vector<string> output;
-    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+", "-", "*", "/", "<", ">", "<=", ">=" };
-    vector<string> removables = {" "};
+    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+", "-", "*", "/", "<", ">", "<=", ">=", "," };
+    vector<string> removables = {" ", string(1, char(8))};
     
     //split and seperate chunks (i.e tokenize them)
     output = seperateAll(line, splits);
@@ -749,9 +752,9 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
     removeVectorParts(output, removables);
     
     /*for (int i=0; i<output.size(); i++)
-     {
-     cout << output[i] << "\n";
-     }*/
+    {
+         cout << output[i] << "\n";
+    }*/
     
     return output;
 }
@@ -1023,4 +1026,16 @@ int getClosingBraceLine(vector<string> &code, int curLine, int startPos)
     }
     
     return -1;
+}
+
+string toLowerCase(string s)
+{
+    for (int i=0; i<s.length(); i++)
+    {
+        if (int(s[i]) >= 65 && int(s[i]) <= 90)
+        {
+            s[i] = char(int(s[i])+32);
+        }
+    }
+    return s;
 }

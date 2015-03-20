@@ -14,7 +14,7 @@ Object::Object()
 {
     type="string";
     name="invalid object name";
-    value="0";
+    value="";
 }
 
 Object::Object(string newType, string newName, string newValue)
@@ -148,7 +148,8 @@ string determineType(string value) //very simplistic, I hope this will satisfy a
     if (value.find(".")!=string::npos) return "double";
     if (value=="true" || value=="false") return "bool";
     if (isNum(value)) return "int";
-    return "invalid type";
+    //return "invalid type";
+    return "string";
 }
 
 Object getObjectByName(vector<Object> &v, string name)
@@ -215,7 +216,8 @@ int objectTypeValue(string t) //casting hierarchy helper
     if (t=="int") return 2;
     if (t=="double") return 3;
     if (t=="string") return 4;
-    return 5;  //invalid type
+    return 4; //string by default?
+    //return 5;  //invalid type
     
 }
 

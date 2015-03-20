@@ -53,7 +53,7 @@ errVar checkSyntax(vector<string> tokens, ExecutionOutput &output) //returns fir
     
     if (tokens.size()==0)
     {
-        output.info.push_back("No tokens found... quitting :(");
+        output.info.push_back("No tokens found... quitting :("); //this shouldn't ever happen of course
         exit(1);
     }
     
@@ -100,6 +100,10 @@ errVar checkSyntax(vector<string> tokens, ExecutionOutput &output) //returns fir
     else if (tokens[0][0] == '#') //comment
     {
         //do nothing
+    }
+    else
+    {
+        //we catch unknown things on the runtime side
     }
     
     return err;

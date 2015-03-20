@@ -35,7 +35,7 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
             }
             else if (keyword=="function")
             {
-                
+                //e = executeFunction(
             }
         }
         else if (keywords[keyword].isSingleWordStatement) //break or continue mostly

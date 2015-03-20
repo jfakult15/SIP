@@ -15,7 +15,34 @@ errVar syntaxInput(vector<string> tokens)
     if (tokens.size()<3)
     {
         e.errorPos = tokens.size()-1;
-        e.message = "Improper input syntax (format: input 'variableName1 variableName2;'";
+        e.message = "Improper input syntax (format: input knownVariable1, knownVariable2, ...;)";
+    }
+    else if (tokens.size() > 3)
+    {
+        bool properSyntax = true;
+        for (int i=1; i<tokens.size()-1; i++)
+        {
+            if (i % 2 == 1) //expect a variable
+            {
+                string varName = tokens[i];
+                if (!isProperVarName(varName))
+                {
+                    e.errorPos = i;
+                    e.message = "Improper input syntax: expected variable, found: '" + varName + "'";
+                    return e;
+                }
+            }
+            else //expect a comma to seperate variables
+            {
+                string temp = tokens[i];
+                if (temp != ",")
+                {
+                    e.errorPos = i;
+                    e.message = "Improper input syntax: expected comma seperated variables, found '" + temp + "'";
+                    return e;
+                }
+            }
+        }
     }
     else if (tokens[tokens.size()-1] != ";")
     {

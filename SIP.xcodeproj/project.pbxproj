@@ -42,6 +42,7 @@
 /* Begin PBXFileReference section */
 		3F0DD68C19E57E59005F511F /* helpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helpers.cpp; sourceTree = "<group>"; };
 		3F0DD68D19E57E59005F511F /* helpers.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = helpers.h; sourceTree = "<group>"; };
+		3F1E6C6F1ABB96EE004DD61E /* sip_core.sip */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sip_core.sip; sourceTree = "<group>"; };
 		3F777C3919C0D16700E4F0DE /* SIP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SIP; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F777C3C19C0D16700E4F0DE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		3F777C3E19C0D16700E4F0DE /* SIP.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SIP.1; sourceTree = "<group>"; };
@@ -89,6 +90,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3F1E6C6E1ABB9695004DD61E /* import */ = {
+			isa = PBXGroup;
+			children = (
+				3F1E6C6F1ABB96EE004DD61E /* sip_core.sip */,
+			);
+			name = import;
+			sourceTree = "<group>";
+		};
 		3F777C3019C0D16700E4F0DE = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +133,7 @@
 				3F0DD68C19E57E59005F511F /* helpers.cpp */,
 				3F0DD68D19E57E59005F511F /* helpers.h */,
 				3FAE215C1A488AC5000FEB2E /* save_state.h */,
+				3F1E6C6E1ABB9695004DD61E /* import */,
 				3FAE21441A463C22000FEB2E /* keywords */,
 				3F777C3E19C0D16700E4F0DE /* SIP.1 */,
 				3FAE215E1A48AD5E000FEB2E /* output.h */,
