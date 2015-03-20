@@ -10,6 +10,7 @@
 #include "object.h"
 #include "err.h"
 #include "helpers.h"
+#include "levenshtein.h"
 
 #include <iostream>
 #include <fstream>
