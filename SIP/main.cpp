@@ -11,6 +11,7 @@
 #include "err.h"
 #include "helpers.h"
 #include "levenshtein.h"
+#include "io.h"
 
 #include <iostream>
 #include <fstream>
@@ -26,8 +27,6 @@ vector<string> readFile(ifstream &file);
 
 int main(int argc, const char * argv[])
 {
-    bool verbose = false;
-    
     /*vector<string> temp = tokenize("5+72+'hi'+false");
     //vector<string> temp = tokenize("(true || (7+1>5) && true && (5+(2*6)>31.6)|| ('byebye'=='hello'))");
     SaveState ss;
@@ -44,7 +43,7 @@ int main(int argc, const char * argv[])
         {
             input=readFile(file);
             input.insert(input.begin(), "import \"sip_core\";");
-            execute(input, output/*, verbose*/);
+            execute(input, output);
             
             if (verbose)
             {
@@ -85,20 +84,4 @@ int main(int argc, const char * argv[])
     cout << "Couldn't find a file!\n";
     
     return 0;
-}
-
-vector<string> readFile(ifstream &file)
-{
-    vector<string> tempLines;
-    while (!file.eof())
-    {
-        string temp;
-        getline(file, temp);
-        
-        if (temp.length()>0)
-        {
-            tempLines.push_back(temp);
-        }
-    }
-    return tempLines;
 }

@@ -93,7 +93,7 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
     }
     else if (keyword=="import")
     {
-        err = executeImport(line, ss);
+        err = executeImport(line, output, ss);
     }
     else
     {

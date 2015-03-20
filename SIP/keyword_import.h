@@ -11,10 +11,14 @@
 
 #include <stdio.h>
 
-#include <vector>
+#include <iostream>
+
+#include "execute.h"
 #include "err.h"
+#include "io.h"
 
 errVar syntaxImport(vector<string> tokens);
-errVar executeImport(vector<string> tokens, SaveState &ss);
+errVar executeImport(vector<string> tokens, ExecutionOutput &output, SaveState &ss);
+errVar executeFile(string path, ExecutionOutput &output);
 
 #endif /* defined(__SIP__keyword_import__) */

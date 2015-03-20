@@ -29,4 +29,6 @@ errVar checkSyntax(vector<string> line, ExecutionOutput &output);
 int getObjectNamed(vector<Object> &objects, string name);
 void executeCode(vector<string> code, ExecutionOutput &output);
 
+extern bool verbose;
+
 #endif /* defined(__SIP__execute__) */

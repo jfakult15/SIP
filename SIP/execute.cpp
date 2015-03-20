@@ -19,6 +19,8 @@ using namespace std;
 
 struct SaveState ss;
 
+bool verbose = false;
+
 void execute(vector<string> code, ExecutionOutput &output)
 {
     output.info.push_back("Executing...\n");

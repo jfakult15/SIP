@@ -29,11 +29,74 @@ errVar syntaxImport(vector<string> tokens)
     return e;
 }
 
-errVar executeImport(vector<string> tokens, SaveState &ss)
+errVar executeImport(vector<string> tokens, ExecutionOutput &output, SaveState &ss)
 {
     errVar e;
     
+    executeFile(tokens[1], output);
     
+    return e;
+}
+
+errVar executeFile(string path, ExecutionOutput &output)
+{
+    errVar e;
+    
+    vector<string> input;
+    
+    path = path.substr(1, path.length()-2); //remove enclosing quotations
+    
+    if (path.length() < 5 || path.substr(path.length()-5, 4) != ".sip")
+    {
+        path += ".sip";
+    }
+    
+    ifstream file;
+    file.open("./import/"+path);
+    
+    if (!file.is_open())
+    {
+        if (path == "sip_core.sip")
+        {
+            output.warnings.push_back("Unable to locate file 'sip_core.sip' in directory 'import'.\nThis directory must be in the same location as the SIP executable");
+        }
+        
+        file.open(path);
+    }
+    
+    if (!file.is_open())
+    {
+        e.errorPos = 1;
+        e.message = "Unable to find import file with error: " + string(strerror(errno));
+        return e;
+    }
+    
+    input=readFile(file);
+    execute(input, output);
+    if (verbose)
+    {
+        for (int i=0; i<output.info.size(); i++)
+        {
+            cout << output.info[i] << "\n";
+        }
+    }
+    if (output.warnings.size()>0)
+    {
+        for (int i=0; i<output.warnings.size(); i++)
+        {
+            cout << output.warnings[i] << "\n";
+        }
+    }
+    if (output.err.size()>0)
+    {
+        for (int i=0; i<output.err.size(); i++)
+        {
+            cout << output.err[i] << "\n";
+        }
+        exit(0);
+    }
+    
+    file.close();
     
     return e;
 }
