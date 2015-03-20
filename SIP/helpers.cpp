@@ -314,7 +314,7 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
     }
     cout << "\n";*/
     
-    bool seenFirstResult=false;
+    bool seenFirstResult=false; 
     
     bool result=false;
     bool lastResult=false;
