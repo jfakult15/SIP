@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3F0DD68E19E57E59005F511F /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F0DD68C19E57E59005F511F /* helpers.cpp */; };
 		3F5EFF711ABCA54700413EA4 /* levenshtein.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F5EFF6F1ABCA54700413EA4 /* levenshtein.cpp */; };
+		3F5EFF741ABCA90B00413EA4 /* keyword_import.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F5EFF721ABCA90B00413EA4 /* keyword_import.cpp */; };
 		3F777C3D19C0D16700E4F0DE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F777C3C19C0D16700E4F0DE /* main.cpp */; };
 		3F777C3F19C0D16700E4F0DE /* SIP.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3F777C3E19C0D16700E4F0DE /* SIP.1 */; };
 		3F777C4719C0E66400E4F0DE /* execute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F777C4519C0E66400E4F0DE /* execute.cpp */; };
@@ -46,6 +47,8 @@
 		3F1E6C6F1ABB96EE004DD61E /* sip_core.sip */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sip_core.sip; sourceTree = "<group>"; };
 		3F5EFF6F1ABCA54700413EA4 /* levenshtein.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = levenshtein.cpp; sourceTree = "<group>"; };
 		3F5EFF701ABCA54700413EA4 /* levenshtein.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = levenshtein.h; sourceTree = "<group>"; };
+		3F5EFF721ABCA90B00413EA4 /* keyword_import.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keyword_import.cpp; sourceTree = "<group>"; };
+		3F5EFF731ABCA90B00413EA4 /* keyword_import.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyword_import.h; sourceTree = "<group>"; };
 		3F777C3919C0D16700E4F0DE /* SIP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SIP; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F777C3C19C0D16700E4F0DE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		3F777C3E19C0D16700E4F0DE /* SIP.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SIP.1; sourceTree = "<group>"; };
@@ -166,6 +169,8 @@
 				3FAE21561A4887FC000FEB2E /* one_word_statement.h */,
 				3FAE21621A4B4940000FEB2E /* keyword_object.cpp */,
 				3FAE21631A4B4940000FEB2E /* keyword_object.h */,
+				3F5EFF721ABCA90B00413EA4 /* keyword_import.cpp */,
+				3F5EFF731ABCA90B00413EA4 /* keyword_import.h */,
 			);
 			name = keywords;
 			sourceTree = "<group>";
@@ -237,6 +242,7 @@
 				3FCFB2701A854B5700B5B3AF /* execution_startup_manager.cpp in Sources */,
 				3FAE214B1A463D84000FEB2E /* keyword_for.cpp in Sources */,
 				3FAE21571A4887FC000FEB2E /* one_word_statement.cpp in Sources */,
+				3F5EFF741ABCA90B00413EA4 /* keyword_import.cpp in Sources */,
 				3FAE21541A4682D3000FEB2E /* keyword_print.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

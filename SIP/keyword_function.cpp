@@ -98,13 +98,17 @@ errVar syntaxFunction(vector<string> tokens)
     {
         e.errorPos = int(tokens.size())-1;
         e.message = "Function declarations should not have a semicolon";
+        return e;
     }
+    
+    
     
     return e;
 }
 
 errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss)
 {
+    
     errVar e;
     
     int firstLine = curLine;
@@ -114,7 +118,8 @@ errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutp
     int blockEnd = getClosingBraceLine(code, curLine+1, 0);
     curLine = blockEnd;
     
-    cout << "Hi :)\n";
+    //FunctionObject(string newName, int newStartLine, int newEndLine, int newNumParams)
+    cout << "hi :)\n";
     
     return e;
 }

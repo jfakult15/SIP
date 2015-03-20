@@ -91,6 +91,10 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
     {
         err = executeInput(line, ss);
     }
+    else if (keyword=="import")
+    {
+        err = executeImport(line, ss);
+    }
     else
     {
         Object o;

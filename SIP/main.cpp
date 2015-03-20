@@ -43,6 +43,7 @@ int main(int argc, const char * argv[])
         if (file.is_open())
         {
             input=readFile(file);
+            input.insert(input.begin(), "import \"sip_core\";");
             execute(input, output/*, verbose*/);
             
             if (verbose)

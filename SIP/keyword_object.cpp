@@ -43,6 +43,7 @@ map<string, KeywordObject> initKeywordObjects()
     temp["continue"] = KeywordObject(false, false, true);
     temp["break"] = KeywordObject(false, false, true);
     temp["input"] = KeywordObject(true, false, false);
+    temp["import"] = KeywordObject(true, false, false);
     
     return temp;
 }
