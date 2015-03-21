@@ -108,18 +108,59 @@ errVar syntaxFunction(vector<string> tokens)
 
 errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss)
 {
-    
     errVar e;
     
     int firstLine = curLine;
-    //string keyword = line[0];
-    
-    //line.erase(line.begin()); //we don't need keyword parts of the statements here
-    int blockEnd = getClosingBraceLine(code, curLine+1, 0);
+    int blockEnd = getClosingBraceLine(code, curLine+2, 0);
     curLine = blockEnd;
+    //cout << curLine << "\n";
     
-    //FunctionObject(string newName, int newStartLine, int newEndLine, int newNumParams)
-    cout << "hi :)\n";
+    e = createFunction(line, firstLine, blockEnd, ss);
+    
+    curLine++;
     
     return e;
 }
+
+errVar createFunction(vector<string> line, int firstLine, int blockEnd, SaveState &ss)
+{
+    errVar e;
+    
+    string funcName = line[1];
+    
+    int numParams = 0;
+    for (int i=3; i<line.size()-1; i++)
+    {
+        if (line[i] != ",") numParams++;
+    }
+    
+    //cout << funcName << " " << numParams << "\n";
+    
+    if (funcExists(funcName, numParams, ss))
+    {
+        e.errorPos = 1;
+        e.message = "Function " + funcName + " is already defined";
+        return e;
+    }
+    
+    ss.definedFunctions.push_back(FunctionObject(funcName, firstLine, blockEnd, numParams));
+    
+    return e;
+}
+
+bool funcExists(string name, int numParams, SaveState &ss)
+{
+    for (int i=0; i<ss.definedFunctions.size(); i++)
+    {
+        if (ss.definedFunctions[i].name == name && ss.definedFunctions[i].numParams == numParams)
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+
+
+

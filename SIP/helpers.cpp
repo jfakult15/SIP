@@ -1004,7 +1004,7 @@ int getClosingBraceLine(vector<string> &code, int curLine, int startPos)
     for (int i=curLine; i<code.size(); i++)
     {
         string temp = code[i];
-        //cout << temp << "==\n";
+        //cout << temp << " " << numClosed << " " << numOpen << "--\n";
         if (i==0) temp = temp.substr(startPos);
         
         for (int j=0; j<temp.length(); j++)
@@ -1038,4 +1038,13 @@ string toLowerCase(string s)
         }
     }
     return s;
+}
+
+bool isAssignment(vector<string> line)
+{
+    return line[1] == "=" || line[1] == "+=" || line[1] == "*=" || line[1] == "/=" || line[1] == "-=" || line[1] == "^=";
+    //vector<string>::iterator a = line.begin();
+    //vector<string>::iterator b = line.end();
+    
+    //return (find(a, b, "=") != b) || (find(a, b, "+=") != b) || (find(a, b, "-=") != b) || (find(a, b, "*=") != b) || (find(a, b, "/=") != b) || (find(a, b, "^=") != b);
 }

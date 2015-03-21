@@ -18,5 +18,7 @@
 
 errVar syntaxFunction(vector<string> tokens);
 errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss);
+errVar createFunction(vector<string> line, int firstLine, int blockEnd, SaveState &ss);
+bool funcExists(string name, int numParams, SaveState &ss);
 
 #endif /* defined(__SIP__keyword_function__) */

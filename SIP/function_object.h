@@ -12,7 +12,9 @@
 #include <stdio.h>
 #include <iostream>
 
-//#include "object.h"
+#include <vector>
+//#include "err.h"
+#include "save_state.h"
 
 //#include <string>
 
@@ -29,5 +31,7 @@ public:
     int endLine;
     int numParams;
 };
+
+bool functionExists(vector<string> line, class SaveState &ss);
 
 #endif /* defined(__SIP__function_object__) */

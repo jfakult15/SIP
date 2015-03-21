@@ -54,10 +54,34 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
             output.err.push_back("What kind of statement is this?");
         }
     }
-    else //probably a variable that is starting the line
+    else //A variable assignment or function invocation
     {
-        analyzeLine(line, ss, output, curLine);
-        curLine++;
+        if (isAssignment(line)) //dealing with a variable
+        {
+            cout << "Exec var\n";
+            curLine++;
+        }
+        else if (line[1] == "(") //dealing with a function
+        {
+            cout << "Exec func\n";
+            curLine++;
+        }
+        else
+        {
+            if (!isProperVarName(line[1]))
+            {
+                e.errorPos = 1;
+                e.message = "Unknown assigment operator (=, +=, -=, *=, /=, ^=)";
+            }
+            else
+            {
+                e.errorPos = 0;
+                e.message = "Unexpected token";// (this is not a function invocation or a variable assignment)";
+            }
+            return e;
+        }
+        
+        //analyzeLine(line, ss, output, curLine);
     }
     
     return e;

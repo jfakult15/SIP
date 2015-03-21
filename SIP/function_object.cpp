@@ -16,3 +16,14 @@ FunctionObject::FunctionObject(string newName, int newStartLine, int newEndLine,
     endLine = newEndLine;
     numParams = newNumParams;
 }
+
+bool functionExists(vector<string> line, SaveState &ss)
+{
+    
+    for (int i=0; i<ss.definedFunctions.size(); i++)
+    {
+        
+    }
+    
+    return false;
+}

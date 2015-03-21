@@ -44,5 +44,6 @@ errVar stringEval(vector<string> expr, SaveState &ss);
 string determineEvalType(vector<string> expr, SaveState &ss);
 string vectorToString(vector<string> v);
 string toLowerCase(string s);
+bool isAssignment(vector<string> line);
 
 #endif /* defined(__SIP__helpers__) */

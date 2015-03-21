@@ -45,14 +45,14 @@ int main(int argc, const char * argv[])
             input.insert(input.begin(), "import \"sip_core\";");
             execute(input, output);
             
-            if (verbose)
+            if (verbose && output.info.size()>0)
             {
                 for (int i=0; i<output.info.size(); i++)
                 {
                     cout << output.info[i] << "\n";
                 }
             }
-            if (output.warnings.size()>0)
+            if (verbose && output.warnings.size()>0)
             {
                 for (int i=0; i<output.warnings.size(); i++)
                 {
