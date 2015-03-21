@@ -16,7 +16,7 @@ errVar syntaxFunction(vector<string> tokens)
     errVar e;
     e.errorPos=-1;
     
-    if (tokens.size() < 5)
+    if (tokens.size() < 4)
     {
         e.errorPos = 0;
         e.message = "Improper function declaration syntax: Not enough arguments\nExpected: 'function name(variable1, variable2, ...)";
@@ -63,12 +63,12 @@ errVar syntaxFunction(vector<string> tokens)
                 continue;
             }
             lastWasByref = false;
-            if (!isProperVarName(varName))
+            /*if (!isProperVarName(varName)) //commented out because we can pass in hardcoded values
             {
                 e.errorPos = i;
                 e.message = "Invalid variable name: '" + varName +"'";
                 return e;
-            }
+            }*/
         }
         else
         {
@@ -136,7 +136,7 @@ errVar createFunction(vector<string> line, int firstLine, int blockEnd, SaveStat
     
     //cout << funcName << " " << numParams << "\n";
     
-    if (funcExists(funcName, numParams, ss))
+    if (funcExists(funcName, numParams, ss) && !seenFuncBefore(funcName, firstLine, ss))
     {
         e.errorPos = 1;
         e.message = "Function " + funcName + " is already defined";
@@ -161,6 +161,28 @@ bool funcExists(string name, int numParams, SaveState &ss)
     return false;
 }
 
+bool seenFuncBefore(string name, int startLine, SaveState &ss)
+{
+    for (int i=0; i<ss.definedFunctions.size(); i++)
+    {
+        if (ss.definedFunctions[i].name == name && ss.definedFunctions[i].startLine == startLine)
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
 
-
+FunctionObject getFunctionNamed(string name, SaveState &ss)
+{
+    for (int i=0; i<ss.definedFunctions.size(); i++)
+    {
+        if (ss.definedFunctions[i].name == name)
+        {
+            return ss.definedFunctions[i];
+        }
+    }
+    return FunctionObject("invalid function name", 0, 0, 0);
+}
 

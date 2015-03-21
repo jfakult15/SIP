@@ -14,8 +14,15 @@ map<string, KeywordObject> keywords=initKeywordObjects();
 
 errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, ExecutionOutput &output, int &curLine)
 {
-    string keyword = line[0];
     errVar e;
+    
+    string keyword = line[0];
+    
+    if (keyword[0] == '#') //comment, ignore
+    {
+        curLine++;
+        return e;
+    }
     
     if (keywords.find(keyword) != keywords.end()) //keyword exists (is defined)
     {
@@ -58,12 +65,85 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
     {
         if (isAssignment(line)) //dealing with a variable
         {
-            cout << "Exec var\n";
+            if (line[1] != "=") //e.g convert x += 6; --> x = x + 6;
+            {
+                char op = line[1][0];
+                line[1] = "=";
+                line.insert(line.begin()+2, line[0]);
+                line.insert(line.begin()+3, string(1,op));
+            }
+            errVar eval = anyEval(vector<string>(line.begin()+2, line.end()-1), ss);
+            if (e.errorPos >=0)
+            {
+                return e;
+            }
+            setObjectWithName(ss.definedVariables, line[0], eval.message);
             curLine++;
         }
         else if (line[1] == "(") //dealing with a function
         {
             cout << "Exec func\n";
+            vector<string> temp = line;
+            temp.insert(temp.begin(), "function");
+            if (temp[temp.size()-1] != ";")
+            {
+                e.errorPos = int(temp.size()-1);
+                e.message = "Function invocation needs semicolon (;)";
+                return e;
+            }
+            temp.erase(temp.end()-1);
+            e = syntaxFunction(temp);
+            //cout << e.message << "==\n";
+            if (e.errorPos != -1) //improper function invocation syntax
+            {
+                return e;
+            }
+            
+            string funcName = temp[1];
+            int numParams = 0;
+            for (int i=3; i<temp.size()-1; i++)
+            {
+                if (temp[i] != ",") numParams++;
+            }
+            
+            
+            if (!funcExists(funcName, numParams, ss))
+            {
+                bool foundFunc = false;
+                for (int i=curLine; i<code.size(); i++)
+                {
+                    if (code[i].find("function " + funcName) != string::npos) //we found the function! Add it to our known functions
+                    {
+                        int startLine = i;
+                        //cout << code[curLine] << "===\n";
+                        int endLine = getClosingBraceLine(code, i+2, 0);
+                        createFunction(tokenize(code[i]), startLine, endLine, ss);
+                        i=int(code.size());
+                        foundFunc = true;
+                    }
+                }
+                if (!foundFunc)
+                {
+                    e.errorPos = 0;
+                    e.message = "Unknown function. Function was never declared";
+                    return e;
+                }
+            }
+            
+            FunctionObject f = getFunctionNamed(funcName, ss);
+            if (f.name == "invalid function name") //this shouldn;t ever happen of course
+            {
+                e.errorPos = 0;
+                e.message = "Fatal error. Quitting...";
+                return e;
+            }
+            
+            vector<string> block(code.begin()+f.startLine+2, code.begin()+f.endLine);
+            ss.nestDepth++;
+            //cout << vectorToString(block);
+            execute(block, output);
+            ss.nestDepth--;
+            
             curLine++;
         }
         else
@@ -71,7 +151,7 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
             if (!isProperVarName(line[1]))
             {
                 e.errorPos = 1;
-                e.message = "Unknown assigment operator (=, +=, -=, *=, /=, ^=)";
+                e.message = "Unknown assigment operator (use =, +=, -=, *=, /=, or ^=)";
             }
             else
             {

@@ -745,6 +745,11 @@ vector<string> tokenize(string line) //split the line into words, spaces, equals
     recombine(output, "=", "=");
     recombine(output, "<", "=");
     recombine(output, ">", "=");
+    recombine(output, "+", "=");
+    recombine(output, "-", "=");
+    recombine(output, "*", "=");
+    recombine(output, "/", "=");
+    recombine(output, "^", "=");
     //recombine(output, "\"", "\"", true);
     recombineBetween(output, "'", true);
     recombineBetween(output, "\"", true);
