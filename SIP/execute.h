@@ -25,8 +25,8 @@
 
 void execute(vector<string> code, ExecutionOutput &output);
 int executeLine(string line, int curLine);
-errVar checkSyntax(vector<string> line, ExecutionOutput &output);
-int getObjectNamed(vector<Object> &objects, string name);
+struct errVar checkSyntax(vector<string> line, ExecutionOutput &output);
+int getObjectNamed(vector<class Object> &objects, string name);
 void executeCode(vector<string> code, ExecutionOutput &output);
 
 extern bool verbose;

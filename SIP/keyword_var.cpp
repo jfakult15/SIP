@@ -65,12 +65,12 @@ errVar syntaxVar(vector<string> tokens)
         return err;
     }
     
-    if (tokens.size()>5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
+    /*if (tokens.size()>5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
     {
         err.errorPos=int(tokens.size()-1);
         err.message="Var declaration improperly formated";
         return err;
-    }
+    }*/
     
     if (tokens[tokens.size()-1]!=";")
     {
@@ -79,12 +79,12 @@ errVar syntaxVar(vector<string> tokens)
         return err;
     }
     
-    if (tokens.size()!=5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
+    /*if (tokens.size()!=5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
     {
         err.errorPos=int(tokens.size()-1);
         err.message="Var declaration improperly formated";
         return err;
-    }
+    }*/
     
     //cout << "Obj: " << obj.type << "\n";
     //objects.push_back(obj); //should this be declared in the syntax checker? NO
@@ -93,7 +93,7 @@ errVar syntaxVar(vector<string> tokens)
     return err;
 }
 
-errVar executeVar(vector<string> tokens, SaveState &ss)
+errVar executeVar(vector<string> tokens, SaveState &ss, ExecutionOutput &output, vector<string> &code)
 {
     errVar err;
     
@@ -101,16 +101,25 @@ errVar executeVar(vector<string> tokens, SaveState &ss)
     
     obj.name=tokens[1];
     
-    string varValue = "";
+    //string varValue = "";
+    vector<string> varValue;
     string type = "string";
     if (tokens.size() > 3)
     {
-        varValue=tokens[3];
-        type=determineType(varValue);
+        varValue=vector<string>(tokens.begin()+3, tokens.end()-1);//tokens[3]);
     }
     
+    err = anyEval(varValue, ss, output, code);
+    //cout << varValue << " " << err.message << "==\n";
+    if (err.errorPos != -1)
+    {
+        err.errorPos = 3;
+        return err;
+    }
+    
+    type=determineType(err.message);
     obj.type=type;
-    obj.value=varValue;
+    obj.value = err.message;
     obj.value = obj.getStringValue();
     
     while (ss.nestDepth>=ss.definedVariables.size())

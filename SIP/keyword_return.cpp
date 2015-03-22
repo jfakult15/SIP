@@ -42,7 +42,7 @@ errVar syntaxReturn(vector<string> tokens)
     return err;
 }
 
-errVar executeReturn(vector<string> tokens, ExecutionOutput &output, SaveState &ss)
+errVar executeReturn(vector<string> tokens, ExecutionOutput &output, SaveState &ss, vector<string> &code)
 {
     errVar err;
     err.errorPos=-1;
@@ -89,7 +89,7 @@ errVar executeReturn(vector<string> tokens, ExecutionOutput &output, SaveState &
         {
             //cout << vectorToString(eval) << "==\n";
             Object o;
-            errVar e = anyEval(eval, ss);
+            errVar e = anyEval(eval, ss, output, code);
             //cout << e.message << "==\n";
             if (e.errorPos == -1)
             {

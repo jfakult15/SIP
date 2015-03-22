@@ -20,6 +20,6 @@
 using namespace std;
 
 errVar syntaxReturn(vector<string> tokens);
-errVar executeReturn(vector<string> tokens, ExecutionOutput &output, SaveState &ss);
+errVar executeReturn(vector<string> tokens, ExecutionOutput &output, SaveState &ss, vector<string> &code);
 
 #endif /* defined(__SIP__keyword_return__) */

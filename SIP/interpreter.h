@@ -21,7 +21,7 @@
 
 #include "keyword_object.h"
 
-errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, ExecutionOutput &output, int &curLine);
-errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, int &curLine);
+struct errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, ExecutionOutput &output, int &curLine);
+struct errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, int &curLine, vector<string> &code);
 
 #endif /* defined(__SIP__interpreter__) */

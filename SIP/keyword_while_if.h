@@ -13,8 +13,8 @@
 #include "err.h"
 #include <vector>
 
-errVar syntaxIfWhile(vector<string> tokens);
-errVar executeIf(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss);
-errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss);
+struct errVar syntaxIfWhile(vector<string> tokens);
+struct errVar executeIf(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, struct SaveState &ss);
+struct errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, struct SaveState &ss);
 
 #endif /* defined(__SIP__keyword_while_if__) */

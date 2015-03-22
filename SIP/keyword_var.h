@@ -16,7 +16,7 @@
 #include "object.h"
 #include "save_state.h"
 
-errVar syntaxVar(vector<string> tokens);
-errVar executeVar(vector<string> tokens, SaveState &ss);
+struct errVar syntaxVar(vector<string> tokens);
+struct errVar executeVar(vector<string> tokens, struct SaveState &ss, ExecutionOutput &output, vector<string> &code);
 
 #endif /* defined(__SIP__keyword_var__) */

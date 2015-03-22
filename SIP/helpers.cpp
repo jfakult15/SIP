@@ -177,7 +177,7 @@ errVar stringEval(vector<string> expr, SaveState &ss)
     return e;
 }
 
-errVar anyEval(vector<string> expr, SaveState &ss) //will evaluate expressions of any type using helper eval functions of course
+errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vector<string> &code) //will evaluate expressions of any type using helper eval functions of course
 {
     errVar e;
     
@@ -187,12 +187,83 @@ errVar anyEval(vector<string> expr, SaveState &ss) //will evaluate expressions o
     {
         if (isProperVarName(expr[i]))
         {
-            Object o = getAnyObjectNamed(ss.definedVariables, expr[i]);
-            if (o.name != "invalid object name")
+            if (expr[i+1] == "(") //function
             {
-                expr[i] = o.value;
-                //cout << expr[i] << "--\n";
-                exprType = o.type;
+                vector<string> temp = expr;
+                temp.insert(temp.begin(), "function");
+                //cout << vectorToString(temp) << "--\n";
+                if (temp[temp.size()-1] == ";")
+                {
+                    temp.erase(temp.end()-1);
+                }
+                e = syntaxFunction(temp);
+                //cout << e.message << "==\n";
+                if (e.errorPos != -1) //improper function invocation syntax
+                {
+                    return e;
+                }
+
+                string funcName = temp[1];
+                int numParams = 0;
+                for (int i=3; i<temp.size()-1; i++)
+                {
+                    if (temp[i] != ",") numParams++;
+                }
+                
+                if (!funcExists(funcName, numParams, ss))
+                {
+                    bool foundFunc = false;
+                    for (int i=0; i<code.size(); i++)
+                    {
+                        if (code[i].find("function " + funcName) != string::npos) //we found the function! Add it to our known functions
+                        {
+                            int startLine = i;
+                            //cout << code[curLine] << "===\n";
+                            int endLine = getClosingBraceLine(code, i+2, 0);
+                            createFunction(tokenize(code[i]), startLine, endLine, ss);
+                            i=int(code.size());
+                            foundFunc = true;
+                        }
+                    }
+                    if (!foundFunc)
+                    {
+                        e.errorPos = 0;
+                        e.message = "Unknown function. Function was never declared";
+                        return e;
+                    }
+                }
+                
+                FunctionObject f = getFunctionNamed(funcName, ss);
+                if (f.name == "invalid function name") //this shouldn;t ever happen of course
+                {
+                    e.errorPos = 0;
+                    e.message = "Fatal error. Quitting...";
+                    return e;
+                }
+                
+                vector<string> block(code.begin()+f.startLine+2, code.begin()+f.endLine);
+                ss.nestDepth++;
+                //cout << vectorToString(block);
+                //bug: add variables to pass in here, parallel vector<Object>
+                execute(block, output);
+                ss.nestDepth--;
+                e.message = output.returnVal;
+            }
+            else
+            {
+                Object o = getAnyObjectNamed(ss.definedVariables, expr[i]);
+                if (o.name != "invalid object name")
+                {
+                    expr[i] = o.value;
+                    //cout << expr[i] << "--\n";
+                    exprType = o.type;
+                }
+                else
+                {
+                    e.errorPos = i;
+                    e.message = "Undefined variable";
+                    return e;
+                }
             }
         }
     }

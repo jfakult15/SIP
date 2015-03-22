@@ -48,12 +48,12 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
         else if (keywords[keyword].isSingleWordStatement) //break or continue mostly
         {
             //do something
-            e = analyzeLine(line, ss, output, curLine);
+            e = analyzeLine(line, ss, output, curLine, code);
             curLine++;
         }
         else if (keywords[keyword].isSingleLineStatement)
         {
-            e = analyzeLine(line, ss, output, curLine);
+            e = analyzeLine(line, ss, output, curLine, code);
             curLine++;
         }
         else
@@ -72,7 +72,7 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
                 line.insert(line.begin()+2, line[0]);
                 line.insert(line.begin()+3, string(1,op));
             }
-            errVar eval = anyEval(vector<string>(line.begin()+2, line.end()-1), ss);
+            errVar eval = anyEval(vector<string>(line.begin()+2, line.end()-1), ss, output, code);
             if (e.errorPos >=0)
             {
                 return e;
@@ -141,8 +141,10 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
             vector<string> block(code.begin()+f.startLine+2, code.begin()+f.endLine);
             ss.nestDepth++;
             //cout << vectorToString(block);
+            //bug: add variables to pass in here, parallel vector<Object>
             execute(block, output);
             ss.nestDepth--;
+            //cout << output.returnVal << "==\n";
             
             curLine++;
         }
@@ -168,7 +170,7 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
     return e;
 }
 
-errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, int &curLine)
+errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, int &curLine, vector<string> &code)
 {
     if (line.size()==0)
     {
@@ -182,15 +184,15 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
     
     if (keyword=="print")
     {
-        err = executePrint(line, output, ss, true);
+        err = executePrint(line, output, ss, true, code);
     }
     else if (keyword=="printf")
     {
-        err = executePrint(line, output, ss, false);
+        err = executePrint(line, output, ss, false, code);
     }
     else if (keyword=="var")
     {
-        err = executeVar(line, ss);
+        err = executeVar(line, ss, output, code);
     }
     else if (keyword=="input")
     {
@@ -202,8 +204,8 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
     }
     else if (keyword=="return")
     {
-        err = executeReturn(line, output, ss);
-        cout << output.returnVal << "==\n";
+        err = executeReturn(line, output, ss, code);
+        //cout << output.returnVal << "==\n";
     }
     else
     {
@@ -217,7 +219,7 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
             if (o.name!="invalid object name") //we found a variable for this value!
             {
                 tokenIsObject = true;
-                depth = ss.definedVariables.size();
+                depth = int(ss.definedVariables.size());
             }
         }
         if (tokenIsObject)
@@ -230,7 +232,7 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
             }
             string expr = vectorToString(vector<string>(line.begin()+2, line.end()-1));
             //cout << expr << "=\n";
-            expr = anyEval(tokenize(expr), ss).message;
+            expr = anyEval(tokenize(expr), ss, output, code).message;
             Object o;
             o.value = expr;
             //cout << o.value << " yes==\n";

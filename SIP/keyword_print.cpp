@@ -58,7 +58,7 @@ errVar syntaxPrint(vector<string> tokens)
     return err;
 }
 
-errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &ss, bool lineBreak)
+errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &ss, bool lineBreak, vector<string> &code)
 {
     errVar err;
     err.errorPos=-1;
@@ -105,7 +105,7 @@ errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &s
         {
             //cout << vectorToString(eval) << "==\n";
             Object o;
-            errVar e = anyEval(eval, ss);
+            errVar e = anyEval(eval, ss, output, code);
             //cout << e.message << "==\n";
             if (e.errorPos == -1)
             {

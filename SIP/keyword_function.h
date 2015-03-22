@@ -16,11 +16,11 @@
 #include "err.h"
 #include "keyword_var.h"
 
-errVar syntaxFunction(vector<string> tokens);
-errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss);
-errVar createFunction(vector<string> line, int firstLine, int blockEnd, SaveState &ss);
-bool funcExists(string name, int numParams, SaveState &ss);
-bool seenFuncBefore(string name, int startLine, SaveState &ss);
-FunctionObject getFunctionNamed(string name, SaveState &ss);
+struct errVar syntaxFunction(vector<string> tokens);
+struct errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss);
+struct errVar createFunction(vector<string> line, int firstLine, int blockEnd, struct SaveState &ss);
+bool funcExists(string name, int numParams, struct SaveState &ss);
+bool seenFuncBefore(string name, int startLine, struct SaveState &ss);
+class FunctionObject getFunctionNamed(string name, struct SaveState &ss);
 
 #endif /* defined(__SIP__keyword_function__) */

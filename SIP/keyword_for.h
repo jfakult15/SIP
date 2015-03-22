@@ -16,6 +16,6 @@
 #include "err.h"
 #include "keyword_var.h"
 
-errVar syntaxFor(vector<string> tokens);
+struct errVar syntaxFor(vector<string> tokens);
 
 #endif /* defined(__SIP__keyword_for__) */

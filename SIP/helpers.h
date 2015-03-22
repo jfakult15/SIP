@@ -17,6 +17,8 @@
 
 #include "err.h"
 #include "save_state.h"
+#include "keywords.h"
+#include "object.h"
 
 //using namespace std;
 
@@ -39,7 +41,7 @@ string getFirstParentheses(string val);
 vector<string> tokenize(string line);
 bool compare(string left, string right, string comparator, string type);
 int getClosingBraceLine(vector<string> &code, int curLine, int startPos);
-errVar anyEval(vector<string> expr, SaveState &ss);
+errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vector<string> &code);
 errVar stringEval(vector<string> expr, SaveState &ss);
 string determineEvalType(vector<string> expr, SaveState &ss);
 string vectorToString(vector<string> v);
