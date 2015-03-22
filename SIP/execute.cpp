@@ -103,6 +103,10 @@ errVar checkSyntax(vector<string> tokens, ExecutionOutput &output) //returns fir
     {
         err = syntaxImport(tokens);
     }
+    else if (tokens[0] == "return")
+    {
+        err = syntaxReturn(tokens);
+    }
     else if (tokens[0][0] == '#') //comment
     {
         //do nothing

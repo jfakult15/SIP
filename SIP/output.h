@@ -19,6 +19,7 @@ struct ExecutionOutput
     vector<string> warnings;
     vector<string> err;
     vector<string> info;
+    string returnVal;
 };
 
 #endif

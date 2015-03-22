@@ -82,7 +82,7 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
         }
         else if (line[1] == "(") //dealing with a function
         {
-            cout << "Exec func\n";
+            //cout << "Exec func\n";
             vector<string> temp = line;
             temp.insert(temp.begin(), "function");
             if (temp[temp.size()-1] != ";")
@@ -148,6 +148,7 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
         }
         else
         {
+            //cout << curLine << " " << line.size() << "--\n";
             if (!isProperVarName(line[1]))
             {
                 e.errorPos = 1;
@@ -198,6 +199,11 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
     else if (keyword=="import")
     {
         err = executeImport(line, output, ss);
+    }
+    else if (keyword=="return")
+    {
+        err = executeReturn(line, output, ss);
+        cout << output.returnVal << "==\n";
     }
     else
     {
