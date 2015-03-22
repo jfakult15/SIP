@@ -205,7 +205,6 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
     else if (keyword=="return")
     {
         err = executeReturn(line, output, ss, code);
-        //cout << output.returnVal << "==\n";
     }
     else
     {
