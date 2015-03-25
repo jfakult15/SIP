@@ -340,7 +340,7 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
     
     int chunkNum = 0;
     
-    for (int i=0; i<parts.size(); i++)
+    for (int i=0; i<parts.size()-1; i++)
     {
         string s = parts[i];
         

@@ -98,23 +98,36 @@ struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOu
         by = line[8];
     }
     
-    Object forVar("string", "for_var_garbage_666f725f7661725f67617262616765_1234567890987654321a", val); //not my proudest moment as a programmer...
-    ss.definedVariables[0].insert(ss.definedVariables[0].begin(), forVar);
+    Object forVar("string", varName, val); //not my proudest moment as a programmer...
+    while (ss.definedVariables.size() <= ss.nestDepth+1)
+    {
+        ss.definedVariables.push_back(vector<Object>());
+    }
+    ss.definedVariables[ss.nestDepth+1].push_back(forVar);
     
-    string comp = "<=";
+    string comp = "<";
     string type = forVar.getType();
     if (type=="int" || type=="double")
     {
         double value = forVar.getDoubleValue();
-        double endValue = 
+        double endValue = Object("a", "a", endVal).getDoubleValue();
+        double byValue = Object("a", "a", by).getDoubleValue();
+        
+        //need more error checking, friendly runtime errors
+        if (byValue < 0)
+        {
+            comp = ">";
+        }
     }
     
     int firstLine = curLine;
     int blockEnd = getClosingBraceLine(code, curLine+2, 0);
-    code[curLine] = "while (for_var_garbage_666f725f7661725f67617262616765_1234567890987654321a " + comp + endVal + ")";
-    cout << code[curLine] << "\n";
-    code.insert(code.begin()+blockEnd, "for_var_garbage_666f725f7661725f67617262616765_1234567890987654321a += " + by);
-    curLine--;
+    code[curLine] = "while (" + varName + " " + comp + " " + endVal + ")";
+    //cout << code[curLine] << "\n";
+    code.insert(code.begin()+blockEnd, varName + " = " + varName + " + " + by + ";");
+    cout << vectorToString(code);
+    //curLine--;
+    e.message = varName;
     
     return e;
 }
