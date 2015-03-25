@@ -99,11 +99,6 @@ struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOu
     }
     
     Object forVar("string", varName, val); //not my proudest moment as a programmer...
-    while (ss.definedVariables.size() <= ss.nestDepth+1)
-    {
-        ss.definedVariables.push_back(vector<Object>());
-    }
-    ss.definedVariables[ss.nestDepth+1].push_back(forVar);
     
     string comp = "<";
     string type = forVar.getType();
@@ -123,10 +118,11 @@ struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOu
     int firstLine = curLine;
     int blockEnd = getClosingBraceLine(code, curLine+2, 0);
     code[curLine] = "while (" + varName + " " + comp + " " + endVal + ")";
-    //cout << code[curLine] << "\n";
-    code.insert(code.begin()+blockEnd, varName + " = " + varName + " + " + by + ";");
-    cout << vectorToString(code);
-    //curLine--;
+
+    code.insert(code.begin()+firstLine, "var " + varName + " = " + val + ";");
+    code.insert(code.begin()+blockEnd+1, varName + " = " + varName + " + " + by + ";");
+
+    //curLine--; //no need for this because the insert shifts if for us
     e.message = varName;
     
     return e;
