@@ -36,6 +36,7 @@ public:
     bool isDoubleFormat();
     bool isStringFormat();
     bool isBoolFormat();
+    bool clean();
     
     string type;
     string name;

@@ -47,5 +47,6 @@ string determineEvalType(vector<string> expr, SaveState &ss);
 string vectorToString(vector<string> v);
 string toLowerCase(string s);
 bool isAssignment(vector<string> line);
+bool clean(vector<class Object> &o);
 
 #endif /* defined(__SIP__helpers__) */

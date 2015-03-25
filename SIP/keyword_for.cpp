@@ -88,9 +88,33 @@ struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOu
     */
     errVar e;
     
+    string varName = line[2];
+    string val = line[4];
+    string endVal = line[6];
+    string by = "1";
+    
+    if (line.size()>8) //have by parameter
+    {
+        by = line[8];
+    }
+    
+    Object forVar("string", "for_var_garbage_666f725f7661725f67617262616765_1234567890987654321a", val); //not my proudest moment as a programmer...
+    ss.definedVariables[0].insert(ss.definedVariables[0].begin(), forVar);
+    
+    string comp = "<=";
+    string type = forVar.getType();
+    if (type=="int" || type=="double")
+    {
+        double value = forVar.getDoubleValue();
+        double endValue = 
+    }
+    
     int firstLine = curLine;
     int blockEnd = getClosingBraceLine(code, curLine+2, 0);
-    //curLine = blockEnd;
+    code[curLine] = "while (for_var_garbage_666f725f7661725f67617262616765_1234567890987654321a " + comp + endVal + ")";
+    cout << code[curLine] << "\n";
+    code.insert(code.begin()+blockEnd, "for_var_garbage_666f725f7661725f67617262616765_1234567890987654321a += " + by);
+    curLine--;
     
     return e;
 }

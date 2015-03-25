@@ -1124,3 +1124,14 @@ bool isAssignment(vector<string> line)
     
     //return (find(a, b, "=") != b) || (find(a, b, "+=") != b) || (find(a, b, "-=") != b) || (find(a, b, "*=") != b) || (find(a, b, "/=") != b) || (find(a, b, "^=") != b);
 }
+
+bool clean(vector<Object> &o)
+{
+    if (o[0].name == "for_var_garbage_666f725f7661725f67617262616765_1234567890987654321a")
+    {
+        o.erase(o.begin());
+        return true;
+    }
+    
+    return false;
+}
