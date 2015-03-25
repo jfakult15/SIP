@@ -83,8 +83,14 @@ errVar syntaxFor(vector<string> tokens)
 
 struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, struct SaveState &ss)
 {
+    /*
+     In reality all we are doing is converting this into a while loop
+    */
     errVar e;
-    cout << "for\n";
-    curLine++;
+    
+    int firstLine = curLine;
+    int blockEnd = getClosingBraceLine(code, curLine+2, 0);
+    //curLine = blockEnd;
+    
     return e;
 }
