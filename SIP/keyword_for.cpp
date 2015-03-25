@@ -81,11 +81,11 @@ errVar syntaxFor(vector<string> tokens)
     return err;
 }
 
+/*
+ In reality all we are doing is converting this into a while loop
+ */
 struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, struct SaveState &ss)
 {
-    /*
-     In reality all we are doing is converting this into a while loop
-    */
     errVar e;
     
     string varName = line[2];
