@@ -80,3 +80,11 @@ errVar syntaxFor(vector<string> tokens)
     
     return err;
 }
+
+struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, struct SaveState &ss)
+{
+    errVar e;
+    cout << "for\n";
+    curLine++;
+    return e;
+}

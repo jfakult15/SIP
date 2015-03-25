@@ -38,6 +38,7 @@ map<string, KeywordObject> initKeywordObjects()
     temp["else"] = KeywordObject(false, true, false);
     temp["for"] = KeywordObject(false, true, false);
     temp["print"] = KeywordObject(true, false, false);
+    temp["printf"] = KeywordObject(true, false, false);
     temp["function"] = KeywordObject(false, true, false);
     temp["input"] = KeywordObject(true, false, false);
     temp["continue"] = KeywordObject(false, false, true);

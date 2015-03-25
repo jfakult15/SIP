@@ -46,7 +46,7 @@ errVar executeFile(string path, ExecutionOutput &output)
     
     path = path.substr(1, path.length()-2); //remove enclosing quotations
     
-    if (path.length() < 5 || path.substr(path.length()-5, 4) != ".sip")
+    if (path.length() < 5 || path.substr(path.length()-4, 4) != ".sip")
     {
         path += ".sip";
     }

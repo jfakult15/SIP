@@ -17,5 +17,6 @@
 #include "keyword_var.h"
 
 struct errVar syntaxFor(vector<string> tokens);
+struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, struct SaveState &ss);
 
 #endif /* defined(__SIP__keyword_for__) */

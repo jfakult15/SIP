@@ -38,7 +38,7 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
             }
             else if (keyword=="for")
             {
-                
+                e = executeFor(line, code, output, curLine, ss);
             }
             else if (keyword=="function")
             {

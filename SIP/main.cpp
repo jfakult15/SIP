@@ -18,12 +18,17 @@
 #include <vector>
 #include <stack>
 
+#include<cstdlib>
+#include<string.h>
+#include<dirent.h>
+
 using namespace std;
 
 vector<string> input;
 ExecutionOutput output;
 //vector<Object> s;
 vector<string> readFile(ifstream &file);
+void importAll(vector<string> &input);
 
 int main(int argc, const char * argv[])
 {
@@ -34,7 +39,7 @@ int main(int argc, const char * argv[])
     exit(0);*/
     
     argc = 2;
-    argv[1] = "/Users/jfakult/Desktop/SIP_test.txt";
+    argv[1] = "/Users/jfakult/Desktop/SIP_test.sip";
     //I am trying to be flexible with command line errors. Ill check every arg until one is a good file
     for (int i=1; i<argc; i++)
     {
@@ -42,7 +47,9 @@ int main(int argc, const char * argv[])
         if (file.is_open())
         {
             input=readFile(file);
-            input.insert(input.begin(), "import \"sip_core\";");
+            importAll(input);
+            //input.insert(input.begin(), "import \"sip_core.sip\";");
+            
             execute(input, output);
             
             if (verbose && output.info.size()>0)
@@ -84,4 +91,21 @@ int main(int argc, const char * argv[])
     cout << "Couldn't find a file!\n";
     
     return 0;
+}
+
+void importAll(vector<string> &input)
+{
+    DIR *pDIR;
+    struct dirent *entry;
+    if((pDIR=opendir("import")))
+    {
+        while((entry = readdir(pDIR)))
+        {
+            if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0 )
+            {
+                input.insert(input.begin(), "import \"" + string(entry->d_name) + "\";");
+            }
+        }
+        closedir(pDIR);
+    }
 }
