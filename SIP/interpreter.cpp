@@ -39,7 +39,8 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
             else if (keyword=="for")
             {
                 e = executeFor(line, code, output, curLine, ss);
-                clean(ss.definedVariables[0]);
+                //cout << vectorToString(code) << "==\n";
+                //clean(ss.definedVariables[0]);
             }
             else if (keyword=="function")
             {
@@ -73,7 +74,8 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
                 line.insert(line.begin()+2, line[0]);
                 line.insert(line.begin()+3, string(1,op));
             }
-            errVar eval = anyEval(vector<string>(line.begin()+2, line.end()-1), ss, output, code);
+            //cout << vectorToString(line) << "--\n";
+            errVar eval = anyEval(vector<string>(line.begin()+2, line.end()), ss, output, code);
             if (e.errorPos >=0)
             {
                 return e;
@@ -86,12 +88,13 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
             //cout << "Exec func\n";
             vector<string> temp = line;
             temp.insert(temp.begin(), "function");
-            if (temp[temp.size()-1] != ";")
+            //remove semi
+            /*if (temp[temp.size()-1] != ";")
             {
                 e.errorPos = int(temp.size()-1);
                 e.message = "Function invocation needs semicolon (;)";
                 return e;
-            }
+            }*/
             temp.erase(temp.end()-1);
             e = syntaxFunction(temp);
             //cout << e.message << "==\n";
@@ -143,7 +146,7 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
             ss.nestDepth++;
             //cout << vectorToString(block);
             //bug: add variables to pass in here, parallel vector<Object>
-            execute(block, output);
+            execute(block, output, 0);
             ss.nestDepth--;
             //cout << output.returnVal << "==\n";
             
@@ -243,12 +246,13 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
                 err.message = "Invalid assignment value";
                 return err;
             }
-            if (line[line.size()-1] != ";")
+            //remove semi
+            /*if (line[line.size()-1] != ";")
             {
                 err.errorPos = 3;
                 err.message = "Variable assignment missing semicolon";
                 return err;
-            }
+            }*/
             setObjectWithName(ss.definedVariables, keyword, o.value);
         }
         else

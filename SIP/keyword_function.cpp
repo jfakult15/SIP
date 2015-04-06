@@ -94,12 +94,14 @@ errVar syntaxFunction(vector<string> tokens)
         return e;
     }
     
+    //remove semi
+    /*
     if (tokens[tokens.size()-1] == ";")
     {
         e.errorPos = int(tokens.size())-1;
         e.message = "Function declarations should not have a semicolon";
         return e;
-    }
+    }*/
     
     
     

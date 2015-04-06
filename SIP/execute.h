@@ -23,7 +23,7 @@
 #include "output.h"
 #include "keyword_object.h"
 
-void execute(vector<string> code, ExecutionOutput &output);
+void execute(vector<string> code, ExecutionOutput &output, int numImports);
 int executeLine(string line, int curLine);
 struct errVar checkSyntax(vector<string> line, ExecutionOutput &output);
 int getObjectNamed(vector<class Object> &objects, string name);

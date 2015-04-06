@@ -20,11 +20,13 @@ errVar syntaxImport(vector<string> tokens)
         return e;
     }
     
+    //remove semi
+    /*
     if (tokens[2] != ";")
     {
         e.errorPos = 2;
         e.message = "Import statement expects semicolon (;)";
-    }
+    }*/
     
     return e;
 }
@@ -72,7 +74,7 @@ errVar executeFile(string path, ExecutionOutput &output)
     }
     
     input=readFile(file);
-    execute(input, output);
+    execute(input, output, 0);
     if (verbose && output.info.size()>0)
     {
         for (int i=0; i<output.info.size(); i++)

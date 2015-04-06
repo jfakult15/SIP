@@ -24,9 +24,37 @@ Object::Object(string newType, string newName, string newValue)
     value=newValue;
 }
 
+string Object::getValue()
+{
+    if (type=="bool")
+    {
+        return to_string(getBoolValue());
+    }
+    else if (type=="int")
+    {
+        return to_string(getIntValue());
+    }
+    else if (type=="double")
+    {
+        std::ostringstream os;
+        os << getDoubleValue();
+        return os.str();
+    }
+    return getStringValue();
+}
+
 string Object::getType()
 {
-    return determineType(value);
+    string temp = determineType(value);
+    if (temp == "double")
+    {
+        if (atoi(value.c_str()) == atof(value.c_str()))
+        {
+            //value = atoi(value.c_str());
+            temp = "int";
+        }
+    }
+    return temp;
 }
 
 int Object::getIntValue()
@@ -39,6 +67,7 @@ int Object::getIntValue()
     {
         return 0;
     }
+    //cout << value << "==\n";
     return stoi(value.c_str());
 }
 

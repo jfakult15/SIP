@@ -15,9 +15,16 @@ errVar syntaxFor(vector<string> tokens)
 {
     errVar err;
     
+    //lets get rid of any extra parentheses just for good error checking. Will have to redo on execution (tokens not passed byref)
+    while (tokens[1]=="(" && tokens[tokens.size()-1] == ")")
+    {
+        tokens.erase(tokens.end()-1);
+        tokens.erase(tokens.begin()+1);
+    }
+    
     //there should be a variable declared in the for statement
     vector<string> varTokens(tokens.begin()+1, tokens.begin()+5);
-    varTokens.push_back(";");
+    //varTokens.push_back(";");
     
     err=syntaxVar(varTokens);
     if (err.errorPos>=0) //we had an error in the for variable declaration
@@ -70,6 +77,7 @@ errVar syntaxFor(vector<string> tokens)
         
         forVar.value=tokens[8];
         forVar.type=forVar.getType();
+
         if (forVar.type!="int" && forVar.type!="double")
         {
             err.errorPos=8;
@@ -88,6 +96,13 @@ struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOu
 {
     errVar e;
     
+    //lets get rid of any extra parentheses just for good error checking
+    while (line[1]=="(" && line[line.size()-1] == ")")
+    {
+        line.erase(line.end()-1);
+        line.erase(line.begin()+1);
+    }
+    
     string varName = line[2];
     string val = line[4];
     string endVal = line[6];
@@ -98,9 +113,9 @@ struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOu
         by = line[8];
     }
     
-    Object forVar("string", varName, val); //not my proudest moment as a programmer...
+    Object forVar("string", varName, val);
     
-    string comp = "<";
+    string comp = "<=";
     string type = forVar.getType();
     if (type=="int" || type=="double")
     {
@@ -111,18 +126,22 @@ struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOu
         //need more error checking, friendly runtime errors
         if (byValue < 0)
         {
-            comp = ">";
+            comp = ">=";
         }
     }
     
+    //remove semi
     int firstLine = curLine;
     int blockEnd = getClosingBraceLine(code, curLine+2, 0);
     code[curLine] = "while (" + varName + " " + comp + " " + endVal + ")";
 
-    code.insert(code.begin()+firstLine, "var " + varName + " = " + val + ";");
-    code.insert(code.begin()+blockEnd+1, varName + " = " + varName + " + " + by + ";");
+    //execute({"var " + varName + " = " + val}, output, 0);
+    code.insert(code.begin()+firstLine, "var " + varName + " = " + val);
+    code.insert(code.begin()+blockEnd+1, varName + " = " + varName + " + " + by);
 
-    //curLine--; //no need for this because the insert shifts if for us
+    //curLine -= 1; //no need for this because the insert shifts if for us
+    //cout << vectorToString(code) << " ?? " << code[curLine] << " ?? " << curLine << "--\n";
+    
     e.message = varName;
     
     return e;

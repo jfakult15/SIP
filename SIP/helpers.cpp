@@ -181,13 +181,15 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
 {
     errVar e;
     
-    string exprType = determineEvalType(expr, ss);;
+    string exprType = determineEvalType(expr, ss);
+    //cout << exprType << " " << vectorToString(expr) << "==\n";
     
     for (int i=0; i<expr.size(); i++)
     {
         if (isProperVarName(expr[i]))
         {
-            if (expr[i+1] == "(") //function
+            //cout << expr[i+1] << " " << expr[i] << "==\n";
+            if (i<expr.size()-1 && expr[i+1] == "(") //function
             {
                 vector<string> temp = expr;
                 temp.insert(temp.begin(), "function");
@@ -196,13 +198,14 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
                 {
                     temp.erase(temp.end()-1);
                 }
+                cout << "Exec func\n";
                 e = syntaxFunction(temp);
                 //cout << e.message << "==\n";
                 if (e.errorPos != -1) //improper function invocation syntax
                 {
                     return e;
                 }
-
+                
                 string funcName = temp[1];
                 int numParams = 0;
                 for (int i=3; i<temp.size()-1; i++)
@@ -245,16 +248,17 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
                 ss.nestDepth++;
                 //cout << vectorToString(block);
                 //bug: add variables to pass in here, parallel vector<Object>
-                execute(block, output);
+                execute(block, output, 0);
                 ss.nestDepth--;
                 e.message = output.returnVal;
             }
             else
             {
                 Object o = getAnyObjectNamed(ss.definedVariables, expr[i]);
+                //cout << o.value << "==\n";
                 if (o.name != "invalid object name")
                 {
-                    expr[i] = o.value;
+                    expr[i] = o.getValue();
                     //cout << expr[i] << "--\n";
                     exprType = o.type;
                 }
@@ -266,9 +270,12 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
                 }
             }
         }
+        else
+        {
+            //cout << expr[i] <<"\n";
+        }
     }
-    
-    //cout << exprType << "==\n";
+    //cout << vectorToString(expr) << "==\n";
     if (exprType == "bool")
     {
         errVar temp = boolEval(expr, ss);
@@ -281,7 +288,9 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
             if (expr[i]=="true") expr[i]="1";
             if (expr[i]=="false") expr[i]="0";
         }
+        //cout << vectorToString(expr) << "hi\n";
         string temp = eval(vectorToString(expr));
+        //cout << temp << "==\n";
         e.message = temp;
     }
     else if (exprType == "string")
@@ -303,6 +312,11 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
 {
     errVar e;
     
+    parts.insert(parts.begin(), "(");
+    parts.insert(parts.end(), ")");
+    
+    if (parts.size()==0) return e;
+    
     int openPar = 0;
     int closePar = 0;
     for (int i=0; i<parts.size(); i++)
@@ -314,6 +328,7 @@ errVar boolEval(vector<string> parts, SaveState &ss) //we will assume that param
         if (o.name != "invalid object name")
         {
             parts[i] = o.value;
+            //cout << o.value << "--\n";
         }
         else
         {
@@ -493,9 +508,10 @@ string getFirstParentheses(string val) //under the assumption that val[0] == "("
 
 string eval(string val)
 {
-    
+    //cout << val << " " << isNum(val) << "--\n";
     if (isNum(val))
         return val;//atof(val.c_str());
+    //cout << "hi\n";
     
     //if (val[0]=='(')
     for (int i=0; i<val.length(); i++)
@@ -514,7 +530,7 @@ string eval(string val)
         }
     }
     
-    //cout << val << "\n";
+    //cout << val << "--1\n";
     while (val.find("^") != string::npos)
     {
         int pos=int(val.find("^"));
@@ -543,14 +559,15 @@ string eval(string val)
         string div=to_string(atof(before.c_str()) / atof(after.c_str()));
         val=val.substr(0,pos-int(before.length()))+div+val.substr(pos+int(after.length())+1);
     }
-    //cout << val << "\n";
+    //cout << val << "--\n";
     while (val.find("+") != string::npos)
     {
         int pos=int(val.find("+"));
         string before=findBefore(val, pos-1);
         string after=findAfter(val, pos+1);
+        //cout << before << "--" << after << "==\n";
         
-        string add=to_string(int(round(atof(before.c_str()) + atof(after.c_str()))));
+        string add=to_string(atof(before.c_str()) + atof(after.c_str()));
         val=val.substr(0,pos-int(before.length()))+add+val.substr(pos+int(after.length())+1);
     }
     //cout << val << "\n";
@@ -563,28 +580,25 @@ string eval(string val)
         val=val.substr(0,pos-int(before.length()))+sub+val.substr(pos+int(after.length())+1);
     }
     
+    //cout << val << "==2\n";
+    
     return val;//atof(val.c_str());  //note, for int return type: return int(round(atof(val.c_str())));
 }
 
 bool isNum(string num)
 {
-    string temp="";
-    try
+    if (num[num.length()-1] == '.') return false;
+    int numPeriods = 0;
+    for (int i=0; i<num.length(); i++)
     {
-        temp=to_string(stoi(num));   //use c++ to confert string to int
-        
-        if (temp.length()<1)
-            temp="0";
-        
-        if (num.find(".") == string::npos)          //if it is an int
-            return (temp.length() == num.length());
-        else
+        if (num[i]=='.')
         {
-            string decimal=num.substr(num.find(".")+1);
-            return (temp.length()+decimal.length()+1 == num.length());
+            numPeriods++;
+            if (numPeriods > 1) return false;
         }
+        if (!isNumber(num[i])) return false;
     }
-    catch (exception e) { return false; }
+    return true;
 }
 
 string findBefore(string val, int pos)

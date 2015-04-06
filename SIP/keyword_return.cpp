@@ -33,11 +33,13 @@ errVar syntaxReturn(vector<string> tokens)
         }
     }
     
+    //remove semi
+    /*
     if (tokens[tokens.size()-1] != ";")
     {
         err.errorPos = int(tokens.size())-1;
         err.message = "Missing a semicolon";
-    }
+    }*/
     
     return err;
 }

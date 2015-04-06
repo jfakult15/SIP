@@ -29,10 +29,15 @@ errVar syntaxVar(vector<string> tokens)
         err.message="Invalid variable name";
     }
     
-    if (tokens.size() == 3)
+    if (tokens.size() == 2)
     {
-        if (tokens[2]==";") return err;
+        return err;
     }
+    
+    /*if (tokens.size() == 3)
+    {
+        if (tokens[2]== ";") return err;
+    }*/
     
     obj.name=varName;
     
@@ -65,19 +70,22 @@ errVar syntaxVar(vector<string> tokens)
         return err;
     }
     
-    /*if (tokens.size()>5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
+    if (tokens.size()>4) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
     {
-        err.errorPos=int(tokens.size()-1);
-        err.message="Var declaration improperly formated";
+        err.errorPos=4;
+        err.message="Unexpected symbol";
+        if (tokens[4]==";") err.message += "\nSIP no longer uses semicolons";
         return err;
-    }*/
+    }
     
-    if (tokens[tokens.size()-1]!=";")
+    //remove semi
+    /*
+    if (tokens[tokens.size()-1] != ";")
     {
         err.errorPos=int(tokens.size()-1);
         err.message="Did you forget a semicolon (;)?";
         return err;
-    }
+    }*/
     
     /*if (tokens.size()!=5) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
     {
@@ -101,16 +109,17 @@ errVar executeVar(vector<string> tokens, SaveState &ss, ExecutionOutput &output,
     
     obj.name=tokens[1];
     
+    //remove semi
     //string varValue = "";
     vector<string> varValue;
     string type = "string";
-    if (tokens.size() > 3)
+    if (tokens.size() > 2)
     {
-        varValue=vector<string>(tokens.begin()+3, tokens.end()-1);//tokens[3]);
+        varValue=vector<string>(tokens.begin()+3, tokens.end());//tokens[3]);
     }
     
     err = anyEval(varValue, ss, output, code);
-    //cout << varValue << " " << err.message << "==\n";
+    //cout << vectorToString(varValue) << " " << err.message << "==\n";
     if (err.errorPos != -1)
     {
         err.errorPos = 3;
@@ -121,6 +130,7 @@ errVar executeVar(vector<string> tokens, SaveState &ss, ExecutionOutput &output,
     obj.type=type;
     obj.value = err.message;
     obj.value = obj.getStringValue();
+    
     
     while (ss.nestDepth>=ss.definedVariables.size())
     {

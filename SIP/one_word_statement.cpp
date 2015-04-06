@@ -17,17 +17,14 @@ errVar syntaxOneWordStatement(vector<string> tokens)
     
     if (tokens.size()>2)
     {
-        err.message = "Extra token in " + tokens[0] + " statement. ";
+        err.message = "Unexpected token in " + tokens[0] + " statement";
+        if (tokens[2]==";")
+        {
+            err.message += "\nSIP no longer uses semicolons";
+        }
         err.errorPos = 1;
     }
-    if (tokens[tokens.size()-1] != ";")
-    {
-        if (err.message.length()==0)
-        {
-            err.errorPos = int(tokens.size())-1;
-        }
-        err.message += "\n Missing semicolon";
-    }
+    //remove semi
     
     return err;
 }

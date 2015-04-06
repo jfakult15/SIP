@@ -14,12 +14,12 @@ using namespace std;
 errVar syntaxIfWhile(vector<string> tokens)
 {
     errVar err;
-    if (tokens[1]!="(")
+    /*if (tokens[1]!="(")
     {
         err.errorPos=1;
         err.message="Expected boolean expression";
         return err;
-    }
+    }*/
     
     return err;
 }
@@ -27,6 +27,13 @@ errVar syntaxIfWhile(vector<string> tokens)
 errVar executeIf(vector<string> &line, vector<string> &code, ExecutionOutput &output, int &curLine, SaveState &ss)
 {
     string keyword = line[0];
+    
+    //lets get rid of any extra parentheses just for good error checking
+    while (line[1]=="(" && line[line.size()-1] == ")")
+    {
+        line.erase(line.end()-1);
+        line.erase(line.begin()+1);
+    }
     
     line.erase(line.begin()); //we don't need keyword parts of the statements here
     errVar e = boolEval(line, ss);
@@ -62,7 +69,7 @@ errVar executeIf(vector<string> &line, vector<string> &code, ExecutionOutput &ou
         }
         vector<string> block(code.begin()+curLine, code.begin()+blockEnd);
         ss.nestDepth++;
-        execute(block, output);
+        execute(block, output, 0);
         ss.nestDepth--;
         curLine=blockEnd+1;
         //execute code in block!
@@ -76,9 +83,17 @@ errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput 
     int firstLine = curLine;
     string keyword = line[0];
     
+    //lets get rid of any extra parentheses just for good error checking
+    while (line[1]=="(" && line[line.size()-1] == ")")
+    {
+        line.erase(line.end()-1);
+        line.erase(line.begin()+1);
+    }
+    
     line.erase(line.begin()); //we don't need keyword parts of the statements here
     errVar e;// = boolEval(line, ss);
-    int blockEnd = getClosingBraceLine(code, curLine+1, 0);
+    int blockEnd = getClosingBraceLine(code, curLine+2, 0);
+    //cout << vectorToString(code) << "==" << blockEnd << "==\n";
     
     if (e.errorPos>=0)
     {
@@ -129,7 +144,7 @@ errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput 
         vector<string> block(code.begin()+curLine, code.begin()+blockEnd);
         ss.nestDepth++;
         //cout << getAnyObjectNamed(ss.definedVariables, "x").value << " " << e.message << "\n";
-        execute(block, output);
+        execute(block, output, 0);
         ss.nestDepth--;
         //execute code in block!
         curLine = firstLine;

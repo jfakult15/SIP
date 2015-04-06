@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
 
 #include "helpers.h"
 
@@ -24,6 +25,7 @@ class Object
 public:
     Object();
     Object(string type, string name, string value);
+    string getValue();
     string getType();
     int getIntValue();
     double getDoubleValue();

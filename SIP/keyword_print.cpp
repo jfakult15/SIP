@@ -49,10 +49,12 @@ errVar syntaxPrint(vector<string> tokens)
         }
     }
     
-    if (tokens[tokens.size()-1] != ";")
+    //remove semi
+    
+    if (tokens[tokens.size()-1] == ";")
     {
         err.errorPos = int(tokens.size())-1;
-        err.message = "Missing a semicolon";
+        err.message = "Unexpected token\nSIP no longer uses semicolons";
     }
     
     return err;
@@ -66,10 +68,8 @@ errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &s
     string printStr = "";
     
     bool concatFromString = false;;
-    
-    for (int i=1; i<tokens.size()-1; i++)
+    for (int i=1; i<tokens.size(); i++)
     {
-        //cout << tokens[i] << "==\n";
         Object temp;
         temp.value = tokens[i];
         string value = temp.value;
@@ -86,7 +86,7 @@ errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &s
         }
 
         vector<string> eval;
-        while (!isString && i<tokens.size()-1)
+        while (!isString && i<tokens.size())
         {
             if (concatFromString)
             {
@@ -96,23 +96,23 @@ errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &s
             }
             eval.push_back(tokens[i]);
             i++;
+            if (i>=tokens.size()) break;
             isString = ((tokens[i][0]=='"' && tokens[i][tokens[i].length()-1]=='"') || (tokens[i][0]=='\'' && tokens[i][tokens[i].length()-1]=='\''));
         }
         i--;
-        
-        
+        //cout << tokens[i] << "==\n";
         if (eval.size() > 0)
         {
             //cout << vectorToString(eval) << "==\n";
-            Object o;
             errVar e = anyEval(eval, ss, output, code);
-            //cout << e.message << "==\n";
+            //cout << e.message << "==1\n";
             if (e.errorPos == -1)
             {
                 printStr += e.message;
             }
             else
             {
+                //cout << e.message << "==\n";
                 //output.err.push_back("Runtime error: \nToken: '" + eval[e.errorPos] + "'\n\nGot error: " + e.message);
                 output.err.push_back("Runtime error: unable to evaluate print expression");
             }

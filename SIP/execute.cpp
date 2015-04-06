@@ -21,7 +21,7 @@ struct SaveState ss;
 
 bool verbose = false;
 
-void execute(vector<string> code, ExecutionOutput &output)
+void execute(vector<string> code, ExecutionOutput &output, int numImports)
 {
     output.info.push_back("Executing...\n");
     
@@ -34,7 +34,8 @@ void execute(vector<string> code, ExecutionOutput &output)
         
         if (syntaxError.errorPos>=0) //add error messages
         {
-            output.err.push_back("Syntax error: line " + to_string(i+1));
+            output.err.push_back("Syntax error: line " + to_string(i+1-numImports));
+            output.err.push_back("Line: " + line);
             output.err.push_back("\"" + tokens[syntaxError.errorPos] + "\"\n" );
             output.err.push_back("Got error: " + syntaxError.message);
             return;
@@ -137,16 +138,21 @@ void executeCode(vector<string> code, ExecutionOutput &output)
     errVar e;
     
     //actual execution
+    //cout << vectorToString(code) << "==\n";
     int curLine=0; //which line we are curently executing
     while (curLine<code.size())
     {
         vector<string> tokens = tokenize(code[curLine]);
+        //cout << code[curLine] << "-=";
         e = interpreter(ss, code, tokens, output, curLine);
+        //cout << code[curLine] << "=-";
+        //cout << code[curLine] << "--" << getObjectByName(ss.definedVariables[0], "x").value << "--\n";
         if (e.errorPos != -1)
         {
-            output.err.push_back("Runtime error: line " + to_string(curLine) + "\nToken: '" + tokens[e.errorPos] + "'\n\nGot error: " + e.message);
+            output.err.push_back("Runtime error: line " + to_string(curLine) + "\nLine: " + code[curLine] + "\nToken: '" + tokens[e.errorPos] + "'\n\nGot error: " + e.message);
             return;
         }
     }
+    //cout << vectorToString(code) << "==\n";
 }
 

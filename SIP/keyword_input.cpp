@@ -12,12 +12,12 @@ errVar syntaxInput(vector<string> tokens)
 {
     errVar e;
     
-    if (tokens.size()<3)
+    if (tokens.size()<2)
     {
         e.errorPos = tokens.size()-1;
         e.message = "Improper input syntax (format: input knownVariable1, knownVariable2, ...;)";
     }
-    else if (tokens.size() > 3)
+    else if (tokens.size() > 2)
     {
         bool properSyntax = true;
         for (int i=1; i<tokens.size()-1; i++)
@@ -44,11 +44,13 @@ errVar syntaxInput(vector<string> tokens)
             }
         }
     }
+    //remove semi
+    /*
     else if (tokens[tokens.size()-1] != ";")
     {
         e.errorPos = tokens.size()-1;
         e.message = "Missing semicolon (;)";
-    }
+    }*/
     
     return e;
 }
