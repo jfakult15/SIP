@@ -181,9 +181,46 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
 {
     errVar e;
     
-    string exprType = determineEvalType(expr, ss);
-    //cout << exprType << " " << vectorToString(expr) << "==\n";
+    //This section splits and reduces the complex eval expression into its individual operand parts (i.e square(6)+1 -> 36 + 1)
+    vector<string> splits = {"+","-","*","/","&&","||"};
+    vector<string> parts;
+    parts = vector<string>();
     
+    int startPos = 0;
+    for (int i=0; i<expr.size(); i++)
+    {
+        if (find(splits.begin(), splits.end(), expr[i]) != splits.end()) //we have a plus or minus operand etc
+        {
+            //cout << vectorToString(parts) << "==\n";
+            if (i==0)
+            {
+                e.message = "Unable to evaluate statement: Unexpected first character: '" + expr[i] + "'";
+                e.errorPos = i;
+                return e;
+            }
+            e = anyEval(parts, ss, output, code);
+            if (e.errorPos >= 0)
+            {
+                e.message = "Couldn't evaluate part: " + parts[0] + "\nGot error: " + e.message;
+                return e;
+            }
+            expr[startPos] = e.message;
+            for (int i=0; i<parts.size()-1; i++)
+            {
+                expr.erase(expr.begin()+startPos+1);
+            }
+            parts = vector<string>();
+            startPos = i+1;
+        }
+        else
+        {
+            parts.push_back(expr[i]);
+        }
+    }
+    
+    string exprType = determineEvalType(expr, ss);
+    //check
+    //cout << exprType << "-" << vectorToString(expr) << "==\n";
     for (int i=0; i<expr.size(); i++)
     {
         if (isProperVarName(expr[i]))
@@ -191,66 +228,15 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
             //cout << expr[i+1] << " " << expr[i] << "==\n";
             if (i<expr.size()-1 && expr[i+1] == "(") //function
             {
-                vector<string> temp = expr;
-                temp.insert(temp.begin(), "function");
-                //cout << vectorToString(temp) << "--\n";
-                if (temp[temp.size()-1] == ";")
-                {
-                    temp.erase(temp.end()-1);
-                }
-                cout << "Exec func\n";
-                e = syntaxFunction(temp);
-                //cout << e.message << "==\n";
-                if (e.errorPos != -1) //improper function invocation syntax
+                int n = -1;
+                e = executeFunction(expr, code, output, n, ss);
+                
+                if (e.errorPos >= 0)
                 {
                     return e;
                 }
-                
-                string funcName = temp[1];
-                int numParams = 0;
-                for (int i=3; i<temp.size()-1; i++)
-                {
-                    if (temp[i] != ",") numParams++;
-                }
-                
-                if (!funcExists(funcName, numParams, ss))
-                {
-                    bool foundFunc = false;
-                    for (int i=0; i<code.size(); i++)
-                    {
-                        if (code[i].find("function " + funcName) != string::npos) //we found the function! Add it to our known functions
-                        {
-                            int startLine = i;
-                            //cout << code[curLine] << "===\n";
-                            int endLine = getClosingBraceLine(code, i+2, 0);
-                            createFunction(tokenize(code[i]), startLine, endLine, ss);
-                            i=int(code.size());
-                            foundFunc = true;
-                        }
-                    }
-                    if (!foundFunc)
-                    {
-                        e.errorPos = 0;
-                        e.message = "Unknown function. Function was never declared";
-                        return e;
-                    }
-                }
-                
-                FunctionObject f = getFunctionNamed(funcName, ss);
-                if (f.name == "invalid function name") //this shouldn;t ever happen of course
-                {
-                    e.errorPos = 0;
-                    e.message = "Fatal error. Quitting...";
-                    return e;
-                }
-                
-                vector<string> block(code.begin()+f.startLine+2, code.begin()+f.endLine);
-                ss.nestDepth++;
-                //cout << vectorToString(block);
-                //bug: add variables to pass in here, parallel vector<Object>
-                execute(block, output, 0);
-                ss.nestDepth--;
-                e.message = output.returnVal;
+
+                i = int(expr.size());
             }
             else
             {
@@ -258,9 +244,65 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
                 //cout << o.value << "==\n";
                 if (o.name != "invalid object name")
                 {
-                    expr[i] = o.getValue();
-                    //cout << expr[i] << "--\n";
-                    exprType = o.type;
+                    if (o.isArray == 1)
+                    {
+                        if (i>expr.size()-4)
+                        {
+                            e.errorPos = i;
+                            e.message = "Can't evaluate array: no index specified";
+                            return e;
+                        }
+                        if (expr[i+1] != "[")
+                        {
+                            e.errorPos = i+1;
+                            e.message = "Can't evaluate array: no index specified";
+                            return e;
+                        }
+                        if (expr[i+3] != "]")
+                        {
+                            e.errorPos = i+1;
+                            e.message = "Array expects closing bracket";
+                            return e;
+                        }
+                        string key = expr[i+2];
+                        Object temp2;
+                        temp2.value = key;
+                        int l = key.length()-1;
+                        if (((key[0] != '"' || key[l] != '"') || (key[0] != '\'' || key[l] != '\'')) && (temp2.getType() == "string"))
+                        {
+                            Object tempObj = getAnyObjectNamed(ss.definedVariables, key);
+                            if (tempObj.name != "invalid object name")
+                            {
+                                key = tempObj.getValue();
+                            }
+                            else
+                            {
+                                e.errorPos = i+2;
+                                e.message = "Array does not contain this index";
+                                return e;
+                            }
+                        }
+                        
+                        errVar temp = o.getArrayValue(key);
+                        if (temp.errorPos >= 0)
+                        {
+                            e.errorPos = i+2;
+                            e.message = "Array does not contain this index";
+                            return e;
+                        }
+                        expr.erase(expr.begin()+i);
+                        expr.erase(expr.begin()+i);
+                        expr.erase(expr.begin()+i);
+                        expr[i] = temp.message;
+                        temp2.value = temp.message;
+                        exprType = temp2.getType();
+                    }
+                    else
+                    {
+                        expr[i] = o.getValue();
+                        //cout << expr[i] << "--\n";
+                        exprType = o.type;
+                    }
                 }
                 else
                 {
@@ -304,6 +346,10 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
         e.message = temp.message;
     }
     //cout << e.message << "-\n";
+    Object o;
+    o.value = e.message; //parse all data correctly. I.e we don't want ints displaying as doubles
+    o.type = o.getType();
+    e.message = o.getValue();
     
     return e;
 }
@@ -562,6 +608,7 @@ string eval(string val)
     //cout << val << "--\n";
     while (val.find("+") != string::npos)
     {
+        //cout << "Val: " << val << "\n";
         int pos=int(val.find("+"));
         string before=findBefore(val, pos-1);
         string after=findAfter(val, pos+1);
@@ -820,7 +867,7 @@ void recombineBetween(vector<string> &output, string str, bool hasEscapeQuote) /
 vector<string> tokenize(string line) //split the line into words, spaces, equals signs, and whatever else
 {
     vector<string> output;
-    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+", "-", "*", "/", "<", ">", "<=", ">=", "," };
+    vector<string> splits = { " ", "=", "'", "\"", ";", "(", ")", "+", "-", "*", "/", "<", ">", "<=", ">=", ",", "[", "]", "{", "}" };
     vector<string> removables = {" ", string(1, char(8))};
     
     //split and seperate chunks (i.e tokenize them)
@@ -1148,4 +1195,28 @@ bool clean(vector<Object> &o)
     }
     
     return false;
+}
+
+bool un_nest(class SaveState &ss)
+{
+    if (ss.nestDepth <= 0) return false;
+    //cout << ss.definedVariables.size() << " " << ss.nestDepth << "\n";
+    while (ss.definedVariables.size()>ss.nestDepth)
+    {
+        ss.definedVariables.erase(ss.definedVariables.end()-1);
+    }
+    
+    ss.nestDepth--;
+    
+    return true;
+}
+
+bool nest(SaveState &ss)
+{
+    ss.nestDepth++;
+    while (ss.definedVariables.size()<ss.nestDepth+1)
+    {
+        ss.definedVariables.push_back(vector<Object>());
+    }
+    return true;
 }

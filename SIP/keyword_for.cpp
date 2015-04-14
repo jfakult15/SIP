@@ -140,7 +140,7 @@ struct errVar executeFor(vector<string> &line, vector<string> &code, ExecutionOu
     code.insert(code.begin()+blockEnd+1, varName + " = " + varName + " + " + by);
 
     //curLine -= 1; //no need for this because the insert shifts if for us
-    //cout << vectorToString(code) << " ?? " << code[curLine] << " ?? " << curLine << "--\n";
+    //cout << vectorToString(code) << "--\n";
     
     e.message = varName;
     

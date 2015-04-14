@@ -114,7 +114,7 @@ errVar executePrint(vector<string> tokens, ExecutionOutput &output, SaveState &s
             {
                 //cout << e.message << "==\n";
                 //output.err.push_back("Runtime error: \nToken: '" + eval[e.errorPos] + "'\n\nGot error: " + e.message);
-                output.err.push_back("Runtime error: unable to evaluate print expression");
+                output.err.push_back(e.message);
             }
         }
     }

@@ -34,14 +34,88 @@ errVar syntaxVar(vector<string> tokens)
         return err;
     }
     
-    /*if (tokens.size() == 3)
+    if (tokens[tokens.size()-1] == ";")
     {
-        if (tokens[2]== ";") return err;
-    }*/
+        err.errorPos = tokens.size()-1;
+        err.message = "SIP no longer uses semicolons";
+        return err;
+    }
+    
+    if (tokens.size()>2 && tokens[2]=="[") //array declaration
+    {
+        if (tokens.size()>3 && tokens[3] != "]")
+        {
+            err.errorPos = 3;
+            err.message = "Invalid array declaration\nShould be in format: " + varName + "[]";
+            return err;
+        }
+        if (tokens.size()==4) return err;
+        if (tokens[4] != "=")
+        {
+            err.errorPos = 4;
+            err.message = "Invalid assignment operator";
+            return err;
+        }
+        if (tokens.size()<=5)
+        {
+            err.errorPos = 4;
+            err.message = "Need to assign a value if you have an equals sign";
+            return err;
+        }
+        if (tokens[tokens.size()-1] == ",")
+        {
+            err.errorPos = tokens.size()-1;
+            err.message = "Can't have a comma ending an array creation";
+            return err;
+        }
+        return err;
+        /*
+        bool isVar = true;
+        for (int i=5; i<tokens.size(); i++)
+        {
+            if (isVar)
+            {
+                Object o;
+                o.value = tokens[i];
+                string type = o.getType();
+                if (type == "string")
+                {
+                    int l = type.length()-1;
+                    if ((type[0] != '"' || type[l] != '"') || (type[0] != '\'' || type[l] != '\''))
+                    {
+                        type = "";
+                    }
+                }
+                if (!isProperVarName(tokens[i]) || type == "")
+                {
+                    err.errorPos = i;
+                    err.message = "Unexpected string. Expected value in array creation\nFormat: var a[] = 10,2,4";
+                    return err;
+                }
+            }
+            else
+            {
+                if (tokens[i] != ",")
+                {
+                    err.errorPos = i;
+                    err.message = "Please use a comman to seperate array values\nFormat: var a[] = 10,2,4";
+                    return err;
+                }
+                if (i == tokens.size()-1)
+                {
+                    err.errorPos = i;
+                    err.message = "Can't have a comma ending an array creation";
+                    return err;
+                }
+            }
+            isVar = !isVar;
+        }*/
+    }
     
     obj.name=varName;
     
     //cout << tokens[1] << "--\n";
+    //cout << vectorToString(tokens) << "\n";
     
     if (tokens[2]!="=")
     {
@@ -70,13 +144,13 @@ errVar syntaxVar(vector<string> tokens)
         return err;
     }
     
-    if (tokens.size()>4) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
+    /*if (tokens.size()>4) // {var, x, =, 10, ;} (there should be at least 5 values in tokens)
     {
         err.errorPos=4;
         err.message="Unexpected symbol";
         if (tokens[4]==";") err.message += "\nSIP no longer uses semicolons";
         return err;
-    }
+    }*/
     
     //remove semi
     /*
@@ -109,8 +183,42 @@ errVar executeVar(vector<string> tokens, SaveState &ss, ExecutionOutput &output,
     
     obj.name=tokens[1];
     
-    //remove semi
-    //string varValue = "";
+    if (tokens[2]=="[") //we have an array!
+    {
+        obj.isArray = 1;
+        if (tokens.size() == 4) //uninitialized array declaration
+        {
+            while (ss.nestDepth>=ss.definedVariables.size())
+            {
+                ss.definedVariables.push_back(vector<Object>());
+            }
+            ss.definedVariables[ss.nestDepth].push_back(obj);
+            
+            return err;
+        }
+        else
+        {
+            map<string, string> values;
+            
+            int key = 1;
+            for (int i=5; i<tokens.size(); i+=2)
+            {
+                values[to_string(key)] = tokens[i];
+                key++;
+            }
+            
+            obj.values = values;
+            
+            while (ss.nestDepth>=ss.definedVariables.size())
+            {
+                ss.definedVariables.push_back(vector<Object>());
+            }
+            ss.definedVariables[ss.nestDepth].push_back(obj);
+            
+            return err;
+        }
+    }
+    
     vector<string> varValue;
     string type = "string";
     if (tokens.size() > 2)

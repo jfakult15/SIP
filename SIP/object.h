@@ -12,8 +12,10 @@
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
+#include <map>
 
 #include "helpers.h"
+#include "err.h"
 
 using namespace std;
 
@@ -43,6 +45,11 @@ public:
     string type;
     string name;
     string value;
+    
+    int isArray = 0;
+    map<string, string> values;
+    struct errVar getArrayValue(string key);
+    string getMapValue();
 };
 
 Object getObjectByName(vector<Object> &v, string name);

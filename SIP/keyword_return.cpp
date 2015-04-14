@@ -40,6 +40,7 @@ errVar syntaxReturn(vector<string> tokens)
         err.errorPos = int(tokens.size())-1;
         err.message = "Missing a semicolon";
     }*/
+    //check for parentheses mismatch? general eval statement?
     
     return err;
 }
@@ -51,9 +52,44 @@ errVar executeReturn(vector<string> tokens, ExecutionOutput &output, SaveState &
     
     string printStr = "";
     
-    bool concatFromString = false;;
+    err = anyEval(vector<string>(tokens.begin()+1, tokens.end()), ss, output, code);
+
     
-    for (int i=1; i<tokens.size()-1; i++)
+    int parPos = -1;
+    for (int i=2; i<tokens.size()-1; i++)
+    {
+        if (tokens[i]=="(")
+        {
+            parPos = i;
+            i = tokens.size();
+        }
+    }
+    if (parPos != -1) //could be a function?
+    {
+        int startFunc = parPos - 1;
+        int endPos = -1;
+        for (int i=parPos+1; i<tokens.size(); i++)
+        {
+            if (tokens[i]==")")
+            {
+                endPos = i;
+                i = tokens.size();
+            }
+        }
+        //cout << 3 << "\n";
+        if (find(tokens.begin(), tokens.end(), ",") != tokens.end() || endPos - parPos <= 2) //its a function!
+        {
+            //cout << "It's returning a function!\n";
+        }
+    }
+    
+    //cout << vectorToString(vector<string>(tokens.begin()+1, tokens.end()));
+    //err = anyEval(vector<string>(tokens.begin()+1, tokens.end()), ss, output, code);
+    //cout << err.message << "!!\n";
+    
+    bool concatFromString = false;
+    
+    for (int i=1; i<tokens.size(); i++)
     {
         //cout << tokens[i] << "==\n";
         Object temp;
@@ -72,7 +108,7 @@ errVar executeReturn(vector<string> tokens, ExecutionOutput &output, SaveState &
         }
         
         vector<string> eval;
-        while (!isString && i<tokens.size()-1)
+        while (!isString && i<tokens.size())
         {
             if (concatFromString)
             {

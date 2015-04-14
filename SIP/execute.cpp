@@ -142,14 +142,17 @@ void executeCode(vector<string> code, ExecutionOutput &output)
     int curLine=0; //which line we are curently executing
     while (curLine<code.size())
     {
+        //cout << ss.nestDepth << " " << code[curLine] << "==\n";
         vector<string> tokens = tokenize(code[curLine]);
         //cout << code[curLine] << "-=";
         e = interpreter(ss, code, tokens, output, curLine);
-        //cout << code[curLine] << "=-";
+        //cout << curLine << "=-\n";
         //cout << code[curLine] << "--" << getObjectByName(ss.definedVariables[0], "x").value << "--\n";
         if (e.errorPos != -1)
         {
+            if (code.size() == 1) curLine = 0;
             output.err.push_back("Runtime error: line " + to_string(curLine) + "\nLine: " + code[curLine] + "\nToken: '" + tokens[e.errorPos] + "'\n\nGot error: " + e.message);
+            //output.err.push_back(":(");
             return;
         }
     }

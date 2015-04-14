@@ -46,8 +46,10 @@ errVar executeIf(vector<string> &line, vector<string> &code, ExecutionOutput &ou
     else
     {
         curLine++;
+        trim(code[curLine]);
         if (code[curLine]!="{")
         {
+            //cout << curLine << " " << code[curLine] << " " << vectorToString(code) << "==\n";
             //output.err.push_back("If statement requires block (starting with opening bracket)");
             e.message = "If statement requires block (starting with opening bracket)";
             e.errorPos = curLine;
@@ -70,7 +72,7 @@ errVar executeIf(vector<string> &line, vector<string> &code, ExecutionOutput &ou
         vector<string> block(code.begin()+curLine, code.begin()+blockEnd);
         ss.nestDepth++;
         execute(block, output, 0);
-        ss.nestDepth--;
+        un_nest(ss);
         curLine=blockEnd+1;
         //execute code in block!
     }
@@ -120,10 +122,12 @@ errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput 
         //cout << getAnyObjectNamed(ss.definedVariables, "x").value << " " << e.message << "\n";
         
         curLine++;
+        trim(code[curLine]);
+        //cout << vectorToString(code) << "==\n";
         if (code[curLine]!="{")
         {
             //output.err.push_back("If statement requires block (starting with opening bracket)");
-            e.message = "If statement requires block (starting with opening bracket)";
+            e.message = "While statement requires block (starting with opening bracket)";
             e.errorPos = curLine;
             return e;
         }
@@ -131,7 +135,7 @@ errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput 
         if (blockEnd==-1)
         {
             //output.err.push_back("If statement missing closing brace '}'");
-            e.message = "If statement missing closing brace '}'";
+            e.message = "While statement missing closing brace '}'";
             e.errorPos = curLine;
             return e;
         }
@@ -145,7 +149,7 @@ errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput 
         ss.nestDepth++;
         //cout << getAnyObjectNamed(ss.definedVariables, "x").value << " " << e.message << "\n";
         execute(block, output, 0);
-        ss.nestDepth--;
+        un_nest(ss);
         //execute code in block!
         curLine = firstLine;
     }

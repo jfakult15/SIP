@@ -65,8 +65,40 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
     }
     else //A variable assignment or function invocation
     {
+        //check: Bug note: array variable assignment here
         if (isAssignment(line)) //dealing with a variable
         {
+            string key = "";
+            if (line[1] == "[")
+            {
+                if (line[3] == "]")
+                {
+                    string key = line[2];
+                    Object temp2;
+                    temp2.value = key;
+                    int l = key.length()-1;
+                    if (((key[0] != '"' || key[l] != '"') || (key[0] != '\'' || key[l] != '\'')) && (temp2.getType() == "string"))
+                    {
+                        Object tempObj = getAnyObjectNamed(ss.definedVariables, key);
+                        if (tempObj.name != "invalid object name")
+                        {
+                            key = tempObj.getValue();
+                        }
+                        else
+                        {
+                            e.errorPos = 2;
+                            e.message = "Array does not contain this index";
+                            return e;
+                        }
+                    }
+                }
+                else
+                {
+                    e.errorPos = 3;
+                    e.message = "Array assignment expecting closing bracket ']'";
+                    return e;
+                }
+            }
             if (line[1] != "=") //e.g convert x += 6; --> x = x + 6;
             {
                 char op = line[1][0];
@@ -147,7 +179,7 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
             //cout << vectorToString(block);
             //bug: add variables to pass in here, parallel vector<Object>
             execute(block, output, 0);
-            ss.nestDepth--;
+            un_nest(ss);
             //cout << output.returnVal << "==\n";
             
             curLine++;
@@ -185,6 +217,7 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
     err.errorPos = -1;
     
     string keyword = line[0];
+    //cout << keyword << " " << line[1] << "\n";
     
     if (keyword=="print")
     {

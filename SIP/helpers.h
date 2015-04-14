@@ -48,5 +48,7 @@ string vectorToString(vector<string> v);
 string toLowerCase(string s);
 bool isAssignment(vector<string> line);
 bool clean(vector<class Object> &o);
+bool un_nest(class SaveState &ss);
+bool nest(class SaveState &ss);
 
 #endif /* defined(__SIP__helpers__) */

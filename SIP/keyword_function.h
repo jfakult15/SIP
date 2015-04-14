@@ -22,5 +22,6 @@ struct errVar createFunction(vector<string> line, int firstLine, int blockEnd, s
 bool funcExists(string name, int numParams, struct SaveState &ss);
 bool seenFuncBefore(string name, int startLine, struct SaveState &ss);
 class FunctionObject getFunctionNamed(string name, struct SaveState &ss);
+struct errVar createTempVars(vector<string> line, vector<string> funcLine, SaveState &ss);
 
 #endif /* defined(__SIP__keyword_function__) */

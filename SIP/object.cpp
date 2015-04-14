@@ -26,6 +26,11 @@ Object::Object(string newType, string newName, string newValue)
 
 string Object::getValue()
 {
+    if (isArray == 1)
+    {
+        getMapValue();
+    }
+    
     if (type=="bool")
     {
         return to_string(getBoolValue());
@@ -41,6 +46,30 @@ string Object::getValue()
         return os.str();
     }
     return getStringValue();
+}
+
+string Object::getMapValue()
+{
+    string buildStr = "";
+    for (map<string, string>::iterator it = values.begin(); it!=values.end(); it++)
+    {
+        buildStr += it->second;
+    }
+    //get rid of trailing comma
+    buildStr = buildStr.substr(0,buildStr.length()-1);
+    return buildStr;
+}
+
+errVar Object::getArrayValue(string key)
+{
+    errVar e;
+    if (values.find(key) == values.end())
+    {
+        e.errorPos = 0;
+        return e;
+    }
+    e.message = values[key];
+    return e;
 }
 
 string Object::getType()
@@ -68,6 +97,7 @@ int Object::getIntValue()
         return 0;
     }
     //cout << value << "==\n";
+    //if (value == "") value = "0";
     return stoi(value.c_str());
 }
 
@@ -183,7 +213,7 @@ string determineType(string value) //very simplistic, I hope this will satisfy a
 
 Object getObjectByName(vector<Object> &v, string name)
 {
-    for (int i=0; i<v.size(); i++)
+    for (int i=int(v.size())-1; i>=0; i--)
     {
         if (v[i].name==name)
         {
@@ -198,7 +228,7 @@ Object getObjectByName(vector<Object> &v, string name)
 Object getAnyObjectNamed(vector<vector<Object> > &v, string name)
 {
     Object o;
-    for (int i=0; i<v.size(); i++)
+    for (int i=int(v.size())-1; i>=0; i--)
     {
         o = getObjectByName(v[i], name);
         //cout << o.name <<"==\n";
@@ -223,7 +253,7 @@ bool objectExistsWithName(vector<vector<Object> > &v, string name)
 
 bool setObjectWithName(vector<vector<Object> > &v, string name, string value)
 {
-    for (int i=v.size()-1; i>=0; i--)
+    for (int i=int(v.size())-1; i>=0; i--)
     {
         for (int j=0; j<v[i].size(); j++)
         {
