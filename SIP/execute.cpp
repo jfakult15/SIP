@@ -29,7 +29,9 @@ void execute(vector<string> code, ExecutionOutput &output, int numImports)
     for (int i=0; i<code.size(); i++)
     {
         string line=code[i];
+        trim(line);
         vector<string> tokens=tokenize(line);
+        
         errVar syntaxError=checkSyntax(tokens, output);
         
         if (syntaxError.errorPos>=0) //add error messages

@@ -56,6 +56,7 @@ Object getObjectByName(vector<Object> &v, string name);
 Object getAnyObjectNamed(vector<vector<Object> > &v, string name);
 bool objectExistsWithName(vector<vector<Object> > &v, string name);
 bool setObjectWithName(vector<vector<Object> > &v, string name, string value);
+bool setMapObjectWithName(vector<vector<Object> > &v, string name, string key, string value);
 
 string compareTypes(string t1, string t2);
 int objectTypeValue(string t);

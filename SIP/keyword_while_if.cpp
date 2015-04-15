@@ -46,7 +46,7 @@ errVar executeIf(vector<string> &line, vector<string> &code, ExecutionOutput &ou
     else
     {
         curLine++;
-        trim(code[curLine]);
+        //trim(code[curLine]);
         if (code[curLine]!="{")
         {
             //cout << curLine << " " << code[curLine] << " " << vectorToString(code) << "==\n";
@@ -71,7 +71,8 @@ errVar executeIf(vector<string> &line, vector<string> &code, ExecutionOutput &ou
         }
         vector<string> block(code.begin()+curLine, code.begin()+blockEnd);
         ss.nestDepth++;
-        execute(block, output, 0);
+        //execute(block, output, 0);
+        executeCode(block, output);
         un_nest(ss);
         curLine=blockEnd+1;
         //execute code in block!
@@ -101,10 +102,14 @@ errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput 
     {
         return e;
     }
-    
+    int temp = 0;
     while (true)//e.message!="false")
     {
+        errVar t; t.message = "true";
+        //if (temp > 100000) t.message = "false";
+        //e = t;//boolEval(line, ss);
         e = boolEval(line, ss);
+        temp++;
         //cout << getAnyObjectNamed(ss.definedVariables, "x").value << " " << e.message << "\n";
         //cout << e.message << " " << vectorToString(line) << "--1\n";
         if (e.message != "true" && e.message != "false")
@@ -122,7 +127,7 @@ errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput 
         //cout << getAnyObjectNamed(ss.definedVariables, "x").value << " " << e.message << "\n";
         
         curLine++;
-        trim(code[curLine]);
+        //trim(code[curLine]);
         //cout << vectorToString(code) << "==\n";
         if (code[curLine]!="{")
         {
@@ -148,7 +153,8 @@ errVar executeWhile(vector<string> &line, vector<string> &code, ExecutionOutput 
         vector<string> block(code.begin()+curLine, code.begin()+blockEnd);
         ss.nestDepth++;
         //cout << getAnyObjectNamed(ss.definedVariables, "x").value << " " << e.message << "\n";
-        execute(block, output, 0);
+        //execute(block, output, 0);
+        executeCode(block, output);
         un_nest(ss);
         //execute code in block!
         curLine = firstLine;

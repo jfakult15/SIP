@@ -1177,8 +1177,21 @@ string toLowerCase(string s)
     return s;
 }
 
+//check: expressions inside arrays
 bool isAssignment(vector<string> line)
 {
+    if (line[1] == "[")
+    {
+        if (line[2] == "]")
+        {
+            return true;
+        }
+        if (line[3] == "]")
+        {
+            return true;
+        }
+        return false;
+    }
     return line[1] == "=" || line[1] == "+=" || line[1] == "*=" || line[1] == "/=" || line[1] == "-=" || line[1] == "^=";
     //vector<string>::iterator a = line.begin();
     //vector<string>::iterator b = line.end();

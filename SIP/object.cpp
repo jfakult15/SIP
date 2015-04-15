@@ -269,6 +269,23 @@ bool setObjectWithName(vector<vector<Object> > &v, string name, string value)
     return false;
 }
 
+bool setMapObjectWithName(vector<vector<Object> > &v, string name, string key, string value)
+{
+    for (int i=int(v.size())-1; i>=0; i--)
+    {
+        for (int j=0; j<v[i].size(); j++)
+        {
+            if (v[i][j].name == name)
+            {
+                //cout << "Value: " << value << "\n";
+                v[i][j].values[key] = value;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 int objectTypeValue(string t) //casting hierarchy helper
 {
     if (t=="bool") return 1;

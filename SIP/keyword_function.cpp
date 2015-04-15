@@ -147,7 +147,7 @@ errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutp
             for (int i=0; i<code.size(); i++)
             {
                 string start = code[i].substr(0, 8);
-                trim(start);
+                //trim(start);
                 if (start == "function")
                 {
                     vector<string> temp = tokenize(code[i]);
@@ -205,7 +205,8 @@ errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutp
         vector<string> block(code.begin()+f.startLine+2, code.begin()+f.endLine);
         //cout << vectorToString(block);
         //bug: add variables to pass in here, parallel vector<Object>
-        execute(block, output, 0);
+        //execute(block, output, 0);
+        executeCode(block, output);
         un_nest(ss);
         e.message = output.returnVal;
         

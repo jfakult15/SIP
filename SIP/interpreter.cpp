@@ -68,28 +68,30 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
         //check: Bug note: array variable assignment here
         if (isAssignment(line)) //dealing with a variable
         {
+            bool isArray = false;
             string key = "";
             if (line[1] == "[")
             {
+                if (line[2] == "]")
+                {
+                    line.insert(line.begin(), "var");
+                    e = syntaxVar(line);
+                    if (e.errorPos >= 0)
+                    {
+                        return e;
+                    }
+                    e = executeVar(line, ss, output, code);
+                    return e;
+                }
                 if (line[3] == "]")
                 {
-                    string key = line[2];
+                    key = line[2];
                     Object temp2;
                     temp2.value = key;
                     int l = key.length()-1;
                     if (((key[0] != '"' || key[l] != '"') || (key[0] != '\'' || key[l] != '\'')) && (temp2.getType() == "string"))
                     {
-                        Object tempObj = getAnyObjectNamed(ss.definedVariables, key);
-                        if (tempObj.name != "invalid object name")
-                        {
-                            key = tempObj.getValue();
-                        }
-                        else
-                        {
-                            e.errorPos = 2;
-                            e.message = "Array does not contain this index";
-                            return e;
-                        }
+                        //do something with key?
                     }
                 }
                 else
@@ -98,21 +100,55 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
                     e.message = "Array assignment expecting closing bracket ']'";
                     return e;
                 }
+                isArray = true;
+                /*while (line[1] != "]")
+                {
+                    line.erase(line.begin()+1);
+                }
+                line.erase(line.begin()+1);*/
             }
-            if (line[1] != "=") //e.g convert x += 6; --> x = x + 6;
+            
+            if (!isArray)
             {
-                char op = line[1][0];
-                line[1] = "=";
-                line.insert(line.begin()+2, line[0]);
-                line.insert(line.begin()+3, string(1,op));
+                if (line[1] != "=") //e.g convert x += 6; --> x = x + 6;
+                {
+                    char op = line[1][0];
+                    line[1] = "=";
+                    line.insert(line.begin()+2, line[0]);
+                    line.insert(line.begin()+3, string(1,op));
+                }
             }
+            
             //cout << vectorToString(line) << "--\n";
-            errVar eval = anyEval(vector<string>(line.begin()+2, line.end()), ss, output, code);
-            if (e.errorPos >=0)
+            errVar eval;
+            if (isArray)
             {
-                return e;
+                if (line[2]=="]")
+                {
+                    eval= anyEval(vector<string>(line.begin()+4, line.end()), ss, output, code);
+                }
+                else
+                {
+                    eval= anyEval(vector<string>(line.begin()+5, line.end()), ss, output, code);
+                }
+                if (e.errorPos >=0)
+                {
+                    return e;
+                }
+                setMapObjectWithName(ss.definedVariables, line[0], key, eval.message);
             }
-            setObjectWithName(ss.definedVariables, line[0], eval.message);
+            else
+            {
+                //eval = vector<string>(line.begin()+2, line.end()), ss);
+                //cout << vectorToString(vector<string>(line.begin()+2, line.end()));
+                eval = anyEval(vector<string>(line.begin()+2, line.end()), ss, output, code);
+                //eval.message = to_string(getAnyObjectNamed(ss.definedVariables, "i").getIntValue() + 1);
+                if (e.errorPos >=0)
+                {
+                    return e;
+                }
+                setObjectWithName(ss.definedVariables, line[0], eval.message);
+            }
             curLine++;
         }
         else if (line[1] == "(") //dealing with a function
@@ -178,7 +214,8 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
             ss.nestDepth++;
             //cout << vectorToString(block);
             //bug: add variables to pass in here, parallel vector<Object>
-            execute(block, output, 0);
+            //execute(block, output, 0);
+            executeCode(block, output);
             un_nest(ss);
             //cout << output.returnVal << "==\n";
             
