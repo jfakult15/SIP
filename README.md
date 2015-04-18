@@ -1,9 +1,7 @@
 SIP - The Students Introduction to Programing
 ===================
 
-A work in progress...
----------------------
-
+Throughout my experience as a programmer, If I’ve learned one thing, it’s that it is really hard to start learning how to program. A coder’s introduction to computer science is critical. In computer science, the better you are able to understand the core concepts of a topic, the better you will be able to apply that understanding to learning new topics. In other words, the more you learn, the easier it becomes to learn. SIP Stands for the Students Introduction to Programming. It is a (soon to be) fully functioning programming language. I designed SIP to be extremely simple and intuitive to use. It is targeted at people with no previous programming experience. In creating SIP I wanted to pick and choose aspects from my favorite programming languages, and mesh them all together in a perfectly simple combination. I am writing the language on top of the C++ language in the Xcode development environment (compiler: CLang). Currently the language is completely functional, although perhaps somewhat unstable. In the future, I plan to continue development and stabilization of the language to the point where it will hopefully be used by the Introduction to Computer Science class here at University School as well as general use. Other projects currently under development include creating online documentation (progress at http://sip-language.com), and integration with popular development environments such as NotePad++ (future) or TextMate (completed). 
 
 ---
 
