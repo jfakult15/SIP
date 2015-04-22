@@ -32,14 +32,16 @@ int importAll(vector<string> &input);
 
 int main(int argc, const char * argv[])
 {
-    /*vector<string> temp = tokenize("5+72+'hi'+false");
-    //vector<string> temp = tokenize("(true || (7+1>5) && true && (5+(2*6)>31.6)|| ('byebye'=='hello'))");
-    SaveState ss;
-    cout << anyEval(temp, ss).message << "==\n";
+    /*
+    SaveState temp;
+    ExecutionOutput output;
+    vector<string> code;
+    errVar e = anyEval(tokenize("((5+6) + 1==1)+2"), temp, output, code);
+    cout << e.message << "--\n";
     exit(0);*/
     
     argc = 2;
-    //argv[1] = "/Users/jfakult/Desktop/first_try.sip";
+    //argv[1] = "/Users/jfakult/Desktop/temp.sip";
     //I am trying to be flexible with command line errors. Ill check every arg until one is a good file
     for (int i=1; i<argc; i++)
     {

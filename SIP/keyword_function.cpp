@@ -228,7 +228,7 @@ errVar createTempVars(vector<string> line, vector<string> funcLine, SaveState &s
     {
         if (line[i] != ",")
         {
-            Object o = getAnyObjectNamed(oldVars, line[i]);
+            Object o = getAnyObjectNamed(oldVars, line[i], ss.nestDepth);
             if (o.name == "invalid object name")
             {
                 e.message = "Unknown variable passed into function: " + line[i];

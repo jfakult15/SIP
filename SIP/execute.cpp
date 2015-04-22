@@ -26,13 +26,13 @@ void execute(vector<string> code, ExecutionOutput &output, int numImports)
     output.info.push_back("Executing...\n");
     
     //syntax checking. We check the syntax first so we don't have to worry about it on execution
-    for (int i=0; i<code.size(); i++)
+    for (int i=0; i<code.size(); i++) //loop through every line in the program
     {
         string line=code[i];
-        trim(line);
-        vector<string> tokens=tokenize(line);
+        trim(line); //remove surrounding whitespace
+        vector<string> tokens=tokenize(line); //lexicographically splits the line into tokens
         
-        errVar syntaxError=checkSyntax(tokens, output);
+        errVar syntaxError=checkSyntax(tokens, output); //first phase of semi-interpeted language
         
         if (syntaxError.errorPos>=0) //add error messages
         {
@@ -44,9 +44,9 @@ void execute(vector<string> code, ExecutionOutput &output, int numImports)
         }
     }
     
-    output.info.push_back("Syntax Okay!");
+    output.info.push_back("Syntax Okay!"); //output.info is displayed in verbose mode (-v CLi flag)
     
-    executeCode(code, output);
+    executeCode(code, output); //second phase of language
 }
 
 //the int this (and all other syntax functions) return the character position of the error or a value less than zero on no errors

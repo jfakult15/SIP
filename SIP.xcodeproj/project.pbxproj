@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3F0DD68E19E57E59005F511F /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F0DD68C19E57E59005F511F /* helpers.cpp */; };
+		3F154BEA1AE7CE6D0091E01A /* evals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F154BE81AE7CE6D0091E01A /* evals.cpp */; };
 		3F5EFF711ABCA54700413EA4 /* levenshtein.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F5EFF6F1ABCA54700413EA4 /* levenshtein.cpp */; };
 		3F5EFF741ABCA90B00413EA4 /* keyword_import.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F5EFF721ABCA90B00413EA4 /* keyword_import.cpp */; };
 		3F5EFF771ABCB37200413EA4 /* io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F5EFF751ABCB37200413EA4 /* io.cpp */; };
@@ -46,6 +47,8 @@
 /* Begin PBXFileReference section */
 		3F0DD68C19E57E59005F511F /* helpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helpers.cpp; sourceTree = "<group>"; };
 		3F0DD68D19E57E59005F511F /* helpers.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = helpers.h; sourceTree = "<group>"; };
+		3F154BE81AE7CE6D0091E01A /* evals.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = evals.cpp; sourceTree = "<group>"; };
+		3F154BE91AE7CE6D0091E01A /* evals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = evals.h; sourceTree = "<group>"; };
 		3F1E6C6F1ABB96EE004DD61E /* sip_core.sip */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sip_core.sip; sourceTree = "<group>"; };
 		3F5EFF6F1ABCA54700413EA4 /* levenshtein.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = levenshtein.cpp; sourceTree = "<group>"; };
 		3F5EFF701ABCA54700413EA4 /* levenshtein.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = levenshtein.h; sourceTree = "<group>"; };
@@ -144,6 +147,8 @@
 				3FAE21601A4B46A2000FEB2E /* function_object.h */,
 				3F0DD68C19E57E59005F511F /* helpers.cpp */,
 				3F0DD68D19E57E59005F511F /* helpers.h */,
+				3F154BE81AE7CE6D0091E01A /* evals.cpp */,
+				3F154BE91AE7CE6D0091E01A /* evals.h */,
 				3FAE215C1A488AC5000FEB2E /* save_state.h */,
 				3F1E6C6E1ABB9695004DD61E /* import */,
 				3FAE21441A463C22000FEB2E /* keywords */,
@@ -255,6 +260,7 @@
 				3FAE214B1A463D84000FEB2E /* keyword_for.cpp in Sources */,
 				3FAE21571A4887FC000FEB2E /* one_word_statement.cpp in Sources */,
 				3F5EFF741ABCA90B00413EA4 /* keyword_import.cpp in Sources */,
+				3F154BEA1AE7CE6D0091E01A /* evals.cpp in Sources */,
 				3FAE21541A4682D3000FEB2E /* keyword_print.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

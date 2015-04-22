@@ -53,7 +53,7 @@ public:
 };
 
 Object getObjectByName(vector<Object> &v, string name);
-Object getAnyObjectNamed(vector<vector<Object> > &v, string name);
+Object getAnyObjectNamed(vector<vector<Object> > &v, string name, int depth);
 bool objectExistsWithName(vector<vector<Object> > &v, string name);
 bool setObjectWithName(vector<vector<Object> > &v, string name, string value);
 bool setMapObjectWithName(vector<vector<Object> > &v, string name, string key, string value);

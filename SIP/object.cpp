@@ -225,14 +225,13 @@ Object getObjectByName(vector<Object> &v, string name)
     return o;
 }
 
-Object getAnyObjectNamed(vector<vector<Object> > &v, string name)
+Object getAnyObjectNamed(vector<vector<Object> > &v, string name, int depth)
 {
     Object o;
-    for (int i=int(v.size())-1; i>=0; i--)
+    for (int i=depth; i>=0; i--)
     {
+        if (i>=v.size()) continue;
         o = getObjectByName(v[i], name);
-        //cout << o.name <<"==\n";
-        
         if (o.name!="invalid object name") //we found a variable for this value!
         {
             return o;
@@ -243,7 +242,7 @@ Object getAnyObjectNamed(vector<vector<Object> > &v, string name)
 
 bool objectExistsWithName(vector<vector<Object> > &v, string name)
 {
-    Object o = getAnyObjectNamed(v, name);
+    Object o = getAnyObjectNamed(v, name, int(v.size()));
     if (o.name != "invalid object name")
     {
         return true;
