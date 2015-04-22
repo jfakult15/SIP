@@ -294,6 +294,7 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
     return e;
 }
 
+//Outdated, about a .6s difference in time over 100,000 loops
 errVar anyEval2(vector<string> expr, SaveState &ss, ExecutionOutput &output, vector<string> &code) //will evaluate expressions of any type using helper eval functions of course
 {
     errVar e;
