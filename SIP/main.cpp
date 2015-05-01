@@ -41,7 +41,7 @@ int main(int argc, const char * argv[])
     exit(0);*/
     
     argc = 2;
-    //argv[1] = "/Users/jfakult/Desktop/temp.sip";
+    argv[1] = "/Users/jfakult/Desktop/temp.sip";
     //I am trying to be flexible with command line errors. Ill check every arg until one is a good file
     for (int i=1; i<argc; i++)
     {
@@ -49,6 +49,7 @@ int main(int argc, const char * argv[])
         if (file.is_open())
         {
             input=readFile(file);
+            fullCode = input;
             int numImports = importAll(input);
             //input.insert(input.begin(), "import \"sip_core.sip\";");
             

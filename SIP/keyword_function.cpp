@@ -163,7 +163,7 @@ errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutp
                             if (funcExists(funcName, numParams, ss))
                             {
                                 createdFunction = true;
-                                i = code.size();
+                                i = int(code.size());
                             }
                         }
                     }
@@ -182,7 +182,32 @@ errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutp
         
         if (!createdFunction)
         {
+            /*
+             As much as I hate to admit, some string manipulation functions need to be hardcoded in. The code is redirected here on those calls
+             */
+            if (funcName == "length")
+            {
+                e = getLength(line, ss, numParams);
+                if (e.errorPos >= 0)
+                {
+                    return e;
+                }
+                output.returnVal = e.message;
+                return e;
+            }
+            else if (funcName == "charAt")
+            {
+                e = getCharAt(line, ss, numParams);
+                if (e.errorPos >= 0)
+                {
+                    return e;
+                }
+                output.returnVal = e.message;
+                return e;
+            }
+            
             e.errorPos = 0;
+            cout << ss.definedVariables[0][2].value;
             e.message = "Undefined function: '" + line[0] + "'";
             return e;
         }
@@ -200,9 +225,15 @@ errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutp
         
         FunctionObject f = getFunctionNamed(line[0], ss);
         
-        e = createTempVars(line, tokenize(code[f.startLine]), ss);
+        e = createTempVars(line, tokenize(fullCode[f.startLine-1]), ss);
         
-        vector<string> block(code.begin()+f.startLine+2, code.begin()+f.endLine);
+        if (e.errorPos >= 0)
+        {
+            e = errVar();
+            return e;
+        }
+        
+        vector<string> block(fullCode.begin()+f.startLine+1, fullCode.begin()+f.endLine-1);
         //cout << vectorToString(block);
         //bug: add variables to pass in here, parallel vector<Object>
         //execute(block, output, 0);
@@ -214,6 +245,118 @@ errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutp
         
         un_nest(ss);
     }
+    
+    return e;
+}
+
+//BUG: check if it is a embedded string or variable etc?
+errVar getLength(vector<string> &line, SaveState &ss, int numParams)
+{
+    errVar e;
+    
+    if (numParams != 1)
+    {
+        e.errorPos = 2;
+        e.message = "Length function requires exactly 1 string parameter";
+        return e;
+    }
+    
+    string stringName = line[2];
+    //cout << stringName << "--\n";
+    
+    Object o; o.value = line[2];
+    if (isProperVarName(line[2]))
+    {
+        o = getAnyObjectNamed(ss.definedVariables, stringName, ss.nestDepth);
+        if (o.name == "invalid object name")
+        {
+            e.errorPos = 2;
+            e.message = "Unknown variable";
+            return e;
+        }
+        
+        if (o.getType() != "string")
+        {
+            e.errorPos = 2;
+            e.message = "Length function expects string parameter";
+            return e;
+        }
+    }
+    
+    e.message = to_string(o.value.length());
+    
+    return e;
+}
+
+errVar getCharAt(vector<string> &line, SaveState &ss, int numParams)
+{
+    errVar e;
+    
+    if (numParams != 2)
+    {
+        e.errorPos = 2;
+        e.message = "charAt function requires exactly 2 parameters: format: charAt(pos, string)";
+        return e;
+    }
+    
+    string pos = line[2];
+    string stringName = line[4];
+    
+    Object p; p.value = pos;
+    
+    if (isProperVarName(pos))
+    {
+        p = getAnyObjectNamed(ss.definedVariables, pos, ss.nestDepth);
+        if (p.name == "invalid object name")
+        {
+            e.errorPos = 2;
+            e.message = "Unknown variable";
+            return e;
+        }
+        if (p.getType() != "int")
+        {
+            e.errorPos = 2;
+            e.message = "charAt function expects first parameter to be an integer";
+            return e;
+        }
+    }
+    
+    
+    Object s; s.value = stringName;
+    
+    if (isProperVarName(stringName))
+    {
+        s = getAnyObjectNamed(ss.definedVariables, stringName, ss.nestDepth);
+        
+        if (s.name == "invalid object name")
+        {
+            e.errorPos = 4;
+            e.message = "Unknown variable";
+            return e;
+        }
+        if (s.getType() != "string")
+        {
+            e.errorPos = 2;
+            e.message = "charAt function expects second parameter to be a string";
+            return e;
+        }
+    }
+    
+    int charPos = p.getIntValue();
+    if (charPos < 0)
+    {
+        e.errorPos = 2;
+        e.message = "Char at position must be greater than or equal to 0";
+        return e;
+    }
+    if (s.value.length() <= charPos)
+    {
+        e.errorPos = 2;
+        e.message = "Char at position is out of bounds (no character exists at this position)";
+        return e;
+    }
+    
+    e.message = s.value[charPos];
     
     return e;
 }
@@ -231,9 +374,12 @@ errVar createTempVars(vector<string> line, vector<string> funcLine, SaveState &s
             Object o = getAnyObjectNamed(oldVars, line[i], ss.nestDepth);
             if (o.name == "invalid object name")
             {
+                o.value = line[i];
+                o.type = o.getType();
+                /*
                 e.message = "Unknown variable passed into function: " + line[i];
                 e.errorPos = i;
-                return e;
+                return e;*/
             }
             //cout << vectorToString(funcLine) << " " << i << "--\n";
             o.name = funcLine[i+1];

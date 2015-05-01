@@ -23,5 +23,7 @@ bool funcExists(string name, int numParams, struct SaveState &ss);
 bool seenFuncBefore(string name, int startLine, struct SaveState &ss);
 class FunctionObject getFunctionNamed(string name, struct SaveState &ss);
 struct errVar createTempVars(vector<string> line, vector<string> funcLine, SaveState &ss);
+struct errVar getLength(vector<string> &line, SaveState &ss, int numParams);
+struct errVar getCharAt(vector<string> &line, SaveState &ss, int numParams);
 
 #endif /* defined(__SIP__keyword_function__) */

@@ -30,5 +30,6 @@ int getObjectNamed(vector<class Object> &objects, string name);
 void executeCode(vector<string> code, ExecutionOutput &output);
 
 extern bool verbose;
+extern vector<string> fullCode;
 
 #endif /* defined(__SIP__execute__) */

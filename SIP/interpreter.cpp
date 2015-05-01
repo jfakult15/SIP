@@ -131,9 +131,9 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
                 {
                     eval= anyEval(vector<string>(line.begin()+5, line.end()), ss, output, code);
                 }
-                if (e.errorPos >=0)
+                if (eval.errorPos >=0)
                 {
-                    return e;
+                    return eval;
                 }
                 setMapObjectWithName(ss.definedVariables, line[0], key, eval.message);
             }
@@ -143,9 +143,9 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
                 //cout << vectorToString(vector<string>(line.begin()+2, line.end()));
                 eval = anyEval(vector<string>(line.begin()+2, line.end()), ss, output, code);
                 //eval.message = to_string(getAnyObjectNamed(ss.definedVariables, "i").getIntValue() + 1);
-                if (e.errorPos >=0)
+                if (eval.errorPos >=0)
                 {
-                    return e;
+                    return eval;
                 }
                 setObjectWithName(ss.definedVariables, line[0], eval.message);
             }
@@ -210,7 +210,7 @@ errVar interpreter(SaveState &ss, vector<string> &code, vector<string> line, Exe
                 return e;
             }
             
-            vector<string> block(code.begin()+f.startLine+2, code.begin()+f.endLine);
+            vector<string> block(fullCode.begin()+f.startLine+1, fullCode.begin()+f.endLine-1);
             ss.nestDepth++;
             //cout << vectorToString(block);
             //bug: add variables to pass in here, parallel vector<Object>

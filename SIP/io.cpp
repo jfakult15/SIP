@@ -8,6 +8,8 @@
 
 #include "io.h"
 
+#include "helpers.h"
+
 vector<string> readFile(ifstream &file)
 {
     vector<string> tempLines;
@@ -18,6 +20,7 @@ vector<string> readFile(ifstream &file)
         
         if (temp.length()>0)
         {
+            trim(temp);
             tempLines.push_back(temp);
         }
     }

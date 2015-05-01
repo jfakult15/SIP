@@ -215,10 +215,43 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
         if (s=="false") s="0";
         if (isProperVarName(s))
         {
-            Object o = getAnyObjectNamed(ss.definedVariables, s, ss.nestDepth);
-            if (o.name != "invalid object name")
+            if (i<expr.size()-1 && expr[i+1] == "(") //we are looking to execute a function instead of a variable
             {
-                s = o.value;
+                vector<string> func;
+                func.push_back(expr[i]);
+                func.push_back("(");
+                i+=2;
+                
+                while (i<expr.size() && expr[i] != ")")
+                {
+                    func.push_back(expr[i]);
+                    i++;
+                }
+                
+                if (expr[i] != ")")
+                {
+                    e.errorPos = expr.size()-1;
+                    e.message = "Invalid function call: missing parentheses";
+                    return e;
+                }
+                func.push_back(expr[i]);
+                
+                int n = -1;
+                e = executeFunction(func, code, output, n, ss);
+                
+                if (e.errorPos >= 0)
+                {
+                    return e;
+                }
+                s = e.message;
+            }
+            else
+            {
+                Object o = getAnyObjectNamed(ss.definedVariables, s, ss.nestDepth);
+                if (o.name != "invalid object name")
+                {
+                    s = o.value;
+                }
             }
         }
         
@@ -353,7 +386,7 @@ errVar anyEval2(vector<string> expr, SaveState &ss, ExecutionOutput &output, vec
                 {
                     return e;
                 }
-                
+                //cout << "yes\n";
                 i = int(expr.size());
             }
             else

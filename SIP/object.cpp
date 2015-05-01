@@ -31,6 +31,8 @@ string Object::getValue()
         getMapValue();
     }
     
+    if (value=="") return "";
+    
     if (type=="bool")
     {
         return to_string(getBoolValue());
@@ -74,6 +76,7 @@ errVar Object::getArrayValue(string key)
 
 string Object::getType()
 {
+    if (value=="") return "string";
     string temp = determineType(value);
     if (temp == "double")
     {

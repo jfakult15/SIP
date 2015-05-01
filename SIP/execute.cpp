@@ -18,6 +18,7 @@ using namespace std;
 //map<string, KeywordObject> keywords=initKeywordObjects();
 
 struct SaveState ss;
+vector<string> fullCode;
 
 bool verbose = false;
 
@@ -29,7 +30,6 @@ void execute(vector<string> code, ExecutionOutput &output, int numImports)
     for (int i=0; i<code.size(); i++) //loop through every line in the program
     {
         string line=code[i];
-        trim(line); //remove surrounding whitespace
         vector<string> tokens=tokenize(line); //lexicographically splits the line into tokens
         
         errVar syntaxError=checkSyntax(tokens, output); //first phase of semi-interpeted language
@@ -136,6 +136,7 @@ void executeCode(vector<string> code, ExecutionOutput &output)
 {
     output.info.push_back("Executing code...");
     output.info.push_back("Output:");
+    //auto temp = ss;
     
     errVar e;
     
