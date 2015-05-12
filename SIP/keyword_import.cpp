@@ -31,16 +31,16 @@ errVar syntaxImport(vector<string> tokens)
     return e;
 }
 
-errVar executeImport(vector<string> tokens, ExecutionOutput &output, SaveState &ss)
+errVar executeImport(vector<string> tokens, ExecutionOutput &output, SaveState &ss, int curLine)
 {
     errVar e;
     
-    executeFile(tokens[1], output);
+    executeFile(tokens[1], output, curLine);
     
     return e;
 }
 
-errVar executeFile(string path, ExecutionOutput &output)
+errVar executeFile(string path, ExecutionOutput &output, int &curLine)
 {
     errVar e;
     
@@ -74,7 +74,17 @@ errVar executeFile(string path, ExecutionOutput &output)
     }
     
     input=readFile(file);
-    execute(input, output, 0);
+    fullCode.erase(fullCode.begin() + curLine);
+    //code.erase(code.begin() + curLine);
+    //int oldCurLine = curLine;
+    for (int i=input.size()-1; i>=0; i--)
+    {
+        fullCode.insert(fullCode.begin() + curLine, input[i]);
+        //code.insert(code.begin() + curLine, input[i]);
+    }
+    //cout << fullCode.size()  << " " << code.size() << "\n";
+    //curLine--;
+    /*execute(input, output, 0);
     if (verbose && output.info.size()>0)
     {
         for (int i=0; i<output.info.size(); i++)
@@ -96,7 +106,7 @@ errVar executeFile(string path, ExecutionOutput &output)
             cout << output.err[i] << "\n";
         }
         exit(0);
-    }
+    }*/
     
     file.close();
     

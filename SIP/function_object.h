@@ -23,15 +23,16 @@ using namespace std;
 class FunctionObject
 {
 public:
-    FunctionObject(string newName, int newStartLine, int newEndLine, int numParams);
+    FunctionObject(string newName, int newStartLine, int newEndLine, int numParams/*, string newLocation*/);
     
     string name;
     //Object returnValue;
     int startLine;
     int endLine;
     int numParams;
+    string location;
 };
 
-bool functionExists(vector<string> line, class SaveState &ss);
+//bool functionExists(vector<string> line, class SaveState &ss);
 
 #endif /* defined(__SIP__function_object__) */

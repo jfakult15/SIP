@@ -250,7 +250,72 @@ errVar anyEval(vector<string> expr, SaveState &ss, ExecutionOutput &output, vect
                 Object o = getAnyObjectNamed(ss.definedVariables, s, ss.nestDepth);
                 if (o.name != "invalid object name")
                 {
-                    s = o.value;
+                    if (o.isArray == 1)
+                    {
+                        if (expr.size()==1)
+                        {
+                            s = "[";
+                            for (map<string,string>::iterator it = o.values.begin(); it!=o.values.end(); it++)
+                            {
+                                s += it->second + ",";
+                            }
+                            s = s.substr(0,s.size()-1);
+                            s += "]";
+                        }
+                        else
+                        {
+                            if (i>expr.size()-4)
+                            {
+                                e.errorPos = i;
+                                e.message = "Can't evaluate array: no index specified";
+                                return e;
+                            }
+                            if (expr[i+1] != "[")
+                            {
+                                e.errorPos = i+1;
+                                e.message = "Can't evaluate array: no index specified";
+                                return e;
+                            }
+                            if (expr[i+3] != "]")
+                            {
+                                e.errorPos = i+1;
+                                e.message = "Array expects closing bracket";
+                                return e;
+                            }
+                            string key = expr[i+2];
+                            Object temp2;
+                            temp2.value = key;
+                            int l = int(key.length()-1);
+                            if (((key[0] != '"' || key[l] != '"') || (key[0] != '\'' || key[l] != '\'')) && (temp2.getType() == "string"))
+                            {
+                                Object tempObj = getAnyObjectNamed(ss.definedVariables, key, ss.nestDepth);
+                                if (tempObj.name != "invalid object name")
+                                {
+                                    key = tempObj.getValue();
+                                }
+                                else
+                                {
+                                    e.errorPos = i+2;
+                                    e.message = "Array does not contain this index";
+                                    return e;
+                                }
+                            }
+                            
+                            errVar temp = o.getArrayValue(key);
+                            if (temp.errorPos >= 0)
+                            {
+                                e.errorPos = i+2;
+                                e.message = "Array does not contain this index";
+                                return e;
+                            }
+                            s = temp.message;
+                            i+=3;
+                        }
+                    }
+                    else
+                    {
+                        s = o.value;
+                    }
                 }
             }
         }
@@ -505,12 +570,24 @@ errVar anyEval2(vector<string> expr, SaveState &ss, ExecutionOutput &output, vec
     return e;
 }
 
-errVar compare(string left, string right, string comp)
+errVar compare(vector<string> left, vector<string> right, string comp, SaveState &ss, ExecutionOutput &output, vector<string> &code)
 {
     errVar e;
+    errVar compErrs;
     
-    Object l; l.value = eval(left);
-    Object r; r.value = eval(right);
+    Object l; compErrs = anyEval(left, ss, output, code);
+    if (compErrs.errorPos >= 0)
+    {
+        return compErrs;
+    }
+    l.value = compErrs.message;
+    
+    Object r; compErrs = anyEval(right, ss, output, code);
+    if (compErrs.errorPos >= 0)
+    {
+        return compErrs;
+    }
+    r.value = compErrs.message;
     
     bool isString = (l.getType() == "string" || r.getType() == "string");
     
@@ -598,8 +675,8 @@ errVar compare(string left, string right, string comp)
 errVar compareEval(vector<string> boolChunk, SaveState &ss)
 {
     //simplify all comparator operations
-    string left = "";
-    string right = "";
+    vector<string> left;
+    vector<string> right;
     string comp = "";
     bool onLeft = true;
     set<string> compVec = {"==", "!=", "<", ">", ">=", "<="};
@@ -608,14 +685,15 @@ errVar compareEval(vector<string> boolChunk, SaveState &ss)
         string s = boolChunk[i];
         if (s=="true") s="1";
         if (s=="false") s="0";
+        /*
         if (isProperVarName(s))
         {
-            Object o = getAnyObjectNamed(ss.definedVariables, s, ss.nestDepth);
+            //Object o = getAnyObjectNamed(ss.definedVariables, s, ss.nestDepth);
             if (o.name != "invalid object name")
             {
                 s = o.value;
             }
-        }
+        }*/
         if (compVec.find(s) != compVec.end())
         {
             //handle comparator
@@ -626,24 +704,25 @@ errVar compareEval(vector<string> boolChunk, SaveState &ss)
         {
             if (onLeft)
             {
-                left += s;
+                left.push_back(s);
             }
             else
             {
-                right += s;
+                right.push_back(s);
             }
         }
     }
     
-    if (right.length() == 0)
+    if (right.size() == 0)
     {
         errVar e;
-        if (left=="0" || left=="false") e.message = "0";
+        if (left.size()==1 && (left[0]=="0" || left[0]=="false")) e.message = "0";
         else e.message = "1";
         return e;
     }
     
-    return compare(left, right, comp);
+    ExecutionOutput output;
+    return compare(left, right, comp, ss, output, fullCode);
 }
 
 errVar boolEval(vector<string> parts, SaveState &ss)
@@ -661,7 +740,7 @@ errVar boolEval(vector<string> parts, SaveState &ss)
     for (int i=0; i<parts.size(); i++)
     {
         string s = parts[i];
-        if (s == "(")
+        if (s == "(" && i>=1 && !isProperVarName(parts[i-1]))
         {
             int openPar = i;
             int parsOpen = 1;

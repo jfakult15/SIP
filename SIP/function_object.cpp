@@ -8,22 +8,12 @@
 
 #include "function_object.h"
 
-FunctionObject::FunctionObject(string newName, int newStartLine, int newEndLine, int newNumParams)
+FunctionObject::FunctionObject(string newName, int newStartLine, int newEndLine, int newNumParams/*, string newLocation*/)
 {
     //returnValue = newReturn;
     name=newName;
     startLine = newStartLine;
     endLine = newEndLine;
     numParams = newNumParams;
-}
-
-bool functionExists(vector<string> line, SaveState &ss)
-{
-    
-    for (int i=0; i<ss.definedFunctions.size(); i++)
-    {
-        
-    }
-    
-    return false;
+    //location = newLocation;
 }

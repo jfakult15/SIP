@@ -49,8 +49,8 @@ int main(int argc, const char * argv[])
         if (file.is_open())
         {
             input=readFile(file);
-            fullCode = input;
             int numImports = importAll(input);
+            fullCode = input;
             //input.insert(input.begin(), "import \"sip_core.sip\";");
             
             execute(input, output, numImports);
@@ -105,7 +105,7 @@ int importAll(vector<string> &input)
     {
         while((entry = readdir(pDIR)))
         {
-            if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0 )
+            if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0 && entry->d_name[0] != '.' )
             {
                 input.insert(input.begin(), "import \"" + string(entry->d_name) + "\"");
                 num++;

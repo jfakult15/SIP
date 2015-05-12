@@ -207,7 +207,7 @@ errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutp
             }
             
             e.errorPos = 0;
-            cout << ss.definedVariables[0][2].value;
+            //cout << ss.definedVariables[0][2].value;
             e.message = "Undefined function: '" + line[0] + "'";
             return e;
         }
@@ -225,7 +225,7 @@ errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutp
         
         FunctionObject f = getFunctionNamed(line[0], ss);
         
-        e = createTempVars(line, tokenize(fullCode[f.startLine-1]), ss);
+        e = createTempVars(line, tokenize(fullCode[f.startLine]), ss);
         
         if (e.errorPos >= 0)
         {
@@ -233,7 +233,15 @@ errVar executeFunction(vector<string> &line, vector<string> &code, ExecutionOutp
             return e;
         }
         
-        vector<string> block(fullCode.begin()+f.startLine+1, fullCode.begin()+f.endLine-1);
+        vector<string> block;
+        if (fullCode.begin()+f.startLine+2 == fullCode.begin()+f.endLine-1)
+        {
+            block.push_back(fullCode[f.startLine+2]);
+        }
+        else
+        {
+            block = vector<string>(fullCode.begin()+f.startLine+2, fullCode.begin()+f.endLine-1);
+        }
         //cout << vectorToString(block);
         //bug: add variables to pass in here, parallel vector<Object>
         //execute(block, output, 0);

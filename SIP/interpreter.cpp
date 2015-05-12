@@ -274,7 +274,10 @@ errVar analyzeLine(vector<string> line, SaveState &ss, ExecutionOutput &output, 
     }
     else if (keyword=="import")
     {
-        err = executeImport(line, output, ss);
+        err = executeImport(line, output, ss, curLine);
+        code = fullCode;
+        curLine--;
+        //cout << code.size() << " " << curLine << ss.definedVariables.size();
     }
     else if (keyword=="return")
     {

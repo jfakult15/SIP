@@ -18,7 +18,7 @@
 #include "io.h"
 
 errVar syntaxImport(vector<string> tokens);
-errVar executeImport(vector<string> tokens, ExecutionOutput &output, SaveState &ss);
-errVar executeFile(string path, ExecutionOutput &output);
+errVar executeImport(vector<string> tokens, ExecutionOutput &output, SaveState &ss, int curLine);
+errVar executeFile(string path, ExecutionOutput &output, int &curLine);
 
 #endif /* defined(__SIP__keyword_import__) */

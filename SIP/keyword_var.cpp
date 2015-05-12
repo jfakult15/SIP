@@ -201,7 +201,7 @@ errVar executeVar(vector<string> tokens, SaveState &ss, ExecutionOutput &output,
             map<string, string> values;
             
             int key = 1;
-            for (int i=5; i<tokens.size(); i+=2)
+            for (int i=6; i<tokens.size(); i+=2)
             {
                 values[to_string(key)] = tokens[i];
                 key++;
@@ -215,6 +215,15 @@ errVar executeVar(vector<string> tokens, SaveState &ss, ExecutionOutput &output,
             }
             ss.definedVariables[ss.nestDepth].push_back(obj);
             
+            return err;
+        }
+    }
+    else
+    {
+        if (find(tokens.begin(), tokens.end(), "[") != tokens.end())
+        {
+            err.errorPos = 1;
+            err.message = "Bad array declaration format.\nShould be in form: var " + obj.name + "[] = [...]";
             return err;
         }
     }
